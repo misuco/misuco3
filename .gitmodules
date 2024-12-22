@@ -1,0 +1,3 @@
+[submodule "polymobilesynth"]
+	path = polymobilesynth
+	url = https://github.com/misuco/polymobilesynth.git
