@@ -24,12 +24,16 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: '30'
-        ndk-version: '21.4.7075529'
+        components: ['platform-tools', 'build-tools;30.0.2', 'platforms;android-30']
+
+    - name: Set up NDK
+      run: |
+        sudo apt-get install -y android-sdk
+        sdkmanager --install "ndk;21.4.7075529"
 
     - name: Set up Qt
       run: |
-        sudo apt-get install build-essential
+        sudo apt-get install -y build-essential
         wget https://download.qt.io/official_releases/qt/6.8/6.8.0/qt-opensource-linux-x64-6.8.0.run
         chmod +x qt-opensource-linux-x64-6.8.0.run
         ./qt-opensource-linux-x64-6.8.0.run --script qt-noninteractive.qs
