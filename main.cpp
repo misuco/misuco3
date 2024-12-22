@@ -1,3 +1,7 @@
+// /^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\
+// Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
+// SPDX-License-Identifier: GPL-3.0
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -7,8 +11,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    //mobileSynthQT68 synth;
-    AudioOutput synth;
+    MobileSynth synth;
 
     QQmlApplicationEngine engine;
 
