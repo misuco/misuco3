@@ -24,7 +24,7 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
       with:
-        components: ['platform-tools', 'build-tools;30.0.2', 'platforms;android-30']
+        components: 'platform-tools build-tools;30.0.2 platforms;android-30'
 
     - name: Set up NDK
       run: |
