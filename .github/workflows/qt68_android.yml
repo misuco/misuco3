@@ -46,13 +46,14 @@ jobs:
         tar -xvf qt-everywhere-src-6.8.1.tar.xz
         cd qt-everywhere-src-6.8.1
         ./configure -prefix $PWD/qtbase
-        cmake --build .
-        
+        make -j$(nproc)
+        make install
+
     - name: Build Project
       run: |
         mkdir build
         cd build
-        /opt/Qt/6.5.0/android/bin/qmake ..
+        $PWD/qtbase/bin/qmake ..
         make
         make install
 
