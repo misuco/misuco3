@@ -24,8 +24,8 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v2
       with:
-        api-level: 30
-        ndk-version: 21.4.7075529
+        api-level: '30'
+        ndk-version: '21.4.7075529'
 
     - name: Set up Qt
       run: |
