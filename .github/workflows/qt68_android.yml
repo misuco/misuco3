@@ -55,7 +55,7 @@ jobs:
         make install
 
     - name: Upload APK
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: android-apk
         path: build/path/to/your/apk/*.apk
