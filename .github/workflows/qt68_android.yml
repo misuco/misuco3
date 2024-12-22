@@ -42,10 +42,12 @@ jobs:
     - name: Set up Qt
       run: |
         sudo apt-get install -y build-essential
-        wget https://download.qt.io/official_releases/qt/6.5/6.5.0/qt-opensource-linux-x64-6.5.0.run
-        chmod +x qt-opensource-linux-x64-6.5.0.run
-        ./qt-opensource-linux-x64-6.5.0.run --script qt-noninteractive.qs
-
+        wget https://download.qt.io/official_releases/qt/6.8/6.8.1/single/qt-everywhere-src-6.8.1.tar.xz
+        tar -xvf qt-everywhere-src-6.8.1.tar.xz
+        cd qt-everywhere-src-6.8.1
+        ./configure -prefix $PWD/qtbase
+        cmake --build .
+        
     - name: Build Project
       run: |
         mkdir build
