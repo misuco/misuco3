@@ -26,14 +26,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y wget unzip
         wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
-        mkdir -p $ANDROID_HOME/cmdline-tools
-        unzip -q commandlinetools-linux-6609375_latest.zip -d $ANDROID_HOME/cmdline-tools
-        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$PATH
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        unzip -q commandlinetools-linux-6609375_latest.zip -d $HOME/android-sdk/cmdline-tools
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH
         yes | sdkmanager --licenses
         sdkmanager "platform-tools" "build-tools;30.0.2" "platforms;android-30"
 
     - name: Set up NDK
       run: |
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH
         sdkmanager --install "ndk;21.4.7075529"
 
     - name: Set up Qt
@@ -50,3 +53,9 @@ jobs:
         /opt/Qt/6.8.0/android/bin/qmake ..
         make
         make install
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: android-apk
+        path: build/path/to/your/apk/*.apk
