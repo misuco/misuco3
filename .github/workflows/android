@@ -1,0 +1,222 @@
+name: Build android (on MacOS)
+
+on:
+  push:
+    paths-ignore:
+      - '.github/workflows/ios.yml'
+      - '.github/workflows/linux.yml'
+      - '.github/workflows/mac.yml'
+      - '.github/workflows/mac_arm64.yml'
+      - '.github/workflows/win.yml'
+      - 'vcpkg-overlay/triplets/arm64-ios.yml'
+      - 'vcpkg-overlay/triplets/arm64-osx.yml'
+      - 'vcpkg-overlay/triplets/x64-linux.yml'
+      - 'vcpkg-overlay/triplets/x64-osx.yml'
+      - 'vcpkg-overlay/triplets/x64-windows.yml'
+      - 'scripts/**'
+      - 'LICENSE'
+      - 'README.md'
+
+concurrency:
+  group: ci-${{github.ref}}-android
+  cancel-in-progress: true
+  
+jobs:
+  android_build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TRIPLET: 'arm-android'
+            QT_ARCH: 'android_armv7'
+            ANDROID_ABI: 'armeabi-v7a'
+          - TRIPLET: 'arm64-android'
+            QT_ARCH: 'android_arm64_v8a'
+            ANDROID_ABI: 'arm64-v8a'
+
+    runs-on: macos-13
+    env: # update README for devs if you modify these env. variables
+      QT_VERSION: '6.6.3' # use scripts/update_qt_version.bash to change
+      ANDROIDAPI: 24
+      NDK_VERSION: '25.1.8937393'
+      NDK_VERSION_FULL: r25b
+      JDK_VERSION: 11
+      SDK_PLATFORM: android-33
+      SDK_BUILD_TOOLS: 33.0.1
+      XC_VERSION: ${{ '15.2' }}
+      CMAKE_VERSION: '3.29.0'
+      VCPKG_ROOT: "${{ github.workspace }}/vcpkg"
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: input-sdk
+
+      - name: Prepare vars
+        id: vars
+        run: |
+          brew install automake bison flex gnu-sed autoconf-archive libtool gettext
+          echo $(brew --prefix bison)/bin >> $GITHUB_PATH
+          echo $(brew --prefix flex)/bin >> $GITHUB_PATH
+          echo $(brew --prefix gettext)/bin >> $GITHUB_PATH
+
+          pip3 install -U pip
+          pip3 install aqtinstall
+
+      - name: Install CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ${{ env.CMAKE_VERSION }}
+          
+      - name: Setup compiler
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XC_VERSION }}
+
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: ${{ env.NDK_VERSION_FULL }}
+          add-to-path: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+         java-version: ${{ env.JDK_VERSION }}
+         distribution: zulu
+
+      - name: Setup Android SDK
+        uses: malinskiy/action-android/install-sdk@release/0.1.2
+
+      - name: Install Android Tools
+        run: |
+          sdkmanager --licenses && sdkmanager --verbose "platforms;${SDK_PLATFORM}" "build-tools;${SDK_BUILD_TOOLS}" tools platform-tools
+
+      - name: Restore cached Qt
+        id: cache-qt-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ github.workspace }}/Qt
+          key: ${{ runner.os }}-QtCache-v15-${{ env.QT_VERSION }}-${{ matrix.QT_ARCH }}
+
+      - name: Install Qt
+        if: steps.cache-qt-restore.outputs.cache-hit != 'true'
+        run: |
+          python3 -m aqt install-qt \
+            mac android ${{ env.QT_VERSION }} ${{ matrix.QT_ARCH }} \
+            -m qtsensors qtconnectivity qt5compat qtmultimedia qtpositioning qtshadertools \
+            -O ${{ github.workspace }}/Qt
+
+          python3 -m aqt install-qt \
+            mac desktop ${{ env.QT_VERSION }} \
+            -m qtsensors qtconnectivity qt5compat qtmultimedia qtpositioning qtshadertools \
+            -O ${{ github.workspace }}/Qt
+
+      - name: Save Qt cache
+        uses: actions/cache/save@v3
+        if: steps.cache-qt-restore.outputs.cache-hit != 'true'
+        id: cache-qt-save
+        with:
+          path: ${{ github.workspace }}/Qt
+          key: ${{ steps.cache-qt-restore.outputs.cache-primary-key }}
+
+      - name: Get vcpkg
+        shell: bash
+        run: |
+          mkdir -p "${{ env.VCPKG_ROOT }}"
+          cd "${{ env.VCPKG_ROOT }}"
+          git init
+          git remote add origin https://github.com/microsoft/vcpkg.git
+          git pull origin master
+          VCPKG_TAG=`cat ${{ github.workspace }}/input-sdk/VCPKG_BASELINE`
+          echo "using VCPKG_TAG ${VCPKG_TAG}"
+          git checkout ${VCPKG_TAG}
+
+      - name: Install vcpkg
+        run: |
+          echo "install vcpkg"
+          cd "${{ env.VCPKG_ROOT }}"
+          chmod +x ./bootstrap-vcpkg.sh
+          ./bootstrap-vcpkg.sh
+
+      - name: Build Deps
+        run: |
+          export Qt6_DIR=${{ github.workspace }}/Qt/${{ env.QT_VERSION }}/${{ matrix.QT_ARCH }}
+          export QT_HOST_PATH=${{ github.workspace }}/Qt/${{ env.QT_VERSION }}/macos
+          export PATH=${{ env.VCPKG_ROOT }}:$PATH
+          export ANDROID_NDK_HOME=${{ steps.setup-ndk.outputs.ndk-path }}
+          export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
+          export ANDROID_ABI=${{ matrix.ANDROID_ABI }}
+
+          vcpkg --version
+
+          mkdir -p ${{ github.workspace }}/build
+          cd ${{ github.workspace }}/build
+          cmake -B ${{ github.workspace }}/build \
+                -S ${{ github.workspace }}/input-sdk \
+                -DCMAKE_TOOLCHAIN_FILE:PATH="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake" \
+                -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${Qt6_DIR}/lib/cmake/Qt6/qt.toolchain.cmake \
+                -G Ninja \
+                -DVCPKG_TARGET_TRIPLET=${{ matrix.TRIPLET }} \
+                -DVCPKG_OVERLAY_TRIPLETS:PATH="${{ github.workspace }}/input-sdk/vcpkg-overlay/triplets" \
+                -DVCPKG_OVERLAY_PORTS="${{ github.workspace }}/input-sdk/vcpkg-overlay/ports" \
+                -D ANDROID_SDK=${ANDROID_HOME} \
+                -DCMAKE_MAKE_PROGRAM=ninja \
+                -DANDROID_ARM_NEON=ON \
+                -DANDROID_ABI=${{ matrix.ANDROID_ABI }} \
+                -DQT_ANDROID_ABIS=${{ matrix.ANDROID_ABI }} \
+                -DANDROIDAPI=${ANDROIDAPI} \
+                -DANDROID_PLATFORM=android-${ANDROIDAPI} \
+                -DANDROID_NDK_PLATFORM=android-${ANDROIDAPI} \
+                -DANDROID_STL="c++_shared"
+
+      - name: Upload build logs on deps failure
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: build-logs-${{ matrix.TRIPLET }}
+          path: |
+            ${{ env.VCPKG_ROOT }}/buildtrees/**/*.log
+
+      - name: Build Test App
+        run: |
+          cd ${{ github.workspace }}/build/${{ matrix.arch }}
+          cmake --build . --config Release --verbose
+
+      - name: Get TimeStamp
+        id: time
+        uses: nanzm/get-time-action@v2.0
+        with:
+          timeZone: 8
+          format: 'YYYYMMDD'
+
+      - name: Create SDK data folder 
+        run: |
+            mkdir -p ${{ github.workspace }}/sdk
+            cp -R ${{ github.workspace }}/build/vcpkg_installed/${{ matrix.TRIPLET }}/* ${{ github.workspace }}/sdk/
+            rm -rf ${{ github.workspace }}/sdk/debug
+            rm -rf ${{ github.workspace }}/sdk/etc
+            rm -rf ${{ github.workspace }}/sdk/mkspecs
+            rm -rf ${{ github.workspace }}/sdk/share
+            rm -rf ${{ github.workspace }}/sdk/tools
+            
+            SDK_TAR=mergin-maps-input-sdk-qt-${{ env.QT_VERSION }}-${{ matrix.TRIPLET }}-${{ steps.time.outputs.time }}-${{ github.run_number }}.tar.gz
+            echo "SDK_TAR=${SDK_TAR}" >> $GITHUB_ENV
+            
+            cd ${{ github.workspace }}/sdk/
+            tar -c -z -f ${{ github.workspace }}/${SDK_TAR} ./
+
+      - name: Upload Sdk in Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: sdk-${{ matrix.TRIPLET }}
+          path: ${{ github.workspace }}/${{ env.SDK_TAR }}
+
+      - name: Create Release
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ matrix.TRIPLET }}-${{ steps.time.outputs.time }}-${{ github.run_number }}
+          allowUpdates: true
+          artifacts: ${{ env.SDK_TAR }}
+          token: ${{ secrets.GITHUB_TOKEN }}
