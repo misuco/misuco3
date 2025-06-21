@@ -1,0 +1,64 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+
+    - name: Set up Android SDK
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        unzip -q commandlinetools-linux-6609375_latest.zip -d $HOME/android-sdk/cmdline-tools
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+        yes | sdkmanager --licenses
+        sdkmanager "platform-tools" "build-tools;30.0.2" "platforms;android-30"
+
+    - name: Set up NDK
+      run: |
+        export ANDROID_HOME=$HOME/android-sdk
+        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH
+        sdkmanager --install "ndk;21.4.7075529"
+
+    - name: Set up Qt
+      run: |
+        sudo apt-get install -y build-essential
+        wget https://download.qt.io/official_releases/qt/6.8/6.8.1/single/qt-everywhere-src-6.8.1.tar.xz
+        tar -xvf qt-everywhere-src-6.8.1.tar.xz
+        cd qt-everywhere-src-6.8.1
+        ./configure -prefix $PWD/qtbase
+        make -j$(nproc)
+        make install
+
+    - name: Build Project
+      run: |
+        mkdir build
+        cd build
+        $PWD/qtbase/bin/qmake ..
+        make
+        make install
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: android-apk
+        path: build/path/to/your/apk/*.apk
