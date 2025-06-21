@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import QtQuick 2.12
+import "VoiceControl.js" as VoiceControl
 
 Item {
     property bool buttonPressed: false
@@ -42,9 +43,10 @@ Item {
         anchors.fill: parent
 
         onPressed: function(touchPoints) {
+            root.voiceId=VoiceControl.GetNextVoiceId()
             root.buttonPressed=(touchPoints.length>0 ? true : false)
             if(root.buttonPressed) {
-                root.synthesizer.noteOn(root.note,root.frequency);
+                root.synthesizer.noteOn(root.voiceId,root.frequency);
             }
         }
 
@@ -52,7 +54,7 @@ Item {
             if(root.holdKeys==false) {
                 root.buttonPressed=(touchPoints.length>1 ? true : false)
                 if(root.buttonPressed==false) {
-                    root.synthesizer.noteOff(root.note)
+                    root.synthesizer.noteOff(root.voiceId)
                 }
             }
         }
@@ -61,7 +63,7 @@ Item {
             if(root.holdKeys==false) {
                 root.buttonPressed=(touchPoints.length>1 ? true : false)
                 if(root.buttonPressed==false) {
-                    root.synthesizer.noteOff(root.note)
+                    root.synthesizer.noteOff(root.voiceId)
                 }
             }
         }

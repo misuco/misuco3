@@ -20,6 +20,7 @@ Window {
     property int buttonWidth: root.width/12
     property int buttonHeight: root.height/2.2
     property var synthesizer: synth
+    property int voiceIdMaster: 0
 
     property bool holdKeys
 
@@ -32,6 +33,10 @@ Window {
         if(synthesizer!==undefined) {
             console.log("Main.qml sythesizer is defined")
         }
+    }
+
+    onVoiceIdMasterChanged: {
+        console.log("voiceIdMaster changed: " + voiceIdMaster)
     }
 
     Repeater {

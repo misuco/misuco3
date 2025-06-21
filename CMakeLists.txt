@@ -34,23 +34,26 @@ qt_add_executable(appmisuco3
     polymobilesynth/mobilesynth/Classes/synth/parameter.cpp
 )
 
+set_source_files_properties(VoiceControl.js
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
 qt_add_qml_module(appmisuco3
     URI misuco3
     VERSION 1.0
     QML_FILES
-        Main.qml
-        Emboss.qml
-        ControlArea.qml
-        ControlButton.qml
-        ControlDial.qml
-        ControlSlider.qml
-        TouchButton.qml
-        Parameters.ui.qml
-        Parameters_Mod.ui.qml
-        Parameters_Osc.ui.qml
-        Parameters_Osc_2.ui.qml
+        qml/Main.qml
+        qml/VoiceControl.js
+        qml/Emboss.qml
+        qml/ControlArea.qml
+        qml/ControlButton.qml
+        qml/ControlDial.qml
+        qml/ControlSlider.qml
+        qml/TouchButton.qml
+        qml/Parameters.ui.qml
+        qml/Parameters_Mod.ui.qml
+        qml/Parameters_Osc.ui.qml
+        qml/Parameters_Osc_2.ui.qml
 )
-
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
