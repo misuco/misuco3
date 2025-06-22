@@ -48,6 +48,7 @@ qt_add_qml_module(appmisuco3
         qml/ControlButton.qml
         qml/ControlDial.qml
         qml/ControlSlider.qml
+        qml/PlayArea.qml
         qml/TouchButton.qml
         qml/Parameters.ui.qml
         qml/Parameters_Mod.ui.qml
