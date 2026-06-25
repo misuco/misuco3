@@ -43,10 +43,13 @@ Item {
         anchors.fill: parent
 
         onPressed: function(touchPoints) {
-            root.voiceId=VoiceControl.GetNextVoiceId()
-            root.buttonPressed=(touchPoints.length>0 ? true : false)
+            // return if already pressed
+            if(root.buttonPressed) { return }
+
+            root.buttonPressed=true
             if(root.buttonPressed) {
-                root.synthesizer.noteOn(root.voiceId,root.frequency);
+                root.voiceId=VoiceControl.GetNextVoiceId()
+                root.synthesizer.noteOn(root.voiceId,root.frequency)
             }
         }
 

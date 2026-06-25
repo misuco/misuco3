@@ -34,15 +34,6 @@ Window {
         }
     }
 
-    PlayArea {
-        width: root.width
-        height: root.buttonHeight
-        x: 0
-        y: root.height-root.buttonHeight
-        synthesizer: root.synthesizer
-    }
-
-    /*
     Repeater {
         model: [
             {
@@ -118,7 +109,6 @@ Window {
             synthesizer: root.synthesizer
         }
     }
-    */
 
     ControlArea {
         x:10

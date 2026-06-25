@@ -4,9 +4,9 @@
 
 .pragma library
 
-let nextVoiceId=0
+let voiceId=0
 
 function GetNextVoiceId() {
-    nextVoiceId++
-    return nextVoiceId
+    voiceId++
+    return voiceId
 }
