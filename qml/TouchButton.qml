@@ -16,7 +16,7 @@ Item {
     onHoldKeysChanged: function() {
         if(root.holdKeys==false && root.buttonPressed==true) {
             root.buttonPressed=false
-            root.synthesizer.noteOff(root.note)
+            root.synthesizer.noteOff(root.voiceId)
         }
     }
 
@@ -44,7 +44,13 @@ Item {
 
         onPressed: function(touchPoints) {
             // return if already pressed
-            if(root.buttonPressed) { return }
+            if(root.buttonPressed) {
+                if(root.holdKeys) {
+                    root.buttonPressed=false
+                    root.synthesizer.noteOff(root.voiceId)
+                }
+                return
+            }
 
             root.buttonPressed=true
             if(root.buttonPressed) {
