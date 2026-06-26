@@ -39,11 +39,47 @@ Item {
         }
     }
 
+    property double touchIndicatorSize: width / 1.5
+    property double touchIndicatorRadius: touchIndicatorSize / 2
+
+    Rectangle {
+        visible: root.buttonPressed
+        width: touchIndicatorSize
+        height: touchIndicatorSize
+        radius: touchIndicatorRadius
+        x: touchPoint1.startX - touchIndicatorRadius
+        y: touchPoint1.startY - touchIndicatorRadius
+        color: "orange"
+    }
+
+    Rectangle {
+        visible: root.buttonPressed
+        width: touchIndicatorSize
+        height: touchIndicatorSize
+        radius: touchIndicatorRadius
+        x: touchPoint1.x - touchIndicatorRadius
+        y: touchPoint1.y - touchIndicatorRadius
+        color: "yellow"
+    }
+
+    Rectangle {
+        visible: root.buttonPressed
+        width: Math.abs(touchPoint1.startX-touchPoint1.x)
+        height: Math.abs(touchPoint1.startY-touchPoint1.y)
+        x: Math.min(touchPoint1.x,touchPoint1.startX)
+        y: Math.min(touchPoint1.y,touchPoint1.startY)
+        color: "violet"
+    }
+
     MultiPointTouchArea {
         anchors.fill: parent
 
+        touchPoints: [
+            TouchPoint {id:touchPoint1}
+        ]
+
         onPressed: function(touchPoints) {
-            // return if already pressed
+            // already pressed toggle in hod mode and return
             if(root.buttonPressed) {
                 if(root.holdKeys) {
                     root.buttonPressed=false
@@ -57,6 +93,17 @@ Item {
                 root.voiceId=VoiceControl.GetNextVoiceId()
                 root.synthesizer.noteOn(root.voiceId,root.frequency)
             }
+        }
+
+        onUpdated: function(touchPoints) {
+            /*
+            console.log("onUpdate")
+            touchPoints.forEach((touchPoint) => {
+                console.log(JSON.stringify(touchPoint))
+            })
+            */
+            let f = Math.max( 10, root.frequency+(touchPoint1.startY-touchPoint1.y) )
+            root.synthesizer.pitch(root.voiceId,f)
         }
 
         onCanceled: function(touchPoints) {
