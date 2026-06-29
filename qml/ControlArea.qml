@@ -8,7 +8,7 @@ Rectangle {
     id: controlArea
     property string text: "Area"
 
-    width: 420
+    width: 620
     height: 50
 
     Text {

@@ -48,12 +48,16 @@ qt_add_qml_module(appmisuco3
         qml/ControlButton.qml
         qml/ControlDial.qml
         qml/ControlSlider.qml
+        qml/ControlSliderRange.qml
+        qml/ControlSliderTuning.qml
         qml/PlayArea.qml
         qml/TouchButton.qml
         qml/Parameters.ui.qml
         qml/Parameters_Mod.ui.qml
         qml/Parameters_Osc.ui.qml
         qml/Parameters_Osc_2.ui.qml
+        qml/ScaleConfig.ui.qml
+        qml/Tuning.ui.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

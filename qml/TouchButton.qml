@@ -10,8 +10,15 @@ Item {
     property double frequency: 1000
     property int voiceId: 0
     property int note: 65
+    property int noteSymbol: 0
+    property int tuning: 65
     property var synthesizer
     property bool holdKeys: false
+
+    onTuningChanged: function() {
+        console.log("onTuningChanged "+tuning)
+        frequency =  6.875 * Math.pow( 2 , ((note + 3) * 100 + tuning) / 1200)
+    }
 
     onHoldKeysChanged: function() {
         if(root.holdKeys==false && root.buttonPressed==true) {
@@ -37,6 +44,13 @@ Item {
             offset: root.buttonPressed ? -2 : 2
             radius: 10
         }
+    }
+
+    Text {
+        anchors.fill: parent
+        verticalAlignment: Qt.AlignVCenter
+        horizontalAlignment: Qt.AlignHCenter
+        text: root.note+"\n"+root.frequency.toFixed(2)
     }
 
     property double touchIndicatorSize: width / 1.5

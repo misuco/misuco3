@@ -10,11 +10,17 @@ Button {
     id: controlButton
     width: 50
     height: 50
+    property color bgColor: "White"
+    property color fgColor: "Black"
+    property int index: 0
+
+    palette.buttonText: fgColor
 
     Rectangle {
         id: rect
         anchors.fill: parent
         radius: 10
+        color: controlButton.bgColor
     }
 
     property bool selected: false

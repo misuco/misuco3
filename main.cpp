@@ -9,6 +9,9 @@
 
 int main(int argc, char *argv[])
 {
+    // Styles: Basic | Fusion | Material | Universal
+    qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
+
     QGuiApplication app(argc, argv);
 
     MobileSynth synth;
