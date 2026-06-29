@@ -13,7 +13,7 @@ Item {
     ControlArea {
         x:10
         y:10
-        height: 320
+        height: 310
         text: "Tuning"
 
         ComboBox {

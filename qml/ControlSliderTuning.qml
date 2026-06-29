@@ -9,13 +9,23 @@ Slider {
     property var controller
     property int index
     x:10
-    y:70
-    height: 240
-    from: -120
-    to: 120
+    y:80
+    height: 201
+    from: -100
+    to: 100
     value: 0
+    snapMode: Slider.SnapAlways
+    stepSize: 1
     orientation: Qt.Vertical
     onValueChanged: function() {
         controller.tuningUpdated(index,value)
+    }
+
+    Text {
+        anchors.top: parent.bottom
+        width: parent.width
+        height: 10
+        text: parent.value
+        horizontalAlignment: Qt.AlignHCenter
     }
 }
