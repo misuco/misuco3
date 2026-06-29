@@ -15,9 +15,17 @@ Item {
     property var synthesizer
     property bool holdKeys: false
 
+    function pitch() {
+        let f = Math.max( 10, root.frequency+(touchPoint1.startY-touchPoint1.y) )
+        root.synthesizer.pitch(root.voiceId,f)
+    }
+
     onTuningChanged: function() {
         console.log("onTuningChanged "+tuning)
         frequency =  6.875 * Math.pow( 2 , ((note + 3) * 100 + tuning) / 1200)
+        if(root.buttonPressed) {
+            root.pitch()
+        }
     }
 
     onHoldKeysChanged: function() {
@@ -110,14 +118,7 @@ Item {
         }
 
         onUpdated: function(touchPoints) {
-            /*
-            console.log("onUpdate")
-            touchPoints.forEach((touchPoint) => {
-                console.log(JSON.stringify(touchPoint))
-            })
-            */
-            let f = Math.max( 10, root.frequency+(touchPoint1.startY-touchPoint1.y) )
-            root.synthesizer.pitch(root.voiceId,f)
+            root.pitch()
         }
 
         onCanceled: function(touchPoints) {
