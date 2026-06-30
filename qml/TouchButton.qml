@@ -4,8 +4,13 @@
 
 import QtQuick 2.12
 import "VoiceControl.js" as VoiceControl
+import "ColorPalette.js" as Palette
 
 Item {
+    id: root
+    width: 200
+    height: 200
+
     property bool buttonPressed: false
     property double frequency: 1000
     property int voiceId: 0
@@ -14,6 +19,7 @@ Item {
     property int tuning: 65
     property var synthesizer
     property bool holdKeys: false
+    property int palette: 1
 
     function pitch() {
         let f = Math.max( 10, root.frequency+(touchPoint1.startY-touchPoint1.y) )
@@ -35,14 +41,11 @@ Item {
         }
     }
 
-    id: root
-    width: 200
-    height: 200
-
     Rectangle {
         anchors.fill: parent
 
-        gradient: root.buttonPressed ? "LandingAircraft" : "AboveTheSky"
+        //gradient: root.buttonPressed ? "LandingAircraft" : "AboveTheSky"
+        color: Palette.bg(root.palette,root.noteSymbol,root.buttonPressed)
 
         radius: 20
 

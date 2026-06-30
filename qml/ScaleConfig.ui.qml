@@ -4,22 +4,17 @@
 
 import QtQuick 2.12
 import QtQuick.Controls
+import "ColorPalette.js" as Palette
 
 Item {
     id: root
 
-    property color bgHalfToneActive: "#00AA00"
-    property color bgHalfTone:       "#000000"
-    property color fgHalfTone:       "#FFFFFF"
-    property color bgFullToneActive: "#AAFFAA"
-    property color bgFullTone:       "#FFFFFF"
-    property color fgFullTone:       "#000000"
-
-    //property string baseNote: "C"
     property int baseNoteIndex: 0
     property var binaryScale: [true,false,false,false,false,false,false,false,false,false,false,false]
     property int lowOctave: 0
     property int highOctave: 9
+
+    property int palette: 1
 
     signal scaleModelUpdated(var m)
 
@@ -64,8 +59,8 @@ Item {
             text: "C"
             index: 0
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -75,8 +70,8 @@ Item {
             text: "C#"
             index: 1
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -86,8 +81,8 @@ Item {
             text: "D"
             index: 2
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -97,8 +92,8 @@ Item {
             text: "D#"
             index: 3
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -108,8 +103,8 @@ Item {
             text: "E"
             index: 4
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -119,8 +114,8 @@ Item {
             text: "F"
             index: 5
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -130,8 +125,8 @@ Item {
             text: "F#"
             index: 6
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -141,8 +136,8 @@ Item {
             text: "G"
             index: 7
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -152,8 +147,8 @@ Item {
             text: "G#"
             index: 8
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -163,8 +158,8 @@ Item {
             text: "A"
             index: 9
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -174,8 +169,8 @@ Item {
             text: "A#"
             index: 10
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
 
@@ -185,8 +180,8 @@ Item {
             text: "B"
             index: 11
             selected: index===root.baseNoteIndex
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: baseButtonPressed(this)
         }
     }
@@ -209,8 +204,8 @@ Item {
             text: "I"
             index: 0
             selected: true
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             //onPressed: scaleButtonPressed(this)
         }
 
@@ -219,8 +214,8 @@ Item {
             y: 70
             text: "ii"
             index: 1
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -229,8 +224,8 @@ Item {
             y: 70
             text: "II"
             index: 2
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -239,8 +234,8 @@ Item {
             y: 70
             text: "iii"
             index: 3
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -249,8 +244,8 @@ Item {
             y: 70
             text: "III"
             index: 4
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -259,8 +254,8 @@ Item {
             y: 70
             text: "IV"
             index: 5
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -269,8 +264,8 @@ Item {
             y: 70
             text: "v"
             index: 6
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -279,8 +274,8 @@ Item {
             y: 70
             text: "V"
             index: 7
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -289,8 +284,8 @@ Item {
             y: 70
             text: "vi"
             index: 8
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -299,8 +294,8 @@ Item {
             y: 70
             text: "VI"
             index: 9
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -309,8 +304,8 @@ Item {
             y: 70
             text: "vii"
             index: 10
-            bgColor: selected ? bgHalfToneActive : bgHalfTone
-            fgColor: fgHalfTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
 
@@ -319,8 +314,8 @@ Item {
             y: 70
             text: "VII"
             index: 11
-            bgColor: selected ? bgFullToneActive : bgFullTone
-            fgColor: fgFullTone
+            bgColor: Palette.bg(root.palette,index,selected)
+            fgColor: Palette.fg(root.palette,index)
             onPressed: scaleButtonPressed(this)
         }
     }

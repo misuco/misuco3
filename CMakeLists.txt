@@ -43,6 +43,7 @@ qt_add_qml_module(appmisuco3
     QML_FILES
         qml/Main.qml
         qml/VoiceControl.js
+        qml/ColorPalette.js
         qml/Emboss.qml
         qml/ControlArea.qml
         qml/ControlButton.qml
