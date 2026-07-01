@@ -60,7 +60,7 @@ Item {
         anchors.fill: parent
         source: rect
         offset: root.buttonPressed ? -2 : 2
-        radius: 20
+        radius: 15
     }
 
     Text {

@@ -118,6 +118,23 @@ Window {
                 console.log("arpSwitch " + checked)
             }
         }
+
+        Rectangle {
+            x:250
+            y:10
+            width: 200 * root.synthesizer.peak
+            height: 50
+            color: "Green"
+        }
+
+        Rectangle {
+            visible: root.synthesizer.clip
+            x:450
+            y:10
+            width: 50
+            height: 50
+            color: "Red"
+        }
     }
 
     SwipeView {
