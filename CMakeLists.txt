@@ -53,6 +53,7 @@ qt_add_qml_module(appmisuco3
         qml/ControlSliderTuning.qml
         qml/PlayArea.qml
         qml/TouchButton.qml
+        qml/AudioDevice.ui.qml
         qml/Parameters.ui.qml
         qml/Parameters_Mod.ui.qml
         qml/Parameters_Osc.ui.qml

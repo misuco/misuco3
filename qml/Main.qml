@@ -134,6 +134,14 @@ Window {
             width: 50
             height: 50
             color: "Red"
+
+            Text {
+                anchors.fill: parent
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                text: root.synthesizer.clipLen
+                color: "White"
+            }
         }
     }
 
@@ -145,6 +153,8 @@ Window {
         currentIndex: 0
 
         interactive: true
+
+        AudioDevice {}
 
         ScaleConfig {
             palette: root.palette
