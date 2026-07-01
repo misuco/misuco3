@@ -41,20 +41,26 @@ Item {
         }
     }
 
+    onButtonPressedChanged: function() {
+        console.log("ButtonPressed "+root.noteSymbol+" "+root.buttonPressed)
+    }
+
     Rectangle {
         anchors.fill: parent
+        id: rect
 
         //gradient: root.buttonPressed ? "LandingAircraft" : "AboveTheSky"
         color: Palette.bg(root.palette,root.noteSymbol,root.buttonPressed)
 
         radius: 20
 
-        Emboss {
-            anchors.fill: parent
-            source: parent
-            offset: root.buttonPressed ? -2 : 2
-            radius: 10
-        }
+    }
+
+    Emboss {
+        anchors.fill: parent
+        source: rect
+        offset: root.buttonPressed ? -2 : 2
+        radius: 20
     }
 
     Text {

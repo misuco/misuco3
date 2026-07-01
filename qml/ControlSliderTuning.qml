@@ -28,11 +28,21 @@ Slider {
         color: Palette.bg(palette,index,true)
     }
 
+    Rectangle {
+        anchors.top: parent.bottom
+        anchors.topMargin: 2
+        width: parent.width
+        height: 20
+        color: Palette.bg(palette,index,true)
+    }
+
     Text {
         anchors.top: parent.bottom
+        anchors.topMargin: 2
         width: parent.width
-        height: 10
+        height: 20
         text: parent.value
         horizontalAlignment: Qt.AlignHCenter
+        color: Palette.fg(palette,index)
     }
 }

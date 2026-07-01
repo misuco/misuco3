@@ -15,11 +15,11 @@ Window {
     width: 1280
     height: 768
     title: qsTr("Emboss")
-    //color: "lightsteelblue"
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
     property var synthesizer: synth
+    property int palette: 1
 
     // The tuning model is realized as separate properties to ensure update on value change
     property var tuningModel0: 0
@@ -68,6 +68,7 @@ Window {
             voiceId: index
             note: modelData.note
             noteSymbol: modelData.note%12
+            palette: root.palette
 
             tuning: noteSymbol===0 ? root.tuningModel0 :
                     noteSymbol===1 ? root.tuningModel1 :
@@ -129,7 +130,7 @@ Window {
         interactive: true
 
         ScaleConfig {
-            id: scaleConfig
+            palette: root.palette
             Connections {
                 function onScaleModelUpdated(m) {
                     console.log("onScaleModelUpdated:" + JSON.stringify(m))
@@ -139,6 +140,7 @@ Window {
         }
 
         Tuning {
+            palette: root.palette
             Connections {
                 function onTuningUpdated(i,t) {
                     console.log("onTuningUpdated:" + i + " " + t)
