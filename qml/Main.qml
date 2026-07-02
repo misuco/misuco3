@@ -14,7 +14,7 @@ Window {
     visible: true
     width: 1280
     height: 768
-    title: qsTr("Emboss")
+    title: qsTr("MISUCO3")
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
@@ -22,18 +22,18 @@ Window {
     property int palette: 1
 
     // The tuning model is realized as separate properties to ensure update on value change
-    property var tuningModel0: 0
-    property var tuningModel1: 0
-    property var tuningModel2: 0
-    property var tuningModel3: 0
-    property var tuningModel4: 0
-    property var tuningModel5: 0
-    property var tuningModel6: 0
-    property var tuningModel7: 0
-    property var tuningModel8: 0
-    property var tuningModel9: 0
-    property var tuningModel10: 0
-    property var tuningModel11: 0
+    property int tuningModel0: 0
+    property int tuningModel1: 0
+    property int tuningModel2: 0
+    property int tuningModel3: 0
+    property int tuningModel4: 0
+    property int tuningModel5: 0
+    property int tuningModel6: 0
+    property int tuningModel7: 0
+    property int tuningModel8: 0
+    property int tuningModel9: 0
+    property int tuningModel10: 0
+    property int tuningModel11: 0
 
     property var scaleModel: [
         {

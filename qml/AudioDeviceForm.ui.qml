@@ -8,6 +8,7 @@ import QtQuick.Controls
 Item {
     id: root
     property var synthesizer: synth
+    property alias deviceSelect: deviceSelect
 
     ControlArea {
         x:10
@@ -25,6 +26,13 @@ Item {
             x:200
             y:20
             model: ["512", "1024"]
+        }
+
+        ComboBox {
+            id: deviceSelect
+            x:400
+            y:20
+            model: synth.deviceList
         }
 
         Text {
