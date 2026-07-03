@@ -27,7 +27,6 @@ Item {
     }
 
     onTuningChanged: function() {
-        console.log("onTuningChanged "+tuning)
         frequency =  6.875 * Math.pow( 2 , ((note + 3) * 100 + tuning) / 1200)
         if(root.buttonPressed) {
             root.pitch()
