@@ -9,6 +9,7 @@ Item {
     id: root
     property var synthesizer: synth
     property alias deviceSelect: deviceSelect
+    property alias modeSelect: modeSelect
 
     ControlArea {
         x:10
@@ -17,6 +18,7 @@ Item {
         text: "Audio Device"
 
         ComboBox {
+            id: modeSelect
             x:10
             y:20
             model: ["Push", "Pull"]
@@ -42,7 +44,7 @@ Item {
         }
 
         Text {
-            x:120
+            x:160
             y:80
             text: synth.readDataLen
         }
@@ -54,7 +56,7 @@ Item {
         }
 
         Text {
-            x:120
+            x:160
             y:100
             text: synth.sampleRate
         }
@@ -66,7 +68,7 @@ Item {
         }
 
         Text {
-            x:120
+            x:160
             y:120
             text: synth.channelBytes * 8
         }
@@ -78,7 +80,7 @@ Item {
         }
 
         Text {
-            x:120
+            x:160
             y:140
             text: synth.channelCount
         }
@@ -91,7 +93,7 @@ Item {
 
         Text {
             property int format: synth.sampleFormat
-            x:120
+            x:160
             y:160
             text:   format === 1 ? "UInt8" :
                     format === 2 ? "Int16" :
@@ -106,9 +108,36 @@ Item {
         }
 
         Text {
-            x:120
+            x:160
             y:180
             text: synth.sampleLittleEndian ? "Little" : "Big"
+        }
+
+        Text {
+            x:10
+            y:200
+            text: "Mode:"
+        }
+
+        Text {
+            x:160
+            y:200
+            text: synth.pullMode ? "Pull" : "Push"
+        }
+
+        Text {
+            x:10
+            y:220
+            text: "State:"
+        }
+
+        Text {
+            x:160
+            y:220
+            text: synth.audioState===0 ? "Active" :
+                  synth.audioState===1 ? "Suspended" :
+                  synth.audioState===2 ? "Stopped" :
+                  synth.audioState===3 ? "Idle" : "Unknown"
         }
     }
 }
