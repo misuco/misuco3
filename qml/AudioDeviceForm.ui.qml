@@ -22,7 +22,7 @@ Item {
             id: modeSelect
             x:10
             y:20
-            model: ["Push", "Pull"]
+            model: ["Pull", "Push"]
         }
 
         ComboBox {

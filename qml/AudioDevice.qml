@@ -5,18 +5,36 @@
 import QtQuick 2.12
 
 AudioDeviceForm {
-    deviceSelect.onCurrentIndexChanged: function() {synth.deviceChanged(deviceSelect.currentIndex)}
+    property bool audioInitialized: false
+
+    Component.onCompleted: function() {
+        console.log("synth.audioDeviceIndex: " + synth.audioDeviceIndex)
+        deviceSelect.currentIndex=synth.audioDeviceIndex
+        bufferSizeSelect.currentIndex=Math.sqrt(synth.bufferSize/512)-1
+        audioInitialized = true;
+    }
+
+    deviceSelect.onCurrentIndexChanged: function() {
+        if(audioInitialized) {
+            synth.deviceChanged(deviceSelect.currentIndex)
+        }
+    }
+
     modeSelect.onCurrentIndexChanged: function() {
-        if(modeSelect.currentIndex===0) {
-            synth.push_mode()
-        } else {
-            synth.pull_mode()
+        if(audioInitialized) {
+            if(modeSelect.currentIndex===0) {
+                synth.pull_mode()
+            } else {
+                synth.push_mode()
+            }
         }
     }
     bufferSizeSelect.onCurrentIndexChanged: function() {
-        let v=512*Math.pow(2,bufferSizeSelect.currentIndex);
-        console.log("buffer size "+v)
-        synth.set_buffer_size(v)
+        if(audioInitialized) {
+            let v=512*Math.pow(2,bufferSizeSelect.currentIndex);
+            console.log("buffer size "+v)
+            synth.set_buffer_size(v)
+        }
     }
 }
 
