@@ -153,5 +153,29 @@ Item {
             y:240
             text: synth.bufferSize
         }
+
+        Text {
+            x:10
+            y:260
+            text: "Buffer frames:"
+        }
+
+        Text {
+            x:160
+            y:260
+            text: synth.bufferFrameCount
+        }
+
+        Text {
+            x:10
+            y:280
+            text: "Buffer free:"
+        }
+
+        Text {
+            x:160
+            y:280
+            text: synth.bufferBytesFree
+        }
     }
 }
