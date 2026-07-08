@@ -10,6 +10,7 @@ Item {
     property var synthesizer: synth
     property alias deviceSelect: deviceSelect
     property alias modeSelect: modeSelect
+    property alias bufferSizeSelect: bufferSizeSelect
 
     ControlArea {
         x:10
@@ -25,9 +26,10 @@ Item {
         }
 
         ComboBox {
+            id: bufferSizeSelect
             x:200
             y:20
-            model: ["512", "1024"]
+            model: ["512", "1024", "2048", "4096", "8192", "16384"]
         }
 
         ComboBox {
@@ -138,6 +140,18 @@ Item {
                   synth.audioState===1 ? "Suspended" :
                   synth.audioState===2 ? "Stopped" :
                   synth.audioState===3 ? "Idle" : "Unknown"
+        }
+
+        Text {
+            x:10
+            y:240
+            text: "Buffer size:"
+        }
+
+        Text {
+            x:160
+            y:240
+            text: synth.bufferSize
         }
     }
 }
