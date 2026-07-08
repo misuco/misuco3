@@ -21,20 +21,6 @@ Window {
     property var synthesizer: synth
     property int palette: 1
 
-    // The tuning model is realized as separate properties to ensure update on value change
-    property int tuningModel0: 0
-    property int tuningModel1: 0
-    property int tuningModel2: 0
-    property int tuningModel3: 0
-    property int tuningModel4: 0
-    property int tuningModel5: 0
-    property int tuningModel6: 0
-    property int tuningModel7: 0
-    property int tuningModel8: 0
-    property int tuningModel9: 0
-    property int tuningModel10: 0
-    property int tuningModel11: 0
-
     property var scaleModel: [
         {
             note: 25
@@ -54,6 +40,22 @@ Window {
         }
     }
 
+    Rectangle {
+        anchors.fill: parent
+        color: "#666"
+    }
+
+    PlayArea {
+        id: playArea
+        width: root.width
+        height: root.buttonHeight
+        y: root.height-root.buttonHeight
+        keys: root.scaleModel
+        synthesizer: root.synthesizer
+        palette: root.palette
+    }
+
+    /*
     Repeater {
         id: playArea
         model: root.scaleModel
@@ -86,6 +88,7 @@ Window {
             synthesizer: root.synthesizer
         }
     }
+    */
 
     ControlArea {
         x:10
@@ -173,40 +176,40 @@ Window {
                     console.log("onTuningUpdated:" + i + " " + t)
                     switch(i) {
                     case 1:
-                        root.tuningModel1 = t
+                        playArea.tuningModel1 = t
                         break
                     case 2:
-                        root.tuningModel2 = t
+                        playArea.tuningModel2 = t
                         break
                     case 3:
-                        root.tuningModel3 = t
+                        playArea.tuningModel3 = t
                         break
                     case 4:
-                        root.tuningModel4 = t
+                        playArea.tuningModel4 = t
                         break
                     case 5:
-                        root.tuningModel5 = t
+                        playArea.tuningModel5 = t
                         break
                     case 6:
-                        root.tuningModel6 = t
+                        playArea.tuningModel6 = t
                         break
                     case 7:
-                        root.tuningModel7 = t
+                        playArea.tuningModel7 = t
                         break
                     case 8:
-                        root.tuningModel8 = t
+                        playArea.tuningModel8 = t
                         break
                     case 9:
-                        root.tuningModel9 = t
+                        playArea.tuningModel9 = t
                         break
                     case 10:
-                        root.tuningModel10 = t
+                        playArea.tuningModel10 = t
                         break
                     case 11:
-                        root.tuningModel11 = t
+                        playArea.tuningModel11 = t
                         break
                     default:
-                        root.tuningModel0 = t
+                        playArea.tuningModel0 = t
                         break
                     }
 

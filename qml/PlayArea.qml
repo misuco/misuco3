@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import QtQuick 2.12
-//import QtQuick.Controls 2.12
+import "ColorPalette.js" as Palette
 
 pragma ComponentBehavior: Bound
 
@@ -20,82 +20,28 @@ Item {
     property var synthesizer
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
-    property var nextVid: 0
+    property int nextVid: 1
+    property int palette: 1
 
     property var keys: [
         {
-            i: 0,
-            note: 25,
-            f: 261.63,
-            pressed: 0
-        },
-        {
-            i: 1,
-            note: 26,
-            f: 277.18,
-            pressed: 0
-        },
-        {
-            i: 2,
-            note: 27,
-            f: 293.66,
-            pressed: 0
-        },
-        {
-            i: 3,
-            note: 28,
-            f: 311.13,
-            pressed: 0
-        },
-        {
-            i: 4,
-            note: 29,
-            f: 329.63,
-            pressed: 0
-        },
-        {
-            i: 5,
-            note: 30,
-            f: 349.23,
-            pressed: 0
-        },
-        {
-            i: 6,
-            note: 31,
-            f: 369.99,
-            pressed: 0
-        },
-        {
-            i: 7,
-            note: 32,
-            f: 392,
-            pressed: 0
-        },
-        {
-            i: 8,
-            note: 33,
-            f: 415.3,
-            pressed: 0
-        },
-        {
-            i: 9,
-            note: 34,
-            f: 440,
-            pressed: 0
-        },
-        {
-            i: 10,
-            note: 35,
-            f: 466.16,
-            pressed: 0
-        },
-        {
-            i: 11,
-            note: 36,
-            f: 493.88,
-            pressed: 0
+            note: 25
         }
     ]
+
+    // The tuning model is realized as separate properties to ensure update on value change
+    property int tuningModel0: 0
+    property int tuningModel1: 0
+    property int tuningModel2: 0
+    property int tuningModel3: 0
+    property int tuningModel4: 0
+    property int tuningModel5: 0
+    property int tuningModel6: 0
+    property int tuningModel7: 0
+    property int tuningModel8: 0
+    property int tuningModel9: 0
+    property int tuningModel10: 0
+    property int tuningModel11: 0
 
     property double keyWidth: root.width / root.keys.length
 
@@ -104,21 +50,50 @@ Item {
             id: keyRepeater
             model: root.keys
 
-            Rectangle {
+            Item {
                 id: key
                 required property int index
                 required property var modelData
-                property bool pressed: modelData.pressed
-                property double f: modelData.f
+                property int pressed: 0
+                property double f: 6.875 * Math.pow( 2 , ((modelData.note + 3) * 100 + tuning) / 1200)
+                property int note: modelData.note
+                property int noteSymbol: note%12
+
+                property int tuning: noteSymbol===0 ? root.tuningModel0 :
+                        noteSymbol===1 ? root.tuningModel1 :
+                        noteSymbol===2 ? root.tuningModel2 :
+                        noteSymbol===3 ? root.tuningModel3 :
+                        noteSymbol===4 ? root.tuningModel4 :
+                        noteSymbol===5 ? root.tuningModel5 :
+                        noteSymbol===6 ? root.tuningModel6 :
+                        noteSymbol===7 ? root.tuningModel7 :
+                        noteSymbol===8 ? root.tuningModel8 :
+                        noteSymbol===9 ? root.tuningModel9 :
+                        noteSymbol===10 ? root.tuningModel10 : root.tuningModel11
 
                 width: root.keyWidth
                 height: root.height
-                color: modelData.note%2===0 ?
-                           (pressed>0 ? "Red" : "Orange") :
-                           (pressed>0 ? "White" : "Gray")
+
+                Rectangle {
+                    id: rect
+                    anchors.fill: parent
+                    color: key.pressed>0 ? Palette.bg(root.palette,noteSymbol,true) :  Palette.bg(root.palette,noteSymbol,false)
+                    radius: 15
+                }
+
+                Emboss {
+                    anchors.fill: rect
+                    source: rect
+                    offset: pressed>0 ? -2 : 2
+                    radius: 15
+                }
 
                 Text {
-                    text: key.modelData.note
+                    anchors.fill: parent
+                    verticalAlignment: Qt.AlignVCenter
+                    horizontalAlignment: Qt.AlignHCenter
+                    text: key.note+"\n"+key.f.toFixed(2)
+                    color: Palette.fg(root.palette,noteSymbol)
                 }
             }
         }
@@ -146,10 +121,12 @@ Item {
             console.log("---------- onPressed -----------------")
             touchPoints.forEach((touchPoint) => {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
-                console.log("pressed " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
+                let frequency=keyRepeater.itemAt(keyIndex).f
+                console.log("pressed keyIndex: " + keyIndex + " pointId: " + touchPoint.pointId + " x: " + touchPoint.x + " y: " + touchPoint.y + " f: " + frequency)
+
                 touchMapKey.set(touchPoint.pointId,keyIndex)
                 keyRepeater.itemAt(keyIndex).pressed++
-                root.synthesizer.noteOn(nextVid,keyRepeater.itemAt(keyIndex).f);
+                root.synthesizer.noteOn(nextVid,frequency);
                 touchMapVid.set(touchPoint.pointId,nextVid)
                 nextVid++
             })
@@ -162,15 +139,20 @@ Item {
                 console.log("updated " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
                 let currentKeyIndex=touchMapKey.get(touchPoint.pointId)
                 let currentVid=touchMapVid.get(touchPoint.pointId)
-                if(currentKeyIndex!=keyIndex) {
+                if(currentKeyIndex!==keyIndex) {
                     keyRepeater.itemAt(currentKeyIndex).pressed--
                     keyRepeater.itemAt(keyIndex).pressed++
                     touchMapKey.set(touchPoint.pointId,keyIndex)
                     root.synthesizer.noteOff(currentVid);
-                    root.synthesizer.noteOn(nextVid,keyRepeater.itemAt(keyIndex).f);
+                    root.synthesizer.noteOn(nextVid,keyRepeater.itemAt(keyIndex).f)
                     touchMapVid.set(touchPoint.pointId,nextVid)
+                    currentVid=nextVid
                     nextVid++
                 }
+                let currentF=keyRepeater.itemAt(keyIndex).f
+                let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
+                root.synthesizer.pitch(currentVid,pitchedF)
+
             })
         }
 
@@ -198,21 +180,61 @@ Item {
     Repeater {
         model: touchArea.touchPoints
 
-        Rectangle {
-            id: touchRect
+        Item {
+            id: tpRoot
             required property var modelData
             property var tp: modelData
-            visible: modelData.pressed
-            x: modelData.x-50
-            y: modelData.y-50
-            radius: 50
-            width: 100
-            height: 100
-            color: "Yellow"
+            visible: tp.pressed
 
-            Text {
-                anchors.left: parent.right
-                text: touchRect.tp.pointId + "\nx:" + touchRect.tp.x + "\ny:" + touchRect.tp.y
+            property int lineWidth: 2
+            property int indicatorRadius: 50
+
+            Rectangle {
+                id: touchRect
+                x: tpRoot.tp.x-50
+                y: tpRoot.tp.y-50
+                radius: tpRoot.indicatorRadius
+                width: 100
+                height: 100
+                color: "Transparent"
+
+                border {
+                    width: tpRoot.lineWidth
+                    color: "Orange"
+                }
+
+                Text {
+                    anchors.left: parent.right
+                    text: tpRoot.tp.pointId + " x:" + tpRoot.tp.x.toFixed(0) + " y:" + tpRoot.tp.y.toFixed(0)
+                    color: "Orange"
+                }
+            }
+
+            Rectangle {
+                id: startYLine
+                x: 0
+                y: tpRoot.tp.startY
+                width: root.width
+                height: tpRoot.lineWidth
+                color: "Gray"
+            }
+
+            Rectangle {
+                id: yLineLeft
+                x: 0
+                y: tpRoot.tp.y
+                width: tpRoot.tp.x-tpRoot.indicatorRadius
+                height: tpRoot.lineWidth
+                color: "Orange"
+            }
+
+            Rectangle {
+                id: yLineRight
+                x: tpRoot.tp.x+tpRoot.indicatorRadius
+                y: tpRoot.tp.y
+                width: root.width-tpRoot.tp.x-tpRoot.indicatorRadius
+                height: tpRoot.lineWidth
+                color: "Orange"
             }
         }
     }
