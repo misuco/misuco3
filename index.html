@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISUCO3 - Microtonal Surface Controller</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- Top Control Bar -->
+            <div class="control-bar">
+                <div class="controls-left">
+                    <label class="switch">
+                        <input type="checkbox" id="holdSwitch">
+                        <span class="slider"></span>
+                        <span class="label">Hold</span>
+                    </label>
+                    <label class="switch">
+                        <input type="checkbox" id="arpSwitch">
+                        <span class="slider"></span>
+                        <span class="label">Arp</span>
+                    </label>
+                </div>
+                
+                <div class="controls-center">
+                    <div class="level-indicator">
+                        <div id="peakLevel" class="peak-bar"></div>
+                    </div>
+                    <div id="clipIndicator" class="clip-indicator" style="display: none;">
+                        <span id="clipCount">0</span>
+                    </div>
+                </div>
+
+                <div class="controls-right">
+                    <button id="masterGainBtn" class="param-btn">Master Gain</button>
+                    <input type="range" id="masterGain" min="0" max="1" step="0.01" value="0.7" class="slider-input">
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Play Area (Touch Keyboard) -->
+                <div class="play-area-container">
+                    <canvas id="playCanvas" class="play-area"></canvas>
+                    <div id="touchIndicators" class="touch-indicators"></div>
+                </div>
+
+                <!-- Configuration Panels (Tabs) -->
+                <div class="config-panels">
+                    <div class="panel-tabs">
+                        <button class="tab-button active" data-tab="audio-device">Audio</button>
+                        <button class="tab-button" data-tab="scale-config">Scale</button>
+                        <button class="tab-button" data-tab="tuning">Tuning</button>
+                        <button class="tab-button" data-tab="parameters">Parameters</button>
+                        <button class="tab-button" data-tab="oscillator">Oscillator</button>
+                        <button class="tab-button" data-tab="modulation">Modulation</button>
+                    </div>
+
+                    <!-- Audio Device Panel -->
+                    <div id="audio-device" class="panel active">
+                        <h3>Audio Output</h3>
+                        <div class="panel-content">
+                            <label>Output Device:
+                                <select id="audioOutput">
+                                    <option selected>Web Audio API (Default)</option>
+                                </select>
+                            </label>
+                            <label>Sample Rate: <span id="sampleRate">0</span> Hz</label>
+                            <label>Buffer Size: <span id="bufferSize">0</span> samples</label>
+                            <button id="audioToggle" class="btn-primary">Start Audio</button>
+                        </div>
+                    </div>
+
+                    <!-- Scale Configuration Panel -->
+                    <div id="scale-config" class="panel">
+                        <h3>Scale Configuration</h3>
+                        <div class="panel-content">
+                            <div class="scale-presets">
+                                <label>Preset:
+                                    <select id="scalePreset" onchange="window.app.setScalePreset(this.value)">
+                                        <option value="chromatic">Chromatic (12-tone)</option>
+                                        <option value="quarter-tone">Quarter-tone (24-tone)</option>
+                                        <option value="sixth-tone">Sixth-tone (18-tone)</option>
+                                        <option value="third-tone">Third-tone (36-tone)</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="scale-editor">
+                                <label>Scale Size:
+                                    <input type="number" id="scaleSize" min="1" max="128" value="12">
+                                </label>
+                                <label>Start Note:
+                                    <input type="number" id="startNote" min="0" max="127" value="25">
+                                </label>
+                                <div id="scaleNotes" class="scale-notes-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tuning Panel -->
+                    <div id="tuning" class="panel">
+                        <h3>Tuning System</h3>
+                        <div class="panel-content">
+                            <div class="tuning-controls">
+                                <label>Tuning for each note class (semitone offsets in cents):
+                                    <div id="tuningSliders" class="tuning-sliders-grid"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parameters Panel -->
+                    <div id="parameters" class="panel">
+                        <h3>Synthesizer Parameters</h3>
+                        <div class="panel-content">
+                            <div class="param-group">
+                                <label>Polyphony:
+                                    <input type="number" id="polyphony" min="1" max="64" value="16">
+                                </label>
+                                <label>Portamento Time:
+                                    <input type="range" id="portamento" min="0" max="1" step="0.01" value="0">
+                                    <span id="portamentoValue">0ms</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Oscillator Panel -->
+                    <div id="oscillator" class="panel">
+                        <h3>Oscillator</h3>
+                        <div class="panel-content">
+                            <div class="param-group">
+                                <label>Oscillator Type:
+                                    <select id="oscType">
+                                        <option value="sine">Sine</option>
+                                        <option value="square">Square</option>
+                                        <option value="sawtooth">Sawtooth</option>
+                                        <option value="triangle">Triangle</option>
+                                    </select>
+                                </label>
+                                <label>Detune (cents):
+                                    <input type="range" id="oscDetune" min="-100" max="100" step="1" value="0">
+                                    <span id="oscDetuneValue">0</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modulation Panel -->
+                    <div id="modulation" class="panel">
+                        <h3>Modulation</h3>
+                        <div class="panel-content">
+                            <div class="param-group">
+                                <label>Filter Type:
+                                    <select id="filterType">
+                                        <option value="lowpass">Low-pass</option>
+                                        <option value="highpass">High-pass</option>
+                                        <option value="bandpass">Band-pass</option>
+                                    </select>
+                                </label>
+                                <label>Cutoff Frequency:
+                                    <input type="range" id="filterCutoff" min="20" max="20000" step="1" value="10000">
+                                    <span id="filterCutoffValue">10000 Hz</span>
+                                </label>
+                                <label>Resonance:
+                                    <input type="range" id="filterQ" min="0" max="30" step="0.1" value="1">
+                                    <span id="filterQValue">1</span>
+                                </label>
+                                <label>Envelope Attack:
+                                    <input type="range" id="envAttack" min="0" max="2" step="0.01" value="0.01">
+                                    <span id="envAttackValue">10ms</span>
+                                </label>
+                                <label>Envelope Release:
+                                    <input type="range" id="envRelease" min="0" max="2" step="0.01" value="0.3">
+                                    <span id="envReleaseValue">300ms</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/synth-engine.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/touch-handler.js"></script>
+    <script src="js/color-palette.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
