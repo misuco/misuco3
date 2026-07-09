@@ -1,0 +1,515 @@
+/* ============================================================
+   MISUCO3 Web Version - Styles
+   Microtonal Surface Controller
+   ============================================================ */
+
+:root {
+    --bg-dark: #333333;
+    --bg-light: #666666;
+    --fg-light: #ffffff;
+    --fg-dark: #222222;
+    --accent-green: #00aa00;
+    --accent-red: #ff0000;
+    --accent-orange: #ff8800;
+    --accent-blue: #0088ff;
+    --border-color: #555555;
+    --transition-speed: 0.15s;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-size: 14px;
+    color: var(--fg-light);
+    background-color: var(--bg-dark);
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   CONTROL BAR
+   ============================================================ */
+
+.control-bar {
+    height: 70px;
+    background-color: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+.controls-left, .controls-center, .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Toggle Switch */
+.switch {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+}
+
+.switch input {
+    display: none;
+}
+
+.switch .slider {
+    width: 50px;
+    height: 30px;
+    background-color: var(--bg-dark);
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+    position: relative;
+    transition: background-color var(--transition-speed);
+}
+
+.switch input:checked + .slider {
+    background-color: var(--accent-green);
+}
+
+.switch .slider::before {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--fg-light);
+    top: 2px;
+    left: 2px;
+    transition: left var(--transition-speed);
+}
+
+.switch input:checked + .slider::before {
+    left: 22px;
+}
+
+.switch .label {
+    min-width: 50px;
+    font-weight: 600;
+}
+
+/* Level Indicators */
+.level-indicator {
+    width: 200px;
+    height: 50px;
+    background-color: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.peak-bar {
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--accent-green));
+    width: 0%;
+    transition: width 0.05s;
+}
+
+.clip-indicator {
+    width: 50px;
+    height: 50px;
+    background-color: var(--accent-red);
+    border: 2px solid var(--fg-light);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    animation: pulse-clip 0.2s;
+}
+
+@keyframes pulse-clip {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Controls Right */
+.controls-right {
+    gap: 10px;
+}
+
+.param-btn {
+    padding: 8px 15px;
+    background-color: var(--bg-dark);
+    color: var(--fg-light);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+}
+
+.param-btn:hover {
+    background-color: var(--border-color);
+}
+
+.slider-input {
+    width: 120px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.main-content {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+/* Play Area Container */
+.play-area-container {
+    flex: 2;
+    background-color: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.play-area {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    display: block;
+    touch-action: none;
+}
+
+.touch-indicators {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.touch-indicator {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--accent-orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-orange);
+    font-weight: bold;
+    font-size: 12px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+}
+
+.touch-line {
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Config Panels */
+.config-panels {
+    flex: 1;
+    background-color: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-tabs {
+    display: flex;
+    background-color: var(--bg-light);
+    border-bottom: 2px solid var(--border-color);
+    overflow-x: auto;
+}
+
+.tab-button {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 12px;
+    background-color: var(--bg-light);
+    color: var(--fg-light);
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all var(--transition-speed);
+    white-space: nowrap;
+}
+
+.tab-button:hover {
+    background-color: var(--border-color);
+}
+
+.tab-button.active {
+    background-color: var(--bg-dark);
+    border-bottom-color: var(--accent-green);
+}
+
+.panel {
+    flex: 1;
+    overflow-y: auto;
+    display: none;
+    padding: 12px;
+}
+
+.panel.active {
+    display: block;
+}
+
+.panel h3 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: var(--accent-green);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Panel Specific Styles */
+.param-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-weight: 500;
+}
+
+label select,
+label input[type="number"],
+label input[type="range"],
+label input[type="text"] {
+    padding: 6px 8px;
+    background-color: var(--bg-dark);
+    color: var(--fg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+label input[type="range"] {
+    cursor: pointer;
+}
+
+label input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+}
+
+label input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+}
+
+/* Scale Configuration */
+.scale-presets {
+    padding: 10px;
+    background-color: var(--bg-light);
+    border-radius: 3px;
+}
+
+.scale-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.scale-notes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.scale-note-item {
+    padding: 6px;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    text-align: center;
+    font-size: 11px;
+}
+
+.scale-note-item.active {
+    background-color: var(--accent-green);
+    color: var(--bg-dark);
+    font-weight: bold;
+}
+
+/* Tuning Sliders */
+.tuning-sliders-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.tuning-slider-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tuning-slider-item label {
+    font-size: 11px;
+}
+
+.tuning-slider-item input[type="range"] {
+    width: 100%;
+}
+
+.tuning-slider-item span {
+    font-size: 11px;
+    color: var(--accent-green);
+    text-align: center;
+}
+
+/* Buttons */
+.btn-primary {
+    padding: 10px 20px;
+    background-color: var(--accent-green);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.btn-primary:hover {
+    background-color: #00dd00;
+    transform: scale(1.05);
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+.btn-primary.recording {
+    background-color: var(--accent-red);
+}
+
+/* ============================================================
+   SCROLLBAR STYLING
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-green);
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+@media (max-width: 1400px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .play-area-container {
+        flex: 1;
+    }
+
+    .config-panels {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .control-bar {
+        flex-wrap: wrap;
+        height: auto;
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .controls-left, .controls-center, .controls-right {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .main-content {
+        padding: 5px;
+        gap: 5px;
+    }
+
+    .tab-button {
+        min-width: 80px;
+        font-size: 11px;
+        padding: 8px 8px;
+    }
+
+    .tuning-sliders-grid {
+        grid-template-columns: 1fr;
+    }
+}
