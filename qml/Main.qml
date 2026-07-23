@@ -124,18 +124,18 @@ Window {
 
         Rectangle {
             x:250
-            y:10
+            y:2
             width: 200 * root.synthesizer.peak
-            height: 50
+            height: 15
             color: "Green"
         }
 
         Rectangle {
             visible: root.synthesizer.clip
             x:450
-            y:10
+            y:2
             width: 50
-            height: 50
+            height: 15
             color: "Red"
 
             Text {
@@ -146,14 +146,31 @@ Window {
                 color: "White"
             }
         }
+
+        // TabBar for clicking to navigate pages
+        TabBar {
+            x:250
+            y:20
+
+            id: tabBar
+            width: parent.width - 260
+            currentIndex: swipeView.currentIndex
+
+            TabButton { text: "P1" }
+            TabButton { text: "P2" }
+            TabButton { text: "P3" }
+            TabButton { text: "P4" }
+            TabButton { text: "P5" }
+            TabButton { text: "P6" }
+        }
     }
 
     SwipeView {
-        id: gridView
+        id: swipeView
         y: 80
         width: 640
         height: 375
-        currentIndex: 0
+        currentIndex: tabBar.currentIndex
 
         interactive: true
 
