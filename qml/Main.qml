@@ -18,7 +18,6 @@ Window {
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
-    //property var synthesizer: synth
     property int palette: 1
 
     property var scaleModel: [
@@ -33,15 +32,6 @@ Window {
         console.log("Main.qml Component.onCompleted")
     }
 
-    /*
-    onSynthesizerChanged: {
-        console.log("Main.qml onSynthesizerChanged")
-        if(synthesizer!==undefined) {
-            console.log("Main.qml sythesizer is defined")
-        }
-    }
-    */
-
     Rectangle {
         anchors.fill: parent
         color: "#666"
@@ -53,45 +43,10 @@ Window {
         height: root.buttonHeight
         y: root.height-root.buttonHeight
         keys: root.scaleModel
-        synthesizer: synthContext //root.synthesizer
+        synthesizer: synthContext
         sender: senderContext
         palette: root.palette
     }
-
-    /*
-    Repeater {
-        id: playArea
-        model: root.scaleModel
-        delegate: TouchButton {
-            required property int index
-            required property var modelData
-            x: index*root.buttonWidth
-            y: root.height-root.buttonHeight
-            width: root.buttonWidth
-            height: root.buttonHeight
-            frequency: 0
-            voiceId: index
-            note: modelData.note
-            noteSymbol: modelData.note%12
-            palette: root.palette
-
-            tuning: noteSymbol===0 ? root.tuningModel0 :
-                    noteSymbol===1 ? root.tuningModel1 :
-                    noteSymbol===2 ? root.tuningModel2 :
-                    noteSymbol===3 ? root.tuningModel3 :
-                    noteSymbol===4 ? root.tuningModel4 :
-                    noteSymbol===5 ? root.tuningModel5 :
-                    noteSymbol===6 ? root.tuningModel6 :
-                    noteSymbol===7 ? root.tuningModel7 :
-                    noteSymbol===8 ? root.tuningModel8 :
-                    noteSymbol===9 ? root.tuningModel9 :
-                    noteSymbol===10 ? root.tuningModel10 : root.tuningModel11
-
-            holdKeys: root.holdKeys
-            synthesizer: root.synthesizer
-        }
-    }
-    */
 
     ControlArea {
         x:10
