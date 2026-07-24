@@ -18,7 +18,7 @@ Window {
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
-    property var synthesizer: synth
+    //property var synthesizer: synth
     property int palette: 1
 
     property var scaleModel: [
@@ -33,12 +33,14 @@ Window {
         console.log("Main.qml Component.onCompleted")
     }
 
+    /*
     onSynthesizerChanged: {
         console.log("Main.qml onSynthesizerChanged")
         if(synthesizer!==undefined) {
             console.log("Main.qml sythesizer is defined")
         }
     }
+    */
 
     Rectangle {
         anchors.fill: parent
@@ -51,7 +53,8 @@ Window {
         height: root.buttonHeight
         y: root.height-root.buttonHeight
         keys: root.scaleModel
-        synthesizer: root.synthesizer
+        synthesizer: synthContext //root.synthesizer
+        sender: senderContext
         palette: root.palette
     }
 
@@ -117,7 +120,7 @@ Window {
             height: 50
             text: qsTr("Arp")
             onCheckedChanged: function() {
-                root.synthesizer.set_arpeggio_enabled(checked)
+                synthContext.set_arpeggio_enabled(checked)
                 console.log("arpSwitch " + checked)
             }
         }
@@ -125,13 +128,13 @@ Window {
         Rectangle {
             x:250
             y:2
-            width: 200 * root.synthesizer.peak
+            width: 200 * synthContext.peak
             height: 15
             color: "Green"
         }
 
         Rectangle {
-            visible: root.synthesizer.clip
+            visible: synthContext.clip
             x:450
             y:2
             width: 50
@@ -142,7 +145,7 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
-                text: root.synthesizer.clipLen
+                text: synthContext.clipLen
                 color: "White"
             }
         }
@@ -174,7 +177,9 @@ Window {
 
         interactive: true
 
-        AudioDevice {}
+        AudioDevice {
+            synthesizer: synthContext
+        }
 
         ScaleConfig {
             palette: root.palette
@@ -234,12 +239,20 @@ Window {
             }
         }
 
-        Parameters {}
+        Parameters {
+            synthesizer: synthContext
+        }
 
-        Parameters_Osc {}
+        Parameters_Osc {
+            synthesizer: synthContext
+        }
 
-        Parameters_Osc_2 {}
+        Parameters_Osc_2 {
+            synthesizer: synthContext
+        }
 
-        Parameters_Mod {}
+        Parameters_Mod {
+            synthesizer: synthContext
+        }
     }
 }

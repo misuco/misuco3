@@ -8,24 +8,24 @@ AudioDeviceForm {
     property bool audioInitialized: false
 
     Component.onCompleted: function() {
-        console.log("synth.audioDeviceIndex: " + synth.audioDeviceIndex)
-        deviceSelect.currentIndex=synth.audioDeviceIndex
-        bufferSizeSelect.currentIndex=Math.sqrt(synth.bufferSize/512)-1
+        console.log("synthContext.audioDeviceIndex: " + synthContext.audioDeviceIndex)
+        deviceSelect.currentIndex=synthContext.audioDeviceIndex
+        bufferSizeSelect.currentIndex=Math.sqrt(synthContext.bufferSize/512)-1
         audioInitialized = true;
     }
 
     deviceSelect.onCurrentIndexChanged: function() {
         if(audioInitialized) {
-            synth.deviceChanged(deviceSelect.currentIndex)
+            synthContext.deviceChanged(deviceSelect.currentIndex)
         }
     }
 
     modeSelect.onCurrentIndexChanged: function() {
         if(audioInitialized) {
             if(modeSelect.currentIndex===0) {
-                synth.pull_mode()
+                synthContext.pull_mode()
             } else {
-                synth.push_mode()
+                synthContext.push_mode()
             }
         }
     }
@@ -33,7 +33,7 @@ AudioDeviceForm {
         if(audioInitialized) {
             let v=512*Math.pow(2,bufferSizeSelect.currentIndex);
             console.log("buffer size "+v)
-            synth.set_buffer_size(v)
+            synthContext.set_buffer_size(v)
         }
     }
 }

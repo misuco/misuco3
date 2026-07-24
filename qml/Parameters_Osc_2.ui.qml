@@ -6,7 +6,7 @@ import QtQuick 2.12
 
 Item {
     id: root
-    property var synthesizer: synth
+    required property var synthesizer
 
     ControlArea {
         x:10

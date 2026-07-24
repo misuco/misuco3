@@ -17,7 +17,9 @@ Item {
     property int notePerScale: 8
     */
 
-    property var synthesizer
+    required property var synthesizer
+    required property var sender
+
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
     property int nextVid: 1
@@ -126,7 +128,7 @@ Item {
 
                 touchMapKey.set(touchPoint.pointId,keyIndex)
                 keyRepeater.itemAt(keyIndex).pressed++
-                root.synthesizer.noteOn(nextVid,frequency);
+                root.sender.noteOn(frequency,0,0,nextVid);
                 touchMapVid.set(touchPoint.pointId,nextVid)
                 nextVid++
             })
@@ -139,19 +141,19 @@ Item {
                 console.log("updated " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
                 let currentKeyIndex=touchMapKey.get(touchPoint.pointId)
                 let currentVid=touchMapVid.get(touchPoint.pointId)
+                let currentF = keyRepeater.itemAt(keyIndex).f;
                 if(currentKeyIndex!==keyIndex) {
                     keyRepeater.itemAt(currentKeyIndex).pressed--
                     keyRepeater.itemAt(keyIndex).pressed++
                     touchMapKey.set(touchPoint.pointId,keyIndex)
-                    root.synthesizer.noteOff(currentVid);
-                    root.synthesizer.noteOn(nextVid,keyRepeater.itemAt(keyIndex).f)
+                    root.sender.noteOff(currentVid);
+                    root.sender.noteOn(currentF,0,0,nextVid);
                     touchMapVid.set(touchPoint.pointId,nextVid)
                     currentVid=nextVid
                     nextVid++
                 }
-                let currentF=keyRepeater.itemAt(keyIndex).f
                 let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
-                root.synthesizer.pitch(currentVid,pitchedF)
+                root.sender.pitch(currentVid,pitchedF,0,0)
 
             })
         }
@@ -162,7 +164,7 @@ Item {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
                 console.log("canceled " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
                 keyRepeater.itemAt(keyIndex).pressed--
-                root.synthesizer.noteOff(touchMapVid.get(touchPoint.pointId));
+                root.sender.noteOff(touchMapVid.get(touchPoint.pointId));
             })
         }
 
@@ -172,7 +174,7 @@ Item {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
                 console.log("released " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
                 keyRepeater.itemAt(keyIndex).pressed--
-                root.synthesizer.noteOff(touchMapVid.get(touchPoint.pointId));
+                root.sender.noteOff(touchMapVid.get(touchPoint.pointId));
             })
         }
     }

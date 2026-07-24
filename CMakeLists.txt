@@ -32,6 +32,34 @@ qt_add_executable(appmisuco3
     polymobilesynth/mobilesynth/Classes/synth/oscillator.cpp
     polymobilesynth/mobilesynth/Classes/synth/parameter.h
     polymobilesynth/mobilesynth/Classes/synth/parameter.cpp
+
+    misulib/comm/heartbeat.cpp
+    misulib/comm/heartbeat.h
+    misulib/comm/mastersender.cpp
+    misulib/comm/mastersender.h
+    misulib/comm/sendermobilesynth.cpp
+    misulib/comm/sendermobilesynth.h
+    misulib/comm/senderoscmidigeneric.cpp
+    misulib/comm/senderoscmidigeneric.h
+    misulib/comm/senderreaktor.cpp
+    misulib/comm/senderreaktor.h
+    misulib/comm/sendersupercollider.cpp
+    misulib/comm/sendersupercollider.h
+    misulib/comm/senderthread.cpp
+    misulib/comm/senderthread.h
+
+    misulib/comm/libofqf/qoscclient.cpp
+    misulib/comm/libofqf/qoscclient.h
+    misulib/comm/libofqf/qoscclientinterface.h
+    misulib/comm/libofqf/qoscmsgparser.cpp
+    misulib/comm/libofqf/qoscmsgparser.h
+    misulib/comm/libofqf/qoscserver.cpp
+    misulib/comm/libofqf/qoscserver.h
+    misulib/comm/libofqf/qoscserverinterface.h
+    misulib/comm/libofqf/qosctcpclient.cpp
+    misulib/comm/libofqf/qosctcpclient.h
+    misulib/comm/libofqf/qosctypes.cpp
+    misulib/comm/libofqf/qosctypes.h
 )
 
 set_source_files_properties(VoiceControl.js
