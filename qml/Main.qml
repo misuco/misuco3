@@ -7,7 +7,7 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Controls.Basic 2.12
 
-//pragma ComponentBehavior: Bound
+pragma ComponentBehavior: Bound
 
 Window {
     id: root
