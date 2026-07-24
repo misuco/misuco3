@@ -119,7 +119,7 @@ Item {
             TouchPoint {id:touchPoint0}
         ]
 
-        onPressed: {
+        onPressed: function(touchPoints) {
             console.log("---------- onPressed -----------------")
             touchPoints.forEach((touchPoint) => {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
@@ -134,7 +134,7 @@ Item {
             })
         }
 
-        onUpdated: {
+        onUpdated: function(touchPoints) {
             console.log("---------- onUpdated -----------------")
             touchPoints.forEach((touchPoint) => {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
@@ -158,7 +158,7 @@ Item {
             })
         }
 
-        onCanceled: {
+        onCanceled: function(touchPoints) {
             console.log("---------- onCanceled -----------------")
             touchPoints.forEach((touchPoint) => {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
@@ -168,7 +168,7 @@ Item {
             })
         }
 
-        onReleased: {
+        onReleased: function(touchPoints) {
             console.log("---------- onReleased -----------------")
             touchPoints.forEach((touchPoint) => {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
