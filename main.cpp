@@ -6,6 +6,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <polymobilesynth/qt6/mobilesynth.h>
+#include <misulib/comm/mastersender.h>
+#include <misulib/comm/sendermobilesynth.h>
+#include <misulib/comm/senderoscmidigeneric.h>
 
 int main(int argc, char *argv[])
 {
@@ -14,12 +17,22 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    MobileSynth synth;
+    MasterSender masterSender;
+
+    SenderMobileSynth senderMobileSynth;
+    std::shared_ptr<MobileSynth> synth = senderMobileSynth.getSynthController();
+    masterSender.addSenderThread(&senderMobileSynth,"MobileSynth");
+    masterSender.onToggleSender("MobileSynth",true);
+
+    SenderOscMidiGeneric senderOscMidi;
+    masterSender.addSenderThread(&senderOscMidi,"OscSender");
+    masterSender.onToggleSender("OscSender",true);
 
     QQmlApplicationEngine engine;
 
     QQmlContext* ctx = engine.rootContext();
-    ctx->setContextProperty("synth", &synth);
+    ctx->setContextProperty("synthContext", synth.get());
+    ctx->setContextProperty("senderContext", &masterSender);
 
     QObject::connect(
         &engine,

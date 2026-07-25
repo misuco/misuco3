@@ -7,7 +7,7 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Controls.Basic 2.12
 
-//pragma ComponentBehavior: Bound
+pragma ComponentBehavior: Bound
 
 Window {
     id: root
@@ -18,7 +18,6 @@ Window {
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
-    property var synthesizer: synth
     property int palette: 1
 
     property var scaleModel: [
@@ -33,13 +32,6 @@ Window {
         console.log("Main.qml Component.onCompleted")
     }
 
-    onSynthesizerChanged: {
-        console.log("Main.qml onSynthesizerChanged")
-        if(synthesizer!==undefined) {
-            console.log("Main.qml sythesizer is defined")
-        }
-    }
-
     Rectangle {
         anchors.fill: parent
         color: "#666"
@@ -51,44 +43,10 @@ Window {
         height: root.buttonHeight
         y: root.height-root.buttonHeight
         keys: root.scaleModel
-        synthesizer: root.synthesizer
+        synthesizer: synthContext
+        sender: senderContext
         palette: root.palette
     }
-
-    /*
-    Repeater {
-        id: playArea
-        model: root.scaleModel
-        delegate: TouchButton {
-            required property int index
-            required property var modelData
-            x: index*root.buttonWidth
-            y: root.height-root.buttonHeight
-            width: root.buttonWidth
-            height: root.buttonHeight
-            frequency: 0
-            voiceId: index
-            note: modelData.note
-            noteSymbol: modelData.note%12
-            palette: root.palette
-
-            tuning: noteSymbol===0 ? root.tuningModel0 :
-                    noteSymbol===1 ? root.tuningModel1 :
-                    noteSymbol===2 ? root.tuningModel2 :
-                    noteSymbol===3 ? root.tuningModel3 :
-                    noteSymbol===4 ? root.tuningModel4 :
-                    noteSymbol===5 ? root.tuningModel5 :
-                    noteSymbol===6 ? root.tuningModel6 :
-                    noteSymbol===7 ? root.tuningModel7 :
-                    noteSymbol===8 ? root.tuningModel8 :
-                    noteSymbol===9 ? root.tuningModel9 :
-                    noteSymbol===10 ? root.tuningModel10 : root.tuningModel11
-
-            holdKeys: root.holdKeys
-            synthesizer: root.synthesizer
-        }
-    }
-    */
 
     ControlArea {
         x:10
@@ -117,7 +75,7 @@ Window {
             height: 50
             text: qsTr("Arp")
             onCheckedChanged: function() {
-                root.synthesizer.set_arpeggio_enabled(checked)
+                synthContext.set_arpeggio_enabled(checked)
                 console.log("arpSwitch " + checked)
             }
         }
@@ -125,13 +83,13 @@ Window {
         Rectangle {
             x:250
             y:2
-            width: 200 * root.synthesizer.peak
+            width: 200 * synthContext.peak
             height: 15
             color: "Green"
         }
 
         Rectangle {
-            visible: root.synthesizer.clip
+            visible: synthContext.clip
             x:450
             y:2
             width: 50
@@ -142,7 +100,7 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
-                text: root.synthesizer.clipLen
+                text: synthContext.clipLen
                 color: "White"
             }
         }
@@ -174,7 +132,9 @@ Window {
 
         interactive: true
 
-        AudioDevice {}
+        AudioDevice {
+            synthesizer: synthContext
+        }
 
         ScaleConfig {
             palette: root.palette
@@ -234,12 +194,20 @@ Window {
             }
         }
 
-        Parameters {}
+        Parameters {
+            synthesizer: synthContext
+        }
 
-        Parameters_Osc {}
+        Parameters_Osc {
+            synthesizer: synthContext
+        }
 
-        Parameters_Osc_2 {}
+        Parameters_Osc_2 {
+            synthesizer: synthContext
+        }
 
-        Parameters_Mod {}
+        Parameters_Mod {
+            synthesizer: synthContext
+        }
     }
 }

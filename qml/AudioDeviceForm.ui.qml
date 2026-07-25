@@ -7,7 +7,7 @@ import QtQuick.Controls
 
 Item {
     id: root
-    property var synthesizer: synth
+    required property var synthesizer
     property alias deviceSelect: deviceSelect
     property alias modeSelect: modeSelect
     property alias bufferSizeSelect: bufferSizeSelect
@@ -36,7 +36,7 @@ Item {
             id: deviceSelect
             x:400
             y:20
-            model: synth.deviceList
+            model: synthesizer.deviceList
         }
 
         Text {
@@ -48,7 +48,7 @@ Item {
         Text {
             x:160
             y:80
-            text: synth.readDataLen
+            text: synthesizer.readDataLen
         }
 
         Text {
@@ -60,7 +60,7 @@ Item {
         Text {
             x:160
             y:100
-            text: synth.sampleRate
+            text: synthesizer.sampleRate
         }
 
         Text {
@@ -72,7 +72,7 @@ Item {
         Text {
             x:160
             y:120
-            text: synth.channelBytes * 8
+            text: synthesizer.channelBytes * 8
         }
 
         Text {
@@ -84,7 +84,7 @@ Item {
         Text {
             x:160
             y:140
-            text: synth.channelCount
+            text: synthesizer.channelCount
         }
 
         Text {
@@ -94,7 +94,7 @@ Item {
         }
 
         Text {
-            property int format: synth.sampleFormat
+            property int format: synthesizer.sampleFormat
             x:160
             y:160
             text:   format === 1 ? "UInt8" :
@@ -112,7 +112,7 @@ Item {
         Text {
             x:160
             y:180
-            text: synth.sampleLittleEndian ? "Little" : "Big"
+            text: synthesizer.sampleLittleEndian ? "Little" : "Big"
         }
 
         Text {
@@ -124,7 +124,7 @@ Item {
         Text {
             x:160
             y:200
-            text: synth.pullMode ? "Pull" : "Push"
+            text: synthesizer.pullMode ? "Pull" : "Push"
         }
 
         Text {
@@ -136,10 +136,10 @@ Item {
         Text {
             x:160
             y:220
-            text: synth.audioState===0 ? "Active" :
-                  synth.audioState===1 ? "Suspended" :
-                  synth.audioState===2 ? "Stopped" :
-                  synth.audioState===3 ? "Idle" : "Unknown"
+            text: synthesizer.audioState===0 ? "Active" :
+                  synthesizer.audioState===1 ? "Suspended" :
+                  synthesizer.audioState===2 ? "Stopped" :
+                  synthesizer.audioState===3 ? "Idle" : "Unknown"
         }
 
         Text {
@@ -151,7 +151,7 @@ Item {
         Text {
             x:160
             y:240
-            text: synth.bufferSize
+            text: synthesizer.bufferSize
         }
 
         Text {
@@ -163,7 +163,7 @@ Item {
         Text {
             x:160
             y:260
-            text: synth.bufferFrameCount
+            text: synthesizer.bufferFrameCount
         }
 
         Text {
@@ -175,7 +175,7 @@ Item {
         Text {
             x:160
             y:280
-            text: synth.bufferBytesFree
+            text: synthesizer.bufferBytesFree
         }
     }
 }

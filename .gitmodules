@@ -1,3 +1,6 @@
 [submodule "polymobilesynth"]
 	path = polymobilesynth
 	url = https://github.com/misuco/polymobilesynth.git
+[submodule "misulib"]
+	path = misulib
+	url = git@github.com:misuco/misulib.git
