@@ -2,7 +2,7 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
 
 Item {
     id: root

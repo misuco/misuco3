@@ -2,7 +2,8 @@
 // Copyright (C) 2026 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
+import QtQuick.Controls
 
 ScaleConfigForm {
     id: root
@@ -83,34 +84,34 @@ ScaleConfigForm {
     
     // Connect scale select combo box
     Connections {
-        target: scaleSelect
+        target: root.scaleSelect
         function onCurrentIndexChanged() {
-            if(scaleSelect.currentIndex>=root.binaryScales.length) {
-                binaryScale0=customBinaryScale[0]
-                binaryScale1=customBinaryScale[1]
-                binaryScale2=customBinaryScale[2]
-                binaryScale3=customBinaryScale[3]
-                binaryScale4=customBinaryScale[4]
-                binaryScale5=customBinaryScale[5]
-                binaryScale6=customBinaryScale[6]
-                binaryScale7=customBinaryScale[7]
-                binaryScale8=customBinaryScale[8]
-                binaryScale9=customBinaryScale[9]
-                binaryScale10=customBinaryScale[10]
-                binaryScale11=customBinaryScale[11]
+            if(root.scaleSelect.currentIndex>=root.binaryScales.length) {
+                root.binaryScale0=root.customBinaryScale[0]
+                root.binaryScale1=root.customBinaryScale[1]
+                root.binaryScale2=root.customBinaryScale[2]
+                root.binaryScale3=root.customBinaryScale[3]
+                root.binaryScale4=root.customBinaryScale[4]
+                root.binaryScale5=root.customBinaryScale[5]
+                root.binaryScale6=root.customBinaryScale[6]
+                root.binaryScale7=root.customBinaryScale[7]
+                root.binaryScale8=root.customBinaryScale[8]
+                root.binaryScale9=root.customBinaryScale[9]
+                root.binaryScale10=root.customBinaryScale[10]
+                root.binaryScale11=root.customBinaryScale[11]
             } else {
-                binaryScale0=binaryScales[scaleSelect.currentIndex][0]
-                binaryScale1=binaryScales[scaleSelect.currentIndex][1]
-                binaryScale2=binaryScales[scaleSelect.currentIndex][2]
-                binaryScale3=binaryScales[scaleSelect.currentIndex][3]
-                binaryScale4=binaryScales[scaleSelect.currentIndex][4]
-                binaryScale5=binaryScales[scaleSelect.currentIndex][5]
-                binaryScale6=binaryScales[scaleSelect.currentIndex][6]
-                binaryScale7=binaryScales[scaleSelect.currentIndex][7]
-                binaryScale8=binaryScales[scaleSelect.currentIndex][8]
-                binaryScale9=binaryScales[scaleSelect.currentIndex][9]
-                binaryScale10=binaryScales[scaleSelect.currentIndex][10]
-                binaryScale11=binaryScales[scaleSelect.currentIndex][11]
+                root.binaryScale0=root.binaryScales[root.scaleSelect.currentIndex][0]
+                root.binaryScale1=root.binaryScales[root.scaleSelect.currentIndex][1]
+                root.binaryScale2=root.binaryScales[root.scaleSelect.currentIndex][2]
+                root.binaryScale3=root.binaryScales[root.scaleSelect.currentIndex][3]
+                root.binaryScale4=root.binaryScales[root.scaleSelect.currentIndex][4]
+                root.binaryScale5=root.binaryScales[root.scaleSelect.currentIndex][5]
+                root.binaryScale6=root.binaryScales[root.scaleSelect.currentIndex][6]
+                root.binaryScale7=root.binaryScales[root.scaleSelect.currentIndex][7]
+                root.binaryScale8=root.binaryScales[root.scaleSelect.currentIndex][8]
+                root.binaryScale9=root.binaryScales[root.scaleSelect.currentIndex][9]
+                root.binaryScale10=root.binaryScales[root.scaleSelect.currentIndex][10]
+                root.binaryScale11=root.binaryScales[root.scaleSelect.currentIndex][11]
             }
             root.updateModel()
         }
@@ -118,48 +119,48 @@ ScaleConfigForm {
     
     // Connect scale note buttons
     Connections {
-        target: scaleButton_ii
-        function onPressed() { scaleButtonPressed(scaleButton_ii) }
+        target: root.scaleButton_ii
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_ii) }
     }
     Connections {
-        target: scaleButton_II
-        function onPressed() { scaleButtonPressed(scaleButton_II) }
+        target: root.scaleButton_II
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_II) }
     }
     Connections {
-        target: scaleButton_iii
-        function onPressed() { scaleButtonPressed(scaleButton_iii) }
+        target: root.scaleButton_iii
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_iii) }
     }
     Connections {
         target: scaleButton_III
-        function onPressed() { scaleButtonPressed(scaleButton_III) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_III) }
     }
     Connections {
         target: scaleButton_IV
-        function onPressed() { scaleButtonPressed(scaleButton_IV) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_IV) }
     }
     Connections {
         target: scaleButton_v
-        function onPressed() { scaleButtonPressed(scaleButton_v) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_v) }
     }
     Connections {
         target: scaleButton_V
-        function onPressed() { scaleButtonPressed(scaleButton_V) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_V) }
     }
     Connections {
         target: scaleButton_vi
-        function onPressed() { scaleButtonPressed(scaleButton_vi) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_vi) }
     }
     Connections {
         target: scaleButton_VI
-        function onPressed() { scaleButtonPressed(scaleButton_VI) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_VI) }
     }
     Connections {
         target: scaleButton_vii
-        function onPressed() { scaleButtonPressed(scaleButton_vii) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_vii) }
     }
     Connections {
         target: scaleButton_VII
-        function onPressed() { scaleButtonPressed(scaleButton_VII) }
+        function onPressed() { scaleButtonPressed(root.scaleButton_VII) }
     }
     
     // Connect base note buttons

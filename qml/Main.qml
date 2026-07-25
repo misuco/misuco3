@@ -2,10 +2,10 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Controls.Basic 2.12
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 pragma ComponentBehavior: Bound
 
@@ -18,7 +18,6 @@ Window {
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
-    property int palette: 1
 
     property var scaleModel: [
         {
@@ -27,6 +26,51 @@ Window {
     ]
 
     property bool holdKeys
+
+    property var bgColors: [
+        "#403",
+        "#512",
+        "#633",
+        "#742",
+        "#750",
+        "#452",
+        "#264",
+        "#165",
+        "#065",
+        "#046",
+        "#135",
+        "#314"
+    ]
+
+    property var bgColorsActive: [
+        "#817",
+        "#a35",
+        "#c66",
+        "#e94",
+        "#ed0",
+        "#9d5",
+        "#4d8",
+        "#2cb",
+        "#0bc",
+        "#09c",
+        "#36b",
+        "#639"
+    ]
+
+    property var fgColors: [
+        "#f2e",
+        "#f6a",
+        "#fcc",
+        "#ff8",
+        "#ff0",
+        "#ffa",
+        "#8ff",
+        "#4ff",
+        "#0ff",
+        "#0ff",
+        "#6cf",
+        "#c6f"
+    ]
 
     Component.onCompleted: {
         console.log("Main.qml Component.onCompleted")
@@ -45,7 +89,9 @@ Window {
         keys: root.scaleModel
         synthesizer: synthContext
         sender: senderContext
-        palette: root.palette
+        bgColors: root.bgColors
+        bgColorsActive: root.bgColorsActive
+        fgColors: root.fgColors
     }
 
     ControlArea {
@@ -137,7 +183,10 @@ Window {
         }
 
         ScaleConfig {
-            palette: root.palette
+            bgColors: root.bgColors
+            bgColorsActive: root.bgColorsActive
+            fgColors: root.fgColors
+
             Connections {
                 function onScaleModelUpdated(m) {
                     console.log("onScaleModelUpdated:" + JSON.stringify(m))
@@ -147,7 +196,10 @@ Window {
         }
 
         Tuning {
-            palette: root.palette
+            bgColors: root.bgColors
+            bgColorsActive: root.bgColorsActive
+            fgColors: root.fgColors
+
             Connections {
                 function onTuningUpdated(i,t) {
                     console.log("onTuningUpdated:" + i + " " + t)

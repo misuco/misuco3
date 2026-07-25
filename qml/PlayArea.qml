@@ -3,19 +3,11 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import QtQuick 2.12
-import "ColorPalette.js" as Palette
 
 pragma ComponentBehavior: Bound
 
 Item {
     id: root
-
-    /*
-    property int startNote: 1
-    property int startOctave: 3
-    property int octaveCount: 4
-    property int notePerScale: 8
-    */
 
     required property var synthesizer
     required property var sender
@@ -23,7 +15,10 @@ Item {
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
     property int nextVid: 1
-    property int palette: 1
+
+    property var bgColors: []
+    property var bgColorsActive: []
+    property var fgColors: []
 
     property var keys: [
         {
@@ -79,14 +74,14 @@ Item {
                 Rectangle {
                     id: rect
                     anchors.fill: parent
-                    color: key.pressed>0 ? Palette.bg(root.palette,noteSymbol,true) :  Palette.bg(root.palette,noteSymbol,false)
+                    color: key.pressed>0 ? root.bgColorsActive[noteSymbol] : root.bgColors[noteSymbol]
                     radius: 15
                 }
 
                 Emboss {
                     anchors.fill: rect
                     source: rect
-                    offset: pressed>0 ? -2 : 2
+                    offset: key.pressed>0 ? -2 : 2
                     radius: 15
                 }
 
@@ -95,7 +90,7 @@ Item {
                     verticalAlignment: Qt.AlignVCenter
                     horizontalAlignment: Qt.AlignHCenter
                     text: key.note+"\n"+key.f.toFixed(2)
-                    color: Palette.fg(root.palette,noteSymbol)
+                    color: root.fgColors[noteSymbol]
                 }
             }
         }
