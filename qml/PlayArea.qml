@@ -124,11 +124,13 @@ Item {
             touchPoints.forEach((touchPoint) => {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
                 let frequency=keyRepeater.itemAt(keyIndex).f
+                let note=keyRepeater.itemAt(keyIndex).note
+                let tuning=keyRepeater.itemAt(keyIndex).tuning
                 console.log("pressed keyIndex: " + keyIndex + " pointId: " + touchPoint.pointId + " x: " + touchPoint.x + " y: " + touchPoint.y + " f: " + frequency)
 
                 touchMapKey.set(touchPoint.pointId,keyIndex)
                 keyRepeater.itemAt(keyIndex).pressed++
-                root.sender.noteOn(frequency,0,0,nextVid);
+                root.sender.noteOn(frequency,note,tuning,nextVid);
                 touchMapVid.set(touchPoint.pointId,nextVid)
                 nextVid++
             })
@@ -142,18 +144,21 @@ Item {
                 let currentKeyIndex=touchMapKey.get(touchPoint.pointId)
                 let currentVid=touchMapVid.get(touchPoint.pointId)
                 let currentF = keyRepeater.itemAt(keyIndex).f;
+                let currentNote = keyRepeater.itemAt(keyIndex).note;
+                let currentTuning = keyRepeater.itemAt(keyIndex).tuning;
                 if(currentKeyIndex!==keyIndex) {
                     keyRepeater.itemAt(currentKeyIndex).pressed--
                     keyRepeater.itemAt(keyIndex).pressed++
                     touchMapKey.set(touchPoint.pointId,keyIndex)
                     root.sender.noteOff(currentVid);
-                    root.sender.noteOn(currentF,0,0,nextVid);
+                    root.sender.noteOn(currentF,currentNote,currentTuning,nextVid);
                     touchMapVid.set(touchPoint.pointId,nextVid)
                     currentVid=nextVid
                     nextVid++
                 }
+                let pitchedTuning = touchPoint.startY-touchPoint.y
                 let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
-                root.sender.pitch(currentVid,pitchedF,0,0)
+                root.sender.pitch(currentVid,pitchedF,currentNote,pitchedTuning)
 
             })
         }
