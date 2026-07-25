@@ -83,12 +83,18 @@ qt_add_qml_module(appmisuco3
         qml/TouchButton.qml
         qml/AudioDevice.qml
         qml/AudioDeviceForm.ui.qml
-        qml/Parameters.ui.qml
-        qml/Parameters_Mod.ui.qml
-        qml/Parameters_Osc.ui.qml
-        qml/Parameters_Osc_2.ui.qml
-        qml/ScaleConfig.ui.qml
-        qml/Tuning.ui.qml
+        qml/Parameters.qml
+        qml/ParametersForm.ui.qml
+        qml/Parameters_Mod.qml
+        qml/Parameters_ModForm.ui.qml
+        qml/Parameters_Osc.qml
+        qml/Parameters_OscForm.ui.qml
+        qml/Parameters_Osc_2.qml
+        qml/Parameters_Osc_2Form.ui.qml
+        qml/ScaleConfig.qml
+        qml/ScaleConfigForm.ui.qml
+        qml/Tuning.qml
+        qml/TuningForm.ui.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -116,5 +122,6 @@ include(GNUInstallDirs)
 install(TARGETS appmisuco3
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+
