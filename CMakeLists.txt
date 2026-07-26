@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(misuco3 VERSION 0.1 LANGUAGES CXX)
+project(polymobilesynth VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -10,56 +10,6 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appmisuco3
     main.cpp
-    polymobilesynth/qt6/mobilesynth.h
-    polymobilesynth/qt6/mobilesynth.cpp
-    polymobilesynth/qt6/qt68wraper.h
-    polymobilesynth/qt6/qt68wraper.cpp
-    polymobilesynth/mobilesynth/Classes/synth/arpeggio.h
-    polymobilesynth/mobilesynth/Classes/synth/arpeggio.cpp
-    polymobilesynth/mobilesynth/Classes/synth/controller.h
-    polymobilesynth/mobilesynth/Classes/synth/controller.cpp
-    polymobilesynth/mobilesynth/Classes/synth/envelope.h
-    polymobilesynth/mobilesynth/Classes/synth/envelope.cpp
-    polymobilesynth/mobilesynth/Classes/synth/filter.h
-    polymobilesynth/mobilesynth/Classes/synth/filter.cpp
-    polymobilesynth/mobilesynth/Classes/synth/key_stack.h
-    polymobilesynth/mobilesynth/Classes/synth/key_stack.cpp
-    polymobilesynth/mobilesynth/Classes/synth/lag_processor.h
-    polymobilesynth/mobilesynth/Classes/synth/lag_processor.cpp
-    polymobilesynth/mobilesynth/Classes/synth/modulation.h
-    polymobilesynth/mobilesynth/Classes/synth/modulation.cpp
-    polymobilesynth/mobilesynth/Classes/synth/oscillator.h
-    polymobilesynth/mobilesynth/Classes/synth/oscillator.cpp
-    polymobilesynth/mobilesynth/Classes/synth/parameter.h
-    polymobilesynth/mobilesynth/Classes/synth/parameter.cpp
-
-    misulib/comm/heartbeat.cpp
-    misulib/comm/heartbeat.h
-    misulib/comm/mastersender.cpp
-    misulib/comm/mastersender.h
-    misulib/comm/sendermobilesynth.cpp
-    misulib/comm/sendermobilesynth.h
-    misulib/comm/senderoscmidigeneric.cpp
-    misulib/comm/senderoscmidigeneric.h
-    misulib/comm/senderreaktor.cpp
-    misulib/comm/senderreaktor.h
-    misulib/comm/sendersupercollider.cpp
-    misulib/comm/sendersupercollider.h
-    misulib/comm/senderthread.cpp
-    misulib/comm/senderthread.h
-
-    misulib/comm/libofqf/qoscclient.cpp
-    misulib/comm/libofqf/qoscclient.h
-    misulib/comm/libofqf/qoscclientinterface.h
-    misulib/comm/libofqf/qoscmsgparser.cpp
-    misulib/comm/libofqf/qoscmsgparser.h
-    misulib/comm/libofqf/qoscserver.cpp
-    misulib/comm/libofqf/qoscserver.h
-    misulib/comm/libofqf/qoscserverinterface.h
-    misulib/comm/libofqf/qosctcpclient.cpp
-    misulib/comm/libofqf/qosctcpclient.h
-    misulib/comm/libofqf/qosctypes.cpp
-    misulib/comm/libofqf/qosctypes.h
 )
 
 set_source_files_properties(VoiceControl.js
@@ -95,6 +45,58 @@ qt_add_qml_module(appmisuco3
         qml/ScaleConfigForm.ui.qml
         qml/Tuning.qml
         qml/TuningForm.ui.qml
+
+    SOURCES
+        misulib/comm/heartbeat.cpp
+        misulib/comm/heartbeat.h
+        misulib/comm/mastersender.cpp
+        misulib/comm/mastersender.h
+        misulib/comm/sendermobilesynth.cpp
+        misulib/comm/sendermobilesynth.h
+        misulib/comm/senderoscmidigeneric.cpp
+        misulib/comm/senderoscmidigeneric.h
+        misulib/comm/senderreaktor.cpp
+        misulib/comm/senderreaktor.h
+        misulib/comm/sendersupercollider.cpp
+        misulib/comm/sendersupercollider.h
+        misulib/comm/senderthread.cpp
+        misulib/comm/senderthread.h
+
+        misulib/comm/libofqf/qoscclient.cpp
+        misulib/comm/libofqf/qoscclient.h
+        misulib/comm/libofqf/qoscclientinterface.h
+        misulib/comm/libofqf/qoscmsgparser.cpp
+        misulib/comm/libofqf/qoscmsgparser.h
+        misulib/comm/libofqf/qoscserver.cpp
+        misulib/comm/libofqf/qoscserver.h
+        misulib/comm/libofqf/qoscserverinterface.h
+        misulib/comm/libofqf/qosctcpclient.cpp
+        misulib/comm/libofqf/qosctcpclient.h
+        misulib/comm/libofqf/qosctypes.cpp
+        misulib/comm/libofqf/qosctypes.h
+
+        polymobilesynth/qt6/mobilesynth.h
+        polymobilesynth/qt6/mobilesynth.cpp
+        polymobilesynth/qt6/qt68wraper.h
+        polymobilesynth/qt6/qt68wraper.cpp
+        polymobilesynth/mobilesynth/Classes/synth/arpeggio.h
+        polymobilesynth/mobilesynth/Classes/synth/arpeggio.cpp
+        polymobilesynth/mobilesynth/Classes/synth/controller.h
+        polymobilesynth/mobilesynth/Classes/synth/controller.cpp
+        polymobilesynth/mobilesynth/Classes/synth/envelope.h
+        polymobilesynth/mobilesynth/Classes/synth/envelope.cpp
+        polymobilesynth/mobilesynth/Classes/synth/filter.h
+        polymobilesynth/mobilesynth/Classes/synth/filter.cpp
+        polymobilesynth/mobilesynth/Classes/synth/key_stack.h
+        polymobilesynth/mobilesynth/Classes/synth/key_stack.cpp
+        polymobilesynth/mobilesynth/Classes/synth/lag_processor.h
+        polymobilesynth/mobilesynth/Classes/synth/lag_processor.cpp
+        polymobilesynth/mobilesynth/Classes/synth/modulation.h
+        polymobilesynth/mobilesynth/Classes/synth/modulation.cpp
+        polymobilesynth/mobilesynth/Classes/synth/oscillator.h
+        polymobilesynth/mobilesynth/Classes/synth/oscillator.cpp
+        polymobilesynth/mobilesynth/Classes/synth/parameter.h
+        polymobilesynth/mobilesynth/Classes/synth/parameter.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -108,8 +110,10 @@ set_target_properties(appmisuco3 PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_include_directories(appmisuco3 PUBLIC
+target_include_directories(appmisuco3 PRIVATE
     polymobilesynth/mobilesynth/Classes
+    polymobilesynth/qt6
+    misulib/comm
 )
 
 target_link_libraries(appmisuco3

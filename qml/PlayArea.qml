@@ -9,12 +9,10 @@ pragma ComponentBehavior: Bound
 Item {
     id: root
 
-    required property var synthesizer
     required property var sender
 
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
-    property int nextVid: 1
 
     property var bgColors: []
     property var bgColorsActive: []
@@ -125,9 +123,8 @@ Item {
 
                 touchMapKey.set(touchPoint.pointId,keyIndex)
                 keyRepeater.itemAt(keyIndex).pressed++
-                root.sender.noteOn(frequency,note,tuning,nextVid);
-                touchMapVid.set(touchPoint.pointId,nextVid)
-                nextVid++
+                let newVid=root.sender.noteOn(frequency,note,tuning,127);
+                touchMapVid.set(touchPoint.pointId,newVid)
             })
         }
 
@@ -146,10 +143,9 @@ Item {
                     keyRepeater.itemAt(keyIndex).pressed++
                     touchMapKey.set(touchPoint.pointId,keyIndex)
                     root.sender.noteOff(currentVid);
-                    root.sender.noteOn(currentF,currentNote,currentTuning,nextVid);
-                    touchMapVid.set(touchPoint.pointId,nextVid)
-                    currentVid=nextVid
-                    nextVid++
+                    let newVid=root.sender.noteOn(currentF,currentNote,currentTuning,127);
+                    touchMapVid.set(touchPoint.pointId,newVid)
+                    currentVid=newVid
                 }
                 let pitchedTuning = touchPoint.startY-touchPoint.y
                 let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))

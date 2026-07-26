@@ -6,6 +6,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Basic
+import misuco3
 
 pragma ComponentBehavior: Bound
 
@@ -15,6 +16,9 @@ Window {
     width: 1280
     height: 768
     title: qsTr("MISUCO3")
+
+    required property MasterSender senderContext;
+    required property MobileSynth synthContext;
 
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
@@ -87,8 +91,7 @@ Window {
         height: root.buttonHeight
         y: root.height-root.buttonHeight
         keys: root.scaleModel
-        synthesizer: synthContext
-        sender: senderContext
+        sender: root.senderContext
         bgColors: root.bgColors
         bgColorsActive: root.bgColorsActive
         fgColors: root.fgColors
@@ -129,13 +132,13 @@ Window {
         Rectangle {
             x:250
             y:2
-            width: 200 * synthContext.peak
+            width: 200 * root.synthContext.peak
             height: 15
             color: "Green"
         }
 
         Rectangle {
-            visible: synthContext.clip
+            visible: root.synthContext.clip
             x:450
             y:2
             width: 50
@@ -146,7 +149,7 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
-                text: synthContext.clipLen
+                text: root.synthContext.clipLen
                 color: "White"
             }
         }
@@ -179,7 +182,7 @@ Window {
         interactive: true
 
         AudioDevice {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         ScaleConfig {
@@ -247,19 +250,19 @@ Window {
         }
 
         Parameters {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         Parameters_Osc {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         Parameters_Osc_2 {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         Parameters_Mod {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
     }
 }
