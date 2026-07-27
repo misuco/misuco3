@@ -2,10 +2,12 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Controls.Basic 2.12
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Controls.Basic
+import misuco3
+import "./"
 
 pragma ComponentBehavior: Bound
 
@@ -16,9 +18,11 @@ Window {
     height: 768
     title: qsTr("MISUCO3")
 
+    required property MasterSender senderContext;
+    required property MobileSynth synthContext;
+
     property double buttonWidth: root.width/scaleModel.length
     property double buttonHeight: root.height/2.2
-    property int palette: 1
 
     property var scaleModel: [
         {
@@ -27,6 +31,51 @@ Window {
     ]
 
     property bool holdKeys
+
+    property var bgColors: [
+        "#403",
+        "#512",
+        "#633",
+        "#742",
+        "#750",
+        "#452",
+        "#264",
+        "#165",
+        "#065",
+        "#046",
+        "#135",
+        "#314"
+    ]
+
+    property var bgColorsActive: [
+        "#817",
+        "#a35",
+        "#c66",
+        "#e94",
+        "#ed0",
+        "#9d5",
+        "#4d8",
+        "#2cb",
+        "#0bc",
+        "#09c",
+        "#36b",
+        "#639"
+    ]
+
+    property var fgColors: [
+        "#f2e",
+        "#f6a",
+        "#fcc",
+        "#ff8",
+        "#ff0",
+        "#ffa",
+        "#8ff",
+        "#4ff",
+        "#0ff",
+        "#0ff",
+        "#6cf",
+        "#c6f"
+    ]
 
     Component.onCompleted: {
         console.log("Main.qml Component.onCompleted")
@@ -43,9 +92,10 @@ Window {
         height: root.buttonHeight
         y: root.height-root.buttonHeight
         keys: root.scaleModel
-        synthesizer: synthContext
-        sender: senderContext
-        palette: root.palette
+        sender: root.senderContext
+        bgColors: root.bgColors
+        bgColorsActive: root.bgColorsActive
+        fgColors: root.fgColors
     }
 
     ControlArea {
@@ -75,7 +125,7 @@ Window {
             height: 50
             text: qsTr("Arp")
             onCheckedChanged: function() {
-                synthContext.set_arpeggio_enabled(checked)
+                root.synthContext.set_arpeggio_enabled(checked)
                 console.log("arpSwitch " + checked)
             }
         }
@@ -83,13 +133,13 @@ Window {
         Rectangle {
             x:250
             y:2
-            width: 200 * synthContext.peak
+            width: 200 * root.synthContext.peak
             height: 15
             color: "Green"
         }
 
         Rectangle {
-            visible: synthContext.clip
+            visible: root.synthContext.clip
             x:450
             y:2
             width: 50
@@ -100,7 +150,7 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
-                text: synthContext.clipLen
+                text: root.synthContext.clipLen
                 color: "White"
             }
         }
@@ -133,11 +183,14 @@ Window {
         interactive: true
 
         AudioDevice {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         ScaleConfig {
-            palette: root.palette
+            bgColors: root.bgColors
+            bgColorsActive: root.bgColorsActive
+            fgColors: root.fgColors
+
             Connections {
                 function onScaleModelUpdated(m) {
                     console.log("onScaleModelUpdated:" + JSON.stringify(m))
@@ -147,7 +200,10 @@ Window {
         }
 
         Tuning {
-            palette: root.palette
+            bgColors: root.bgColors
+            bgColorsActive: root.bgColorsActive
+            fgColors: root.fgColors
+
             Connections {
                 function onTuningUpdated(i,t) {
                     console.log("onTuningUpdated:" + i + " " + t)
@@ -195,19 +251,19 @@ Window {
         }
 
         Parameters {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         Parameters_Osc {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         Parameters_Osc_2 {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
 
         Parameters_Mod {
-            synthesizer: synthContext
+            synthesizer: root.synthContext
         }
     }
 }

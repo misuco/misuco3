@@ -2,18 +2,19 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick
+import QtQuick.Controls
 
 Slider {
     property string text: "Control"
+    property int ruler: 5
+
     id: controlSlider
     width: 400
     height: 50
     from: 1
     to: 1000
     value: 1
-    property int ruler: 5
 
     background: Rectangle {
         x: controlSlider.leftPadding

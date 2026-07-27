@@ -2,11 +2,10 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick
+import QtQuick.Controls
 
 RangeSlider {
-    property string text: "Control"
     id: controlSlider
     width: 400
     height: 50
@@ -14,6 +13,8 @@ RangeSlider {
     to: 10
     first.value: 2
     second.value: 9
+
+    property string text: "Control"
     property int ruler: 10
 
     background: Rectangle {

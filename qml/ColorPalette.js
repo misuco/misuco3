@@ -148,6 +148,7 @@ function fg(palette,index) {
 }
 
 function bg(palette,index,active) {
+    console.log(`bg palette:${palette} index:${index} active:${active}`)
     if(active) {
         return colors[palette].bgActive[index];
     } else {

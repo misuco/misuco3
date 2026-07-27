@@ -2,14 +2,17 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import "ColorPalette.js" as Palette
+import QtQuick
+import QtQuick.Controls
 
 Slider {
     property var controller
     property int index
-    property int palette: 1
+
+    property color bgColor
+    property var fgColor
+
+    id: root
     x:10
     y:80
     height: 201
@@ -19,13 +22,14 @@ Slider {
     snapMode: Slider.SnapAlways
     stepSize: 1
     orientation: Qt.Vertical
+
     onValueChanged: function() {
         controller.tuningUpdated(index,value)
     }
 
     Rectangle {
         anchors.fill: parent
-        color: Palette.bg(palette,index,true)
+        color: root.bgColor
     }
 
     Rectangle {
@@ -33,7 +37,7 @@ Slider {
         anchors.topMargin: 2
         width: parent.width
         height: 20
-        color: Palette.bg(palette,index,true)
+        color: root.bgColor
     }
 
     Text {
@@ -43,6 +47,6 @@ Slider {
         height: 20
         text: parent.value
         horizontalAlignment: Qt.AlignHCenter
-        color: Palette.fg(palette,index)
+        color: root.fgColor
     }
 }

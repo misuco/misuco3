@@ -2,15 +2,17 @@
 // Copyright (C) 2026 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
 import QtQuick.Controls
+import misuco3
 
 Item {
     id: root
-    required property var synthesizer
+
     property alias deviceSelect: deviceSelect
     property alias modeSelect: modeSelect
     property alias bufferSizeSelect: bufferSizeSelect
+    property MobileSynth synthesizer
 
     ControlArea {
         x:10
@@ -36,7 +38,7 @@ Item {
             id: deviceSelect
             x:400
             y:20
-            model: synthesizer.deviceList
+            model: root.synthesizer.deviceList
         }
 
         Text {
@@ -48,7 +50,7 @@ Item {
         Text {
             x:160
             y:80
-            text: synthesizer.readDataLen
+            text: root.synthesizer.readDataLen
         }
 
         Text {
@@ -60,7 +62,7 @@ Item {
         Text {
             x:160
             y:100
-            text: synthesizer.sampleRate
+            text: root.synthesizer.sampleRate
         }
 
         Text {
@@ -72,7 +74,7 @@ Item {
         Text {
             x:160
             y:120
-            text: synthesizer.channelBytes * 8
+            text: root.synthesizer.channelBytes * 8
         }
 
         Text {
@@ -84,7 +86,7 @@ Item {
         Text {
             x:160
             y:140
-            text: synthesizer.channelCount
+            text: root.synthesizer.channelCount
         }
 
         Text {
@@ -94,7 +96,7 @@ Item {
         }
 
         Text {
-            property int format: synthesizer.sampleFormat
+            property int format: root.synthesizer.sampleFormat
             x:160
             y:160
             text:   format === 1 ? "UInt8" :
@@ -112,7 +114,7 @@ Item {
         Text {
             x:160
             y:180
-            text: synthesizer.sampleLittleEndian ? "Little" : "Big"
+            text: root.synthesizer.sampleLittleEndian ? "Little" : "Big"
         }
 
         Text {
@@ -124,7 +126,7 @@ Item {
         Text {
             x:160
             y:200
-            text: synthesizer.pullMode ? "Pull" : "Push"
+            text: root.synthesizer.pullMode ? "Pull" : "Push"
         }
 
         Text {
@@ -136,10 +138,10 @@ Item {
         Text {
             x:160
             y:220
-            text: synthesizer.audioState===0 ? "Active" :
-                  synthesizer.audioState===1 ? "Suspended" :
-                  synthesizer.audioState===2 ? "Stopped" :
-                  synthesizer.audioState===3 ? "Idle" : "Unknown"
+            text: root.synthesizer.audioState===0 ? "Active" :
+                  root.synthesizer.audioState===1 ? "Suspended" :
+                  root.synthesizer.audioState===2 ? "Stopped" :
+                  root.synthesizer.audioState===3 ? "Idle" : "Unknown"
         }
 
         Text {
@@ -151,7 +153,7 @@ Item {
         Text {
             x:160
             y:240
-            text: synthesizer.bufferSize
+            text: root.synthesizer.bufferSize
         }
 
         Text {
@@ -163,7 +165,7 @@ Item {
         Text {
             x:160
             y:260
-            text: synthesizer.bufferFrameCount
+            text: root.synthesizer.bufferFrameCount
         }
 
         Text {
@@ -175,7 +177,7 @@ Item {
         Text {
             x:160
             y:280
-            text: synthesizer.bufferBytesFree
+            text: root.synthesizer.bufferBytesFree
         }
     }
 }

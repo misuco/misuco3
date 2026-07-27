@@ -5,10 +5,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <polymobilesynth/qt6/mobilesynth.h>
-#include <misulib/comm/mastersender.h>
-#include <misulib/comm/sendermobilesynth.h>
-#include <misulib/comm/senderoscmidigeneric.h>
+#include <mobilesynth.h>
+#include <mastersender.h>
+#include <sendermobilesynth.h>
+#include <senderoscmidigeneric.h>
 
 int main(int argc, char *argv[])
 {
@@ -30,9 +30,10 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    QQmlContext* ctx = engine.rootContext();
-    ctx->setContextProperty("synthContext", synth.get());
-    ctx->setContextProperty("senderContext", &masterSender);
+    engine.setInitialProperties({
+        {"senderContext", QVariant::fromValue(&masterSender)},
+        {"synthContext", QVariant::fromValue(synth.get())}
+    });
 
     QObject::connect(
         &engine,
