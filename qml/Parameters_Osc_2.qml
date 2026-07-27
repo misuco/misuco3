@@ -7,22 +7,36 @@ import QtQuick.Controls
 
 Parameters_Osc_2Form {
     id: root
-    
-    Component.onCompleted: {
-        levelSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_osc2_level(levelSlider.value)
-        })
-        
-        waveSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_osc2_wave_type(waveSlider.value)
-        })
-        
-        octaveSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_osc2_octave(octaveSlider.value)
-        })
-        
-        shiftSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_osc2_shift(shiftSlider.value)
-        })
+
+    Connections {
+        target: root.levelSlider
+        function onValueChanged() {
+            root.synthesizer.set_osc2_level(root.levelSlider.value)
+            console.log("set_osc2_level " + root.levelSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.waveSlider
+        function onValueChanged() {
+            root.synthesizer.set_osc2_wave_type(root.waveSlider.value)
+            console.log("set_osc2_wave_type " + root.waveSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.octaveSlider
+        function onValueChanged() {
+            root.synthesizer.set_osc2_octave(root.octaveSlider.value)
+            console.log("set_osc2_octave " + root.octaveSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.shiftSlider
+        function onValueChanged() {
+            root.synthesizer.set_osc2_shift(root.shiftSlider.value)
+            console.log("set_osc2_shift " + root.shiftSlider.value)
+        }
     }
 }

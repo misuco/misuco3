@@ -4,32 +4,50 @@
 
 import QtQuick
 import QtQuick.Controls
+import misuco3
 
 ParametersForm {
     id: root
-    
-    Component.onCompleted: {
-        arpeggioSamplesSlider.onValueChanged.connect(function() {
-            console.log("set_arpeggio_samples " + arpeggioSamplesSlider.value)
-            root.synthesizer.set_arpeggio_samples(arpeggioSamplesSlider.value)
-        })
-        
-        arpeggioOctavesSlider.onValueChanged.connect(function() {
-            console.log("set_arpeggio_octaves " + arpeggioOctavesSlider.value)
-            root.synthesizer.set_arpeggio_octaves(arpeggioOctavesSlider.value)
-        })
-        
-        arpeggioStepSlider.onValueChanged.connect(function() {
-            console.log("set_arpeggio_step " + arpeggioStepSlider.value)
-            root.synthesizer.set_arpeggio_step(arpeggioStepSlider.value)
-        })
-        
-        filterCutoffSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_filter_cutoff(filterCutoffSlider.value)
-        })
-        
-        filterResonanceSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_filter_resonance(filterResonanceSlider.value)
-        })
+
+    property MobileSynth synthesizer
+
+    Connections {
+        target: root.arpeggioSamplesSlider
+        function onValueChanged() {
+            root.synthesizer.set_arpeggio_samples(root.arpeggioSamplesSlider.value)
+            console.log("set_arpeggio_samples " + root.arpeggioSamplesSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.arpeggioOctavesSlider
+        function onValueChanged() {
+            root.synthesizer.set_arpeggio_octaves(root.arpeggioOctavesSlider.value)
+            console.log("set_arpeggio_octaves " + root.arpeggioOctavesSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.arpeggioStepSlider
+        function onValueChanged() {
+            root.synthesizer.set_arpeggio_step(root.arpeggioStepSlider.value)
+            console.log("set_arpeggio_step " + root.arpeggioStepSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.filterCutoffSlider
+        function onValueChanged() {
+            root.synthesizer.set_filter_cutoff(root.filterCutoffSlider.value)
+            console.log("set_filter_cutoff " + root.filterCutoffSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.filterResonanceSlider
+        function onValueChanged() {
+            root.synthesizer.set_filter_resonance(root.filterResonanceSlider.value)
+            console.log("set_filter_resonance " + root.filterResonanceSlider.value)
+        }
     }
 }

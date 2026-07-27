@@ -72,7 +72,7 @@ Item {
                 Rectangle {
                     id: rect
                     anchors.fill: parent
-                    color: key.pressed>0 ? root.bgColorsActive[noteSymbol] : root.bgColors[noteSymbol]
+                    color: key.pressed>0 ? root.bgColorsActive[key.noteSymbol] : root.bgColors[key.noteSymbol]
                     radius: 15
                 }
 
@@ -88,7 +88,7 @@ Item {
                     verticalAlignment: Qt.AlignVCenter
                     horizontalAlignment: Qt.AlignHCenter
                     text: key.note+"\n"+key.f.toFixed(2)
-                    color: root.fgColors[noteSymbol]
+                    color: root.fgColors[key.noteSymbol]
                 }
             }
         }

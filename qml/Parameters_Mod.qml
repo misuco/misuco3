@@ -7,51 +7,92 @@ import QtQuick.Controls
 
 Parameters_ModForm {
     id: root
-    
-    Component.onCompleted: {
-        amountSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_modulation_amount(amountSlider.value)
-            console.log("set_modulation_amount " + amountSlider.value)
-        })
-        
-        freqSlider.onValueChanged.connect(function() {
-            root.synthesizer.set_modulation_frequency(freqSlider.value)
-            console.log("set_modulation_frequency " + freqSlider.value)
-        })
-        
-        sourceSquareButton.onPressed.connect(function() {
+
+    Connections {
+        target: root.amountSlider
+        function onValueChanged() {
+            root.synthesizer.set_modulation_amount(root.amountSlider.value)
+            console.log("set_modulation_amount " + root.amountSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.amountSlider
+        function onValueChanged() {
+            root.synthesizer.set_modulation_amount(root.amountSlider.value)
+            console.log("set_modulation_amount " + root.amountSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.freqSlider
+        function onValueChanged() {
+            root.synthesizer.set_modulation_frequency(root.freqSlider.value)
+            console.log("set_modulation_frequency " + root.freqSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.sourceSquareButton
+        function onPressed() {
             root.synthesizer.set_modulation_source(0)
             root.source=0
-        })
-        
-        sourceTriButton.onPressed.connect(function() {
+        }
+    }
+
+    Connections {
+        target: root.sourceSquareButton
+        function onPressed() {
+            root.synthesizer.set_modulation_source(0)
+            root.source=0
+        }
+    }
+
+    Connections {
+        target: root.sourceTriButton
+        function onPressed() {
             root.synthesizer.set_modulation_source(1)
             root.source=1
-        })
-        
-        sourceSawButton.onPressed.connect(function() {
+        }
+    }
+
+    Connections {
+        target: root.sourceSawButton
+        function onPressed() {
             root.synthesizer.set_modulation_source(2)
             root.source=2
-        })
-        
-        sourceRevsawButton.onPressed.connect(function() {
+        }
+    }
+
+    Connections {
+        target: root.sourceRevsawButton
+        function onPressed() {
             root.synthesizer.set_modulation_source(3)
             root.source=3
-        })
-        
-        destWaveButton.onPressed.connect(function() {
+        }
+    }
+
+    Connections {
+        target: root.destWaveButton
+        function onPressed() {
             root.synthesizer.set_modulation_destination(0)
             root.destination=0
-        })
-        
-        destPitchButton.onPressed.connect(function() {
+        }
+    }
+
+    Connections {
+        target: root.destPitchButton
+        function onPressed() {
             root.synthesizer.set_modulation_destination(1)
             root.destination=1
-        })
-        
-        destFilterButton.onPressed.connect(function() {
+        }
+    }
+
+    Connections {
+        target: root.destFilterButton
+        function onPressed() {
             root.synthesizer.set_modulation_destination(2)
             root.destination=2
-        })
+        }
     }
 }

@@ -30,7 +30,6 @@ qt_add_qml_module(appmisuco3
         qml/ControlSliderRange.qml
         qml/ControlSliderTuning.qml
         qml/PlayArea.qml
-        qml/TouchButton.qml
         qml/AudioDevice.qml
         qml/AudioDeviceForm.ui.qml
         qml/Parameters.qml

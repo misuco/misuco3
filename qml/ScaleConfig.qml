@@ -7,7 +7,7 @@ import QtQuick.Controls
 
 ScaleConfigForm {
     id: root
-    
+
     function getBinaryScaleIntValue(s) {
         let value=0
         let bitValue=1
@@ -131,103 +131,103 @@ ScaleConfigForm {
         function onPressed() { root.scaleButtonPressed(root.scaleButton_iii) }
     }
     Connections {
-        target: scaleButton_III
-        function onPressed() { scaleButtonPressed(root.scaleButton_III) }
+        target: root.scaleButton_III
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_III) }
     }
     Connections {
-        target: scaleButton_IV
-        function onPressed() { scaleButtonPressed(root.scaleButton_IV) }
+        target: root.scaleButton_IV
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_IV) }
     }
     Connections {
-        target: scaleButton_v
-        function onPressed() { scaleButtonPressed(root.scaleButton_v) }
+        target: root.scaleButton_v
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_v) }
     }
     Connections {
-        target: scaleButton_V
-        function onPressed() { scaleButtonPressed(root.scaleButton_V) }
+        target: root.scaleButton_V
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_V) }
     }
     Connections {
-        target: scaleButton_vi
-        function onPressed() { scaleButtonPressed(root.scaleButton_vi) }
+        target: root.scaleButton_vi
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_vi) }
     }
     Connections {
-        target: scaleButton_VI
-        function onPressed() { scaleButtonPressed(root.scaleButton_VI) }
+        target: root.scaleButton_VI
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_VI) }
     }
     Connections {
-        target: scaleButton_vii
-        function onPressed() { scaleButtonPressed(root.scaleButton_vii) }
+        target: root.scaleButton_vii
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_vii) }
     }
     Connections {
-        target: scaleButton_VII
-        function onPressed() { scaleButtonPressed(root.scaleButton_VII) }
+        target: root.scaleButton_VII
+        function onPressed() { root.scaleButtonPressed(root.scaleButton_VII) }
     }
     
     // Connect base note buttons
     Connections {
-        target: baseButton_C
-        function onPressed() { baseButtonPressed(baseButton_C) }
+        target: root.baseButton_C
+        function onPressed() { root.baseButtonPressed(root.baseButton_C) }
     }
     Connections {
-        target: baseButton_Cs
-        function onPressed() { baseButtonPressed(baseButton_Cs) }
+        target: root.baseButton_Cs
+        function onPressed() { root.baseButtonPressed(root.baseButton_Cs) }
     }
     Connections {
-        target: baseButton_D
-        function onPressed() { baseButtonPressed(baseButton_D) }
+        target: root.baseButton_D
+        function onPressed() { root.baseButtonPressed(root.baseButton_D) }
     }
     Connections {
-        target: baseButton_Ds
-        function onPressed() { baseButtonPressed(baseButton_Ds) }
+        target: root.baseButton_Ds
+        function onPressed() { root.baseButtonPressed(root.baseButton_Ds) }
     }
     Connections {
-        target: baseButton_E
-        function onPressed() { baseButtonPressed(baseButton_E) }
+        target: root.baseButton_E
+        function onPressed() { root.baseButtonPressed(root.baseButton_E) }
     }
     Connections {
-        target: baseButton_F
-        function onPressed() { baseButtonPressed(baseButton_F) }
+        target: root.baseButton_F
+        function onPressed() { root.baseButtonPressed(root.baseButton_F) }
     }
     Connections {
-        target: baseButton_Fs
-        function onPressed() { baseButtonPressed(baseButton_Fs) }
+        target: root.baseButton_Fs
+        function onPressed() { root.baseButtonPressed(root.baseButton_Fs) }
     }
     Connections {
-        target: baseButton_G
-        function onPressed() { baseButtonPressed(baseButton_G) }
+        target: root.baseButton_G
+        function onPressed() { root.baseButtonPressed(root.baseButton_G) }
     }
     Connections {
-        target: baseButton_Gs
-        function onPressed() { baseButtonPressed(baseButton_Gs) }
+        target: root.baseButton_Gs
+        function onPressed() { root.baseButtonPressed(root.baseButton_Gs) }
     }
     Connections {
-        target: baseButton_A
-        function onPressed() { baseButtonPressed(baseButton_A) }
+        target: root.baseButton_A
+        function onPressed() { root.baseButtonPressed(root.baseButton_A) }
     }
     Connections {
-        target: baseButton_As
-        function onPressed() { baseButtonPressed(baseButton_As) }
+        target: root.baseButton_As
+        function onPressed() { root.baseButtonPressed(root.baseButton_As) }
     }
     Connections {
-        target: baseButton_B
-        function onPressed() { baseButtonPressed(baseButton_B) }
+        target: root.baseButton_B
+        function onPressed() { root.baseButtonPressed(root.baseButton_B) }
     }
     
     // Connect octave range slider
     Connections {
-        target: octaveRangeSlider.first
+        target: root.octaveRangeSlider.first
         function onValueChanged() {
-            console.log("set_low_octave " + octaveRangeSlider.first.value)
-            lowOctave = octaveRangeSlider.first.value
-            updateModel()
+            console.log("set_low_octave " + root.octaveRangeSlider.first.value)
+            root.lowOctave = root.octaveRangeSlider.first.value
+            root.updateModel()
         }
     }
     Connections {
-        target: octaveRangeSlider.second
+        target: root.octaveRangeSlider.second
         function onValueChanged() {
-            console.log("set_high_octave " + octaveRangeSlider.second.value)
-            highOctave = octaveRangeSlider.second.value
-            updateModel()
+            console.log("set_high_octave " + root.octaveRangeSlider.second.value)
+            root.highOctave = root.octaveRangeSlider.second.value
+            root.updateModel()
         }
     }
 }

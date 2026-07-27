@@ -7,8 +7,7 @@ import QtQuick.Controls
 
 Item {
     id: root
-    required property var synthesizer
-    
+
     property alias arpeggioSamplesSlider: arpeggioSamplesSlider
     property alias arpeggioOctavesSlider: arpeggioOctavesSlider
     property alias arpeggioStepSlider: arpeggioStepSlider

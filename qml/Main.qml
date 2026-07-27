@@ -7,6 +7,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Basic
 import misuco3
+import "./"
 
 pragma ComponentBehavior: Bound
 
@@ -124,7 +125,7 @@ Window {
             height: 50
             text: qsTr("Arp")
             onCheckedChanged: function() {
-                synthContext.set_arpeggio_enabled(checked)
+                root.synthContext.set_arpeggio_enabled(checked)
                 console.log("arpSwitch " + checked)
             }
         }
