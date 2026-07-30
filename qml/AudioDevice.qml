@@ -10,8 +10,10 @@ AudioDeviceForm {
     Component.onCompleted: function() {
         console.log("synthContext.audioDeviceIndex: " + synthesizer.audioDeviceIndex)
         deviceSelect.currentIndex=synthesizer.audioDeviceIndex
-        bufferSizeSelect.currentIndex=Math.sqrt(synthesizer.bufferSize/512)-1
-        audioInitialized = true;
+
+        audioInitialized = true
+
+        bufferSizeSelect.currentIndex=3 //Math.sqrt(synthesizer.bufferSize/512)-1
     }
 
     deviceSelect.onCurrentIndexChanged: function() {
