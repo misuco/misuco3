@@ -170,6 +170,7 @@ Window {
             TabButton { text: "P4" }
             TabButton { text: "P5" }
             TabButton { text: "P6" }
+            TabButton { text: "P7" }
         }
     }
 
@@ -197,6 +198,10 @@ Window {
                     root.scaleModel = m
                 }
             }
+        }
+
+        XYModAssign {
+
         }
 
         Tuning {

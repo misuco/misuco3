@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(polymobilesynth VERSION 0.1 LANGUAGES CXX)
+project(misuco3 VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -44,6 +44,8 @@ qt_add_qml_module(appmisuco3
         qml/ScaleConfigForm.ui.qml
         qml/Tuning.qml
         qml/TuningForm.ui.qml
+        qml/XYModAssign.qml
+        qml/XYModAssignForm.ui.qml
 
     SOURCES
         misulib/comm/heartbeat.cpp

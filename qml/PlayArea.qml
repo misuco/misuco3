@@ -3,13 +3,17 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import QtQuick 2.12
+import misuco3
 
 pragma ComponentBehavior: Bound
 
 Item {
     id: root
 
-    required property var sender
+    required property MasterSender sender
+
+    signal xMod(value :double)
+    signal yMod(value :double)
 
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
@@ -147,6 +151,13 @@ Item {
                     touchMapVid.set(touchPoint.pointId,newVid)
                     currentVid=newVid
                 }
+
+                let xDiff=touchPoint.startX-touchPoint.x
+                let yDiff=touchPoint.startY-touchPoint.y
+
+                root.xMod(xDiff/root.keyWidth)
+                root.yMod(yDiff/root.keyHeight)
+
                 let pitchedTuning = touchPoint.startY-touchPoint.y
                 let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
                 root.sender.pitch(currentVid,pitchedF,currentNote,pitchedTuning)
