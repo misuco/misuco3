@@ -6,7 +6,9 @@ import QtQuick
 
 Item {
     id: root
+
     required property var synthesizer
+
     property int source
     property int destination
     

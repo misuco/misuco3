@@ -8,18 +8,12 @@ import QtQuick.Controls
 Parameters_ModForm {
     id: root
 
-    Connections {
-        target: root.amountSlider
-        function onValueChanged() {
-            root.synthesizer.set_modulation_amount(root.amountSlider.value)
-            console.log("set_modulation_amount " + root.amountSlider.value)
-        }
-    }
+    required property XYModAssign modAssign
 
     Connections {
         target: root.amountSlider
         function onValueChanged() {
-            root.synthesizer.set_modulation_amount(root.amountSlider.value)
+            root.modAssign.setBaseValue(1,root.amountSlider.value)
             console.log("set_modulation_amount " + root.amountSlider.value)
         }
     }
@@ -29,14 +23,6 @@ Parameters_ModForm {
         function onValueChanged() {
             root.synthesizer.set_modulation_frequency(root.freqSlider.value)
             console.log("set_modulation_frequency " + root.freqSlider.value)
-        }
-    }
-
-    Connections {
-        target: root.sourceSquareButton
-        function onPressed() {
-            root.synthesizer.set_modulation_source(0)
-            root.source=0
         }
     }
 

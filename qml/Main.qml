@@ -98,6 +98,20 @@ Window {
         fgColors: root.fgColors
     }
 
+    Connections {
+        target: playArea
+        function onXMod(voiceId :int, note :int, tuning :int, value :double) {
+            xyModAssign.xMod(voiceId, note, tuning, value)
+        }
+    }
+
+    Connections {
+        target: playArea
+        function onYMod(voiceId :int, note :int, tuning :int, value :double) {
+            xyModAssign.yMod(voiceId, note, tuning, value)
+        }
+    }
+
     ControlArea {
         x:10
         y:10
@@ -201,7 +215,8 @@ Window {
         }
 
         XYModAssign {
-
+            id: xyModAssign
+            sender: root.senderContext
         }
 
         Tuning {
@@ -269,6 +284,7 @@ Window {
 
         Parameters_Mod {
             synthesizer: root.synthContext
+            modAssign: xyModAssign
         }
     }
 }

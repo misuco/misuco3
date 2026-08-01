@@ -12,8 +12,8 @@ Item {
 
     required property MasterSender sender
 
-    signal xMod(value :double)
-    signal yMod(value :double)
+    signal xMod(voiceId :int, note :int, tuning :int, value :double)
+    signal yMod(voiceId :int, note :int, tuning :int, value :double)
 
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
@@ -54,7 +54,8 @@ Item {
                 required property int index
                 required property var modelData
                 property int pressed: 0
-                property double f: 6.875 * Math.pow( 2 , ((modelData.note + 3) * 100 + tuning) / 1200)
+                readonly property int offsetMidiChamberTone: 3
+                property double f: 6.875 * Math.pow( 2 , ((modelData.note + offsetMidiChamberTone) * 100 + tuning) / 1200)
                 property int note: modelData.note
                 property int noteSymbol: note%12
 
@@ -155,12 +156,14 @@ Item {
                 let xDiff=touchPoint.startX-touchPoint.x
                 let yDiff=touchPoint.startY-touchPoint.y
 
-                root.xMod(xDiff/root.keyWidth)
-                root.yMod(yDiff/root.keyHeight)
+                root.xMod(currentVid, currentNote, currentTuning, xDiff/root.keyWidth)
+                root.yMod(currentVid, currentNote, currentTuning, yDiff/root.height)
 
+                /*
                 let pitchedTuning = touchPoint.startY-touchPoint.y
                 let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
                 root.sender.pitch(currentVid,pitchedF,currentNote,pitchedTuning)
+                */
 
             })
         }
