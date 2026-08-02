@@ -1,42 +1,51 @@
 // /^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\
-// Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
+// Copyright (C) 2024-2026 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
-import Qt5Compat.GraphicalEffects
+import QtQuick
+import QtQuick.Effects
 
-Item {
-    id: emboss
+Rectangle {
+    id: root
 
-    property alias source: topLeftShadow.source
-    property color lightColor: "white"
-    property color darkColor: "black"
-    property bool cached: true
-    property real radius: 1
-    property real spread: 0.1
-    property real offset: 1
+    property bool down: true
+    property int effectSize: 2
+    property color bgColor: "Gray"
+    readonly property int effectOffset: down ? -effectSize : effectSize
 
-    InnerShadow {
-        id: topLeftShadow
-        anchors.fill: parent
-        cached: emboss.cached
-        horizontalOffset: emboss.offset
-        verticalOffset: emboss.offset
-        color: emboss.lightColor
-        radius: emboss.radius
-        samples: emboss.radius * 2
-        spread: emboss.spread
+    anchors {
+        fill: parent
+        margins: root.effectSize
     }
-    InnerShadow {
-        id: bottomRightShadow
+
+    radius: 10
+    color: root.bgColor
+
+    layer.enabled: true
+    layer.effect: MultiEffect {
+        shadowEnabled: true
+        shadowColor: "Black"
+        shadowBlur: 0.5
+        shadowOpacity: 0.5
+        shadowHorizontalOffset: effectOffset
+        shadowVerticalOffset: effectOffset
+        autoPaddingEnabled: true
+    }
+
+    Rectangle {
         anchors.fill: parent
-        cached: emboss.cached
-        source: topLeftShadow
-        horizontalOffset: -emboss.offset
-        verticalOffset: -emboss.offset
-        color: emboss.darkColor
-        radius: emboss.radius
-        samples: emboss.radius * 2
-        spread: emboss.spread
+        radius: parent.radius
+        color: root.bgColor
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowColor: "White"
+            shadowBlur: 0.5
+            shadowOpacity: 0.5
+            shadowHorizontalOffset: -effectOffset
+            shadowVerticalOffset: -effectOffset
+            autoPaddingEnabled: true
+        }
     }
 }

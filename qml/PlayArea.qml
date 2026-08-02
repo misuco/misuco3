@@ -2,7 +2,7 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
 import misuco3
 
 pragma ComponentBehavior: Bound
@@ -83,9 +83,9 @@ Item {
 
                 Emboss {
                     anchors.fill: rect
-                    source: rect
-                    offset: key.pressed>0 ? -2 : 2
+                    down: key.pressed
                     radius: 15
+                    bgColor: key.pressed>0 ? root.bgColorsActive[key.noteSymbol] : root.bgColors[key.noteSymbol]
                 }
 
                 Text {

@@ -2,7 +2,7 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
 
 Rectangle {
     id: controlArea
@@ -10,6 +10,11 @@ Rectangle {
 
     width: 620
     height: 50
+
+    Emboss {
+        anchors.fill: parent
+        radius: 10
+    }
 
     Text {
         x: 10
@@ -23,14 +28,5 @@ Rectangle {
         color: "Gray"
         width: 1
     }
-
-    /*
-    Emboss {
-        anchors.fill: parent
-        source: parent
-        offset: -2
-        radius: 10
-    }
-    */
 
 }
