@@ -153,17 +153,11 @@ Item {
                     currentVid=newVid
                 }
 
-                let xDiff=touchPoint.startX-touchPoint.x
+                let xDiff=touchPoint.x-touchPoint.startX
                 let yDiff=touchPoint.startY-touchPoint.y
 
                 root.xMod(currentVid, currentNote, currentTuning, xDiff/root.keyWidth)
                 root.yMod(currentVid, currentNote, currentTuning, yDiff/root.height)
-
-                /*
-                let pitchedTuning = touchPoint.startY-touchPoint.y
-                let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
-                root.sender.pitch(currentVid,pitchedF,currentNote,pitchedTuning)
-                */
 
             })
         }
