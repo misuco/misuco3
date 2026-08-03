@@ -4,25 +4,25 @@
 
 import QtQuick
 import QtQuick.Controls
+import misuco3
 
 Parameters_ModForm {
     id: root
 
     required property XYModAssign modAssign
+    required property MobileSynth synthesizer
 
     Connections {
         target: root.amountSlider
         function onValueChanged() {
             root.modAssign.setBaseValue(1,root.amountSlider.value)
-            console.log("set_modulation_amount " + root.amountSlider.value)
         }
     }
 
     Connections {
         target: root.freqSlider
         function onValueChanged() {
-            root.synthesizer.set_modulation_frequency(root.freqSlider.value)
-            console.log("set_modulation_frequency " + root.freqSlider.value)
+            root.modAssign.setBaseValue(87,root.freqSlider.value)
         }
     }
 

@@ -271,6 +271,7 @@ Window {
         }
 
         Parameters {
+            modAssign: xyModAssign
             synthesizer: root.synthContext
         }
 

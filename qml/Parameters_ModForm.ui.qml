@@ -7,8 +7,6 @@ import QtQuick
 Item {
     id: root
 
-    required property var synthesizer
-
     property int source
     property int destination
     
@@ -44,8 +42,8 @@ Item {
             y:60
             text: "Freq"
             from: 0
-            to: 20
-            value: 2
+            to: 1
+            value: 0.5
         }
 
         ControlButton {

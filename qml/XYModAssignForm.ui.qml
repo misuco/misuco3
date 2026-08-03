@@ -16,7 +16,10 @@ Item {
     property list<string> assignables: [
         "-",
         "pitch",
-        "mod"
+        "mod",
+        "mod freq",
+        "filter freq",
+        "filter reso"
     ]
 
     ControlArea {

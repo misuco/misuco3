@@ -9,6 +9,7 @@ import misuco3
 ParametersForm {
     id: root
 
+    required property XYModAssign modAssign
     property MobileSynth synthesizer
 
     Connections {
@@ -38,7 +39,7 @@ ParametersForm {
     Connections {
         target: root.filterCutoffSlider
         function onValueChanged() {
-            root.synthesizer.set_filter_cutoff(root.filterCutoffSlider.value)
+            root.modAssign.setBaseValue(74,root.filterCutoffSlider.value)
             console.log("set_filter_cutoff " + root.filterCutoffSlider.value)
         }
     }
@@ -46,7 +47,7 @@ ParametersForm {
     Connections {
         target: root.filterResonanceSlider
         function onValueChanged() {
-            root.synthesizer.set_filter_resonance(root.filterResonanceSlider.value)
+            root.modAssign.setBaseValue(71,root.filterResonanceSlider.value)
             console.log("set_filter_resonance " + root.filterResonanceSlider.value)
         }
     }
