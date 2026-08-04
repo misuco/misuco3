@@ -39,6 +39,7 @@ RangeSlider {
             model: controlSlider.ruler
 
             Rectangle {
+                required property int modelData
                 width: 1
                 height: parent.height
                 x: modelData*parent.width/controlSlider.ruler

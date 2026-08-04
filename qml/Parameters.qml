@@ -5,6 +5,7 @@
 import QtQuick
 import QtQuick.Controls
 import misuco3
+import "./"
 
 ParametersForm {
     id: root

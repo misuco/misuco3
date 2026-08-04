@@ -284,8 +284,8 @@ Window {
         }
 
         Parameters_Mod {
-            synthesizer: root.synthContext
             modAssign: xyModAssign
+            synthesizer: root.synthContext
         }
     }
 }

@@ -9,17 +9,17 @@ Rectangle {
     id: root
 
     property bool down: true
-    property int effectSize: 2
+    property int effectSize: 3
     property color bgColor: "Gray"
-    readonly property int effectOffset: down ? -effectSize : effectSize
+    readonly property int effectOffset: down ? -1 * effectSize : effectSize
 
     anchors {
         fill: parent
-        margins: root.effectSize
+        margins: effectSize
     }
 
     radius: 10
-    color: root.bgColor
+    color: bgColor
 
     layer.enabled: true
     layer.effect: MultiEffect {
@@ -43,8 +43,8 @@ Rectangle {
             shadowColor: "White"
             shadowBlur: 0.5
             shadowOpacity: 0.5
-            shadowHorizontalOffset: -effectOffset
-            shadowVerticalOffset: -effectOffset
+            shadowHorizontalOffset: -1 * root.effectOffset
+            shadowVerticalOffset: -1 * root.effectOffset
             autoPaddingEnabled: true
         }
     }

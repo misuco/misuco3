@@ -6,10 +6,11 @@ import QtQuick
 import QtQuick.Controls
 
 Slider {
+    id: controlSlider
+
     property string text: "Control"
     property int ruler: 5
 
-    id: controlSlider
     width: 400
     height: 50
     from: 1
@@ -35,8 +36,10 @@ Slider {
 
         Repeater {
             model: controlSlider.ruler
+            property int rulerSize: controlSlider.ruler
 
             Rectangle {
+                required property int modelData
                 width: 1
                 height: parent.height
                 x: modelData*parent.width/controlSlider.ruler
