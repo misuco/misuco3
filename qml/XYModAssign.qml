@@ -38,46 +38,48 @@ XYModAssignForm {
     }
 
     function handlePitch(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`handlePitch voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
         sendPitch(voiceId, note, tuning, value)
     }
 
     function handleModulationAmount(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`handleModulationAmount voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
-        sendCC(voiceId, note, tuning, value, 1)
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCModAmount)
     }
 
     function handleModulationFrequency(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`handleModulationFrequency voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
-        sendCC(voiceId, note, tuning, value, 87)
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCModFreq)
     }
 
     function handleFilterCutoff(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`handleFilterCutoff voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
-        sendCC(voiceId, note, tuning, value, 74)
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCFilterCutoff)
     }
 
     function handleFilterResonance(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`handleFilterFrequency voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
-        sendCC(voiceId, note, tuning, value, 71)
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCFilterResonance)
+    }
+
+    function handleOsc1Level(voiceId :int, note :int, tuning :int, value :double) {
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCOsc1Level)
+    }
+
+    function handleOsc2Level(voiceId :int, note :int, tuning :int, value :double) {
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCOsc2Level)
+    }
+
+    function handleOsc2Shift(voiceId :int, note :int, tuning :int, value :double) {
+        sendCC(voiceId, note, tuning, value, SenderMobileSynth.CCOsc2Shift)
     }
 
     function sendCC(voiceId :int, note :int, tuning :int, value :double, cc: int) {
-        console.log(`sendCC cc: ${cc} note: ${note} tuning: ${tuning} value: ${value}`)
-        //sender.cc(voiceId,cc,Math.abs(value))
-        sender.ccAllVoices(cc,Math.abs(value))
+        sender.cc(voiceId,cc,Math.abs(value))
     }
 
     function sendPitch(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`sendPitch note: ${note} tuning: ${tuning} value: ${value}`)
         let pitchedTuning = tuning + value * 500
         let pitchedF = 6.875 * Math.pow( 2 , ((note + offsetMidiChamberTone) * 100 + pitchedTuning) / 1200)
-        console.log(`    pitchedF: ${pitchedF} pitchedTuning: ${pitchedTuning}`)
         sender.pitch(voiceId,pitchedF,note,pitchedTuning)
     }
 
     function connectHandler(currentHaldlerId :int, newHaldlerId :int, toSignal: var) {
-        console.log(`connectHandler curr ${currentHaldlerId} new: ${newHaldlerId} sig: ${toSignal}`)
         if(currentHaldlerId===1) {
             toSignal.disconnect(handlePitch)
         } else if(currentHaldlerId===2) {
@@ -88,6 +90,12 @@ XYModAssignForm {
             toSignal.disconnect(handleFilterCutoff)
         } else if(currentHaldlerId===5) {
             toSignal.disconnect(handleFilterResonance)
+        } else if(currentHaldlerId===6) {
+            toSignal.disconnect(handleOsc1Level)
+        } else if(currentHaldlerId===7) {
+            toSignal.disconnect(handleOsc2Level)
+        } else if(currentHaldlerId===8) {
+            toSignal.disconnect(handleOsc2Shift)
         }
 
         if(newHaldlerId===1) {
@@ -100,16 +108,22 @@ XYModAssignForm {
             toSignal.connect(handleFilterCutoff)
         } else if(newHaldlerId===5) {
             toSignal.connect(handleFilterResonance)
+        } else if(newHaldlerId===6) {
+            toSignal.connect(handleOsc1Level)
+        } else if(newHaldlerId===7) {
+            toSignal.connect(handleOsc2Level)
+        } else if(newHaldlerId===8) {
+            toSignal.connect(handleOsc2Shift)
         }
     }
 
     Component.onCompleted: function() {
         console.log("XYModAssignForm completed ")
         //deviceSelect.currentIndex=synthesizer.audioDeviceIndex
-        valueMap.set(1,0.5)
-        modMap.set(1,1)
-        valueMap.set(87,2)
-        modMap.set(87,1)
+        valueMap.set(SenderMobileSynth.CCModAmount,0.5)
+        modMap.set(SenderMobileSynth.CCModAmount,1)
+        valueMap.set(SenderMobileSynth.CCModFreq,2)
+        modMap.set(SenderMobileSynth.CCModFreq,1)
     }
 
     xModAssignSelect.onCurrentIndexChanged: function() {

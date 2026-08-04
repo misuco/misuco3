@@ -19,7 +19,10 @@ Item {
         "mod",
         "mod freq",
         "filter freq",
-        "filter reso"
+        "filter reso",
+        "osc1 level",
+        "osc2 level",
+        "osc2 shift"
     ]
 
     ControlArea {
