@@ -86,6 +86,10 @@ Window {
         color: "#666"
     }
 
+    XYAssignableParameter {
+        id: xyAssignableParameter
+    }
+
     PlayArea {
         id: playArea
         width: root.width
@@ -101,14 +105,14 @@ Window {
     Connections {
         target: playArea
         function onXMod(voiceId :int, note :int, tuning :int, value :double) {
-            xyModAssign.xMod(voiceId, note, tuning, value)
+            xModAssign.xyMod(voiceId, note, tuning, value)
         }
     }
 
     Connections {
         target: playArea
         function onYMod(voiceId :int, note :int, tuning :int, value :double) {
-            xyModAssign.yMod(voiceId, note, tuning, value)
+            yModAssign.xyMod(voiceId, note, tuning, value)
         }
     }
 
@@ -185,6 +189,7 @@ Window {
             TabButton { text: "P5" }
             TabButton { text: "P6" }
             TabButton { text: "P7" }
+            TabButton { text: "P8" }
         }
     }
 
@@ -215,8 +220,17 @@ Window {
         }
 
         XYModAssign {
-            id: xyModAssign
+            id: xModAssign
+            title: "X Mod Assign"
             sender: root.senderContext
+            parameters: xyAssignableParameter
+        }
+
+        XYModAssign {
+            id: yModAssign
+            title: "Y Mod Assign"
+            sender: root.senderContext
+            parameters: xyAssignableParameter
         }
 
         Tuning {
@@ -271,7 +285,7 @@ Window {
         }
 
         Parameters {
-            modAssign: xyModAssign
+            modAssign: xyAssignableParameter
             synthesizer: root.synthContext
         }
 
@@ -284,7 +298,7 @@ Window {
         }
 
         Parameters_Mod {
-            modAssign: xyModAssign
+            modAssign: xyAssignableParameter
             synthesizer: root.synthContext
         }
     }

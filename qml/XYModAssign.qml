@@ -4,37 +4,21 @@
 
 import QtQuick
 import misuco3
+import "./"
 
 XYModAssignForm {   
+    required property XYAssignableParameter parameters
     required property MasterSender sender
 
-    property var valueMap: new Map()
-    property var modMap: new Map()
     readonly property int offsetMidiChamberTone: 3
 
-    property int xAssignId: 0
-    property int yAssignId: 0
+    property int modAssignId: 0
 
-    signal handleXMod(voiceId :int, note :int, tuning :int, value :double)
-    signal handleYMod(voiceId :int, note :int, tuning :int, value :double)
+    signal handleMod(voiceId :int, note :int, tuning :int, value :double)
 
-    function setBaseValue(cc :int, value :double) {
-        console.log(`setBaseValue ${cc} ${value}`)
-        valueMap.set(cc,value)
-        let mod=modMap.get(cc)
-        let modValue=value*mod
-        console.log(`mod ${mod} modValue ${modValue}`)
-        sender.ccAllVoices(cc,modValue)
-    }
-
-    function xMod(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`xMod voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
-        handleXMod(voiceId, note, tuning, value)
-    }
-
-    function yMod(voiceId :int, note :int, tuning :int, value :double) {
-        console.log(`yMod voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
-        handleYMod(voiceId, note, tuning, value)
+    function xyMod(voiceId :int, note :int, tuning :int, value :double) {
+        console.log(`xyMod voiceId: ${voiceId} note: ${note} tuning: ${tuning} value ${value}`)
+        handleMod(voiceId, note, tuning, value)
     }
 
     function handlePitch(voiceId :int, note :int, tuning :int, value :double) {
@@ -70,7 +54,14 @@ XYModAssignForm {
     }
 
     function sendCC(voiceId :int, note :int, tuning :int, value :double, cc: int) {
-        sender.cc(voiceId,cc,Math.abs(value))
+        // translate value |-0.5....0.5| -> to sendValue |0.0...1.0| in range | minValue |0.0...1.0| ... maxValue |0.0...1.0| |
+        let minValue = modMinSlider.value
+        let maxValue = modMaxSlider.value
+        let range = maxValue - minValue
+        let valueClipped = Math.min(Math.max(value, -0.5), 0.5)
+        let sendValue = minValue + range * (valueClipped + 0.5)
+        sender.cc(voiceId,cc,sendValue)
+        modBar.value = sendValue
     }
 
     function sendPitch(voiceId :int, note :int, tuning :int, value :double) {
@@ -83,18 +74,46 @@ XYModAssignForm {
         if(currentHaldlerId===1) {
             toSignal.disconnect(handlePitch)
         } else if(currentHaldlerId===2) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCModAmount,
+                parameters.getBaseValue(SenderMobileSynth.CCModAmount)
+            )
             toSignal.disconnect(handleModulationAmount)
         } else if(currentHaldlerId===3) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCModFreq,
+                parameters.getBaseValue(SenderMobileSynth.CCModFreq)
+            )
             toSignal.disconnect(handleModulationFrequency)
         } else if(currentHaldlerId===4) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCFilterCutoff,
+                parameters.getBaseValue(SenderMobileSynth.CCFilterCutoff)
+            )
             toSignal.disconnect(handleFilterCutoff)
         } else if(currentHaldlerId===5) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCFilterResonance,
+                parameters.getBaseValue(SenderMobileSynth.CCFilterResonance)
+            )
             toSignal.disconnect(handleFilterResonance)
         } else if(currentHaldlerId===6) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCOsc1Level,
+                parameters.getBaseValue(SenderMobileSynth.CCOsc1Level)
+            )
             toSignal.disconnect(handleOsc1Level)
         } else if(currentHaldlerId===7) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCOsc2Level,
+                parameters.getBaseValue(SenderMobileSynth.CCOsc2Level)
+            )
             toSignal.disconnect(handleOsc2Level)
         } else if(currentHaldlerId===8) {
+            sender.ccAllVoices(
+                SenderMobileSynth.CCOsc2Shift,
+                parameters.getBaseValue(SenderMobileSynth.CCOsc2Shift)
+            )
             toSignal.disconnect(handleOsc2Shift)
         }
 
@@ -119,21 +138,11 @@ XYModAssignForm {
 
     Component.onCompleted: function() {
         console.log("XYModAssignForm completed ")
-        //deviceSelect.currentIndex=synthesizer.audioDeviceIndex
-        valueMap.set(SenderMobileSynth.CCModAmount,0.5)
-        modMap.set(SenderMobileSynth.CCModAmount,1)
-        valueMap.set(SenderMobileSynth.CCModFreq,2)
-        modMap.set(SenderMobileSynth.CCModFreq,1)
     }
 
-    xModAssignSelect.onCurrentIndexChanged: function() {
-        connectHandler(xAssignId, xModAssignSelect.currentIndex, handleXMod)
-        xAssignId=xModAssignSelect.currentIndex
-    }
-
-    yModAssignSelect.onCurrentIndexChanged: function() {
-        connectHandler(yAssignId, yModAssignSelect.currentIndex, handleYMod)
-        yAssignId=yModAssignSelect.currentIndex
+    modAssignSelect.onCurrentIndexChanged: function() {
+        connectHandler(modAssignId, modAssignSelect.currentIndex, handleMod)
+        modAssignId=modAssignSelect.currentIndex
     }
 }
 

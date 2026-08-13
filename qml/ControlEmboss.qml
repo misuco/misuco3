@@ -13,10 +13,7 @@ Rectangle {
     property color bgColor: "Gray"
     readonly property int effectOffset: down ? -1 * effectSize : effectSize
 
-    anchors {
-        fill: parent
-        margins: effectSize
-    }
+    anchors.margins: effectSize
 
     radius: 10
     color: bgColor

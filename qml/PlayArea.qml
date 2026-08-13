@@ -81,7 +81,7 @@ Item {
                     radius: 15
                 }
 
-                Emboss {
+                ControlEmboss {
                     anchors.fill: rect
                     down: key.pressed
                     radius: 15

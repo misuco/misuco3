@@ -27,7 +27,7 @@ Button {
         color: "Transparent"
     }
 
-    Emboss {
+    ControlEmboss {
         anchors.fill: parent
         down: controlButton.selected
         bgColor: controlButton.bgColor

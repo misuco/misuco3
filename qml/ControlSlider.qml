@@ -11,8 +11,9 @@ Slider {
     property string text: "Control"
     property int ruler: 5
 
-    width: 400
-    height: 50
+    implicitWidth: 400
+    implicitHeight: 50
+
     from: 1
     to: 1000
     value: 1

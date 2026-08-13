@@ -11,7 +11,7 @@ Rectangle {
     width: 620
     height: 50
 
-    Emboss {
+    ControlEmboss {
         anchors.fill: parent
         radius: 10
     }

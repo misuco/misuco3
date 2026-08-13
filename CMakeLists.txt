@@ -12,26 +12,23 @@ qt_add_executable(appmisuco3
     main.cpp
 )
 
-set_source_files_properties(VoiceControl.js
-    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
-
 qt_add_qml_module(appmisuco3
     URI misuco3
     VERSION 1.0
     QML_FILES
         qml/Main.qml
-        qml/VoiceControl.js
+        qml/AudioDevice.qml
+        qml/AudioDeviceForm.ui.qml
         qml/ColorPalette.js
-        qml/Emboss.qml
         qml/ControlArea.qml
+        qml/ControlBarRange.qml
         qml/ControlButton.qml
         qml/ControlDial.qml
+        qml/ControlEmboss.qml
         qml/ControlSlider.qml
         qml/ControlSliderRange.qml
         qml/ControlSliderTuning.qml
         qml/PlayArea.qml
-        qml/AudioDevice.qml
-        qml/AudioDeviceForm.ui.qml
         qml/Parameters.qml
         qml/ParametersForm.ui.qml
         qml/Parameters_Mod.qml
@@ -44,6 +41,7 @@ qt_add_qml_module(appmisuco3
         qml/ScaleConfigForm.ui.qml
         qml/Tuning.qml
         qml/TuningForm.ui.qml
+        qml/XYAssignableParameter.qml
         qml/XYModAssign.qml
         qml/XYModAssignForm.ui.qml
 

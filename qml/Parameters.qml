@@ -10,7 +10,7 @@ import "./"
 ParametersForm {
     id: root
 
-    required property XYModAssign modAssign
+    required property XYAssignableParameter modAssign
     property MobileSynth synthesizer
 
     Connections {
