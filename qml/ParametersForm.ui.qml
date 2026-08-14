@@ -17,6 +17,7 @@ Item {
     ControlArea {
         x:10
         y:10
+        width: root.width
         height: 180
         text: "Arpeggio"
 
@@ -54,6 +55,7 @@ Item {
     ControlArea {
         x:10
         y:210
+        width: root.width
         height: 120
         text: "Filter"
 

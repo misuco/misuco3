@@ -17,6 +17,7 @@ Item {
     ControlArea {
         x:10
         y:10
+        width: root.width
         height: 310
         text: "Audio Device"
 

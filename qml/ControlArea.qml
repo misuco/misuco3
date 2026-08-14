@@ -4,29 +4,37 @@
 
 import QtQuick
 
-Rectangle {
+Item {
     id: controlArea
+
     property string text: "Area"
 
     width: 620
     height: 50
 
-    ControlEmboss {
-        anchors.fill: parent
+    Rectangle {
+
+        anchors {
+            fill: parent
+            rightMargin: 10
+        }
+
+        ControlEmboss {
+            anchors.fill: parent
+            radius: 10
+        }
+
+        Text {
+            x: 10
+            text: controlArea.text
+        }
+
         radius: 10
+        color: "Transparent"
+
+        border {
+            color: "Gray"
+            width: 1
+        }
     }
-
-    Text {
-        x: 10
-        text: controlArea.text
-    }
-
-    radius: 10
-    color: "Transparent"
-
-    border {
-        color: "Gray"
-        width: 1
-    }
-
 }

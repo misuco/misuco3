@@ -16,6 +16,7 @@ Item {
     ControlArea {
         x:10
         y:10
+        width: root.width
         height: 220
         text: "OSC2"
 

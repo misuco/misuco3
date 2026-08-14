@@ -78,6 +78,7 @@ Item {
     ControlArea {
         x:10
         y:10
+        width: root.width
         height: 130
         text: "Scale"
 
@@ -224,6 +225,7 @@ Item {
     ControlArea {
         x:10
         y:150
+        width: root.width
         height: 80
         text: "Basenote"
 
@@ -363,6 +365,7 @@ Item {
     ControlArea {
         x:10
         y:240
+        width: root.width
         height: 80
         text: "Octave"
 
