@@ -31,6 +31,7 @@ AudioDeviceForm {
             }
         }
     }
+
     bufferSizeSelect.onCurrentIndexChanged: function() {
         if(audioInitialized) {
             let v=512*Math.pow(2,bufferSizeSelect.currentIndex);

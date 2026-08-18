@@ -7,6 +7,10 @@ import QtQuick.Controls
 
 RangeSlider {
     id: controlSlider
+
+    property string text: "Control"
+    property double elementRadius: 10
+
     width: 400
     height: 50
     from: 1
@@ -14,58 +18,48 @@ RangeSlider {
     first.value: 2
     second.value: 9
 
-    property string text: "Control"
-    property int ruler: 10
-
-    background: Rectangle {
+    background: ControlEmboss {
         x: controlSlider.leftPadding
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
         implicitWidth: 200
         implicitHeight: 20
         width: controlSlider.availableWidth
-        height: implicitHeight
-        radius: 2
+        height: controlSlider.height
+        radius: controlSlider.elementRadius
         color: "#bdbebf"
 
         Rectangle {
-            x: controlSlider.first.visualPosition * parent.width
-            width: (controlSlider.second.visualPosition - controlSlider.first.visualPosition) * parent.width
-            height: parent.height
+            x: controlSlider.first.visualPosition * parent.width + controlSlider.height * 0.2
+            y: controlSlider.height / 3
+            width: (controlSlider.second.visualPosition - controlSlider.first.visualPosition) * parent.width - controlSlider.height * 0.2
+            height: controlSlider.height / 3
             color: "#21be2b"
-            radius: 2
-        }
-
-        Repeater {
-            model: controlSlider.ruler
-
-            Rectangle {
-                required property int modelData
-                width: 1
-                height: parent.height
-                x: modelData*parent.width/controlSlider.ruler
-                y: 0
-            }
+            radius: controlSlider.elementRadius
         }
     }
 
-    first.handle: Rectangle {
+    first.handle: ControlEmboss {
         x: controlSlider.leftPadding + controlSlider.first.visualPosition * (controlSlider.availableWidth - width)
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-        implicitWidth: 50
-        implicitHeight: 50
-        radius: 25
-        color: controlSlider.first.pressed ? "#f0f0f0" : "#f6f6f6"
-        border.color: "#bdbebf"
+        down: false
+        implicitWidth: controlSlider.height * 0.8
+        implicitHeight: controlSlider.height * 0.8
+        width: implicitWidth
+        height: implicitHeight
+        radius: implicitHeight
+        bgColor: "#21be2b"
     }
 
-    second.handle: Rectangle {
+    second.handle: ControlEmboss {
         x: controlSlider.leftPadding + controlSlider.second.visualPosition * (controlSlider.availableWidth - width)
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-        implicitWidth: 50
-        implicitHeight: 50
-        radius: 25
-        color: controlSlider.second.pressed ? "#f0f0f0" : "#f6f6f6"
-        border.color: "#bdbebf"
+        down: false
+        implicitWidth: controlSlider.height * 0.8
+        implicitHeight: controlSlider.height * 0.8
+        width: implicitWidth
+        height: implicitHeight
+        radius: implicitHeight
+        bgColor: "#21be2b"
     }
 
     Text {

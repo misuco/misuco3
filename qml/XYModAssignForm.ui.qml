@@ -14,6 +14,11 @@ Item {
     property alias modMaxSlider: modMaxSlider
     property alias modBar: modBar
 
+    property double rasterWidth: 50
+    property double elementSpace: 5
+    property double elementRadius: 5
+    property bool portrait: false
+
     property string title: "Mod Assign"
 
     property list<string> assignables: [
@@ -28,57 +33,73 @@ Item {
         "osc2 shift"
     ]
 
+    readonly property double elementWidth: width/2 - 3*elementSpace
+    readonly property double buttonSize: rasterWidth - 3*elementSpace
+
     ControlArea {
-        x:10
-        y:10
         width: root.width
-        height: 310
+        height: root.height
+
         text: root.title
 
-        ComboBox {
-            id: modAssignSelect
-            x:10
-            y:20
-            model: root.assignables
-        }
+        Column {
+            y: root.elementSpace
+            padding: root.elementSpace
 
-        ControlSlider {
-            id: modAmountSlider
-            x:10
-            y:80
-            text: "Amount"
-            from: 0
-            to: 1
-            value: 0.5
-        }
+            Grid {
+                columns: 2
+                rows: 2
 
-        ControlSlider {
-            id: modMinSlider
-            x:10
-            y:140
-            text: "Min"
-            from: 0
-            to: 1
-            value: 0
-        }
+                padding: root.elementSpace
 
-        ControlSlider {
-            id: modMaxSlider
-            x:10
-            y:200
-            text: "Max"
-            from: 0
-            to: 1
-            value: 1
-        }
+                ComboBox {
+                    id: modAssignSelect
+                    model: root.assignables
+                    width: root.elementWidth
+                    height: root.buttonSize
+                }
 
-        ControlBarRange {
-            id: modBar
-            x:10
-            y:260
-            height: 20
-            minValue: modMinSlider.value
-            maxValue: modMaxSlider.value
+                ControlSlider {
+                    id: modAmountSlider
+                    width: root.elementWidth
+                    height: root.buttonSize
+                    elementRadius: root.elementRadius
+                    text: "Amount"
+                    from: 0
+                    to: 1
+                    value: 0.5
+                }
+
+                ControlSlider {
+                    id: modMinSlider
+                    width: root.elementWidth
+                    height: root.buttonSize
+                    elementRadius: root.elementRadius
+                    text: "Min"
+                    from: 0
+                    to: 1
+                    value: 0
+                }
+
+                ControlSlider {
+                    id: modMaxSlider
+                    width: root.elementWidth
+                    height: root.buttonSize
+                    elementRadius: root.elementRadius
+                    text: "Max"
+                    from: 0
+                    to: 1
+                    value: 1
+                }
+            }
+
+            ControlBarRange {
+                id: modBar
+                width: root.width
+                height: root.elementSpace
+                minValue: modMinSlider.value
+                maxValue: modMaxSlider.value
+            }
         }
     }
 }

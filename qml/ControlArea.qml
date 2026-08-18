@@ -8,33 +8,24 @@ Item {
     id: controlArea
 
     property string text: "Area"
+    property double elementSpace: 10
+    property double elementRadius: 10
 
     width: 620
     height: 50
 
-    Rectangle {
+    ControlEmboss {
+        radius: controlArea.elementRadius
+        bgColor: "Gray"
 
         anchors {
             fill: parent
-            rightMargin: 10
-        }
-
-        ControlEmboss {
-            anchors.fill: parent
-            radius: 10
+            rightMargin: controlArea.elementSpace
         }
 
         Text {
-            x: 10
+            x: controlArea.elementSpace
             text: controlArea.text
-        }
-
-        radius: 10
-        color: "Transparent"
-
-        border {
-            color: "Gray"
-            width: 1
         }
     }
 }

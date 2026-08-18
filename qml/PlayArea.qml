@@ -45,6 +45,7 @@ Item {
     property double keyWidth: root.width / root.keys.length
 
     Row {
+        //anchors.centerIn: parent
         Repeater {
             id: keyRepeater
             model: root.keys

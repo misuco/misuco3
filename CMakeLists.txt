@@ -37,6 +37,8 @@ qt_add_qml_module(appmisuco3
         qml/Parameters_OscForm.ui.qml
         qml/Parameters_Osc_2.qml
         qml/Parameters_Osc_2Form.ui.qml
+        qml/RangeConfig.qml
+        qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
         qml/ScaleConfigForm.ui.qml
         qml/Tuning.qml

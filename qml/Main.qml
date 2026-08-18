@@ -18,10 +18,6 @@ Window {
     required property MobileSynth synthContext
 
     readonly property bool portrait: height > width
-    readonly property double buttonWidth: root.width/scaleModel.length
-    readonly property double buttonHeight: root.height/2.2
-
-    readonly property double sizeScaleFactor: Math.min( portrait ? width / 1080 : width / 1920 , portrait ? height / 1920 : height / 1080 )
 
     property var scaleModel: [
         {
@@ -30,6 +26,7 @@ Window {
     ]
 
     property bool holdKeys
+    property bool arpOn
 
     property var bgColors: [
         "#403",
@@ -77,8 +74,8 @@ Window {
     ]
 
     visible: true
-    width: Screen.width
-    height: Screen.height
+    width: 1920 //Screen.width
+    height: 1080 //Screen.height
     title: qsTr("MISUCO3")
 
     Rectangle {
@@ -88,274 +85,394 @@ Window {
     }
 
     Item {
-        id: viewRoot
+        id: viewContainer
 
-        readonly property int baseWidth: root.portrait ? 1080 : 1920
-        readonly property int baseHeight: root.portrait ? 1920 : 1080
+        // Raster 12mm @ 60x140mm display
+        property double rasterWidth: root.portrait ? width / 6 : height / 6
+        property double elementSpace: rasterWidth / 12
+        property double elementRadius: rasterWidth / 12
+        property double contentWidth: width - 2*elementSpace
 
-        anchors {
-            fill: parent
-            topMargin: parent.SafeArea.margins.top;
-            bottomMargin: parent.SafeArea.margins.bottom;
-            leftMargin: parent.SafeArea.margins.left;
-            rightMargin: parent.SafeArea.margins.right;
+        property double headerHeight: rasterWidth
+        property double swipeHeight: rasterWidth * (root.portrait ? 3 : 2)
+        property double playAreaHeight: height - headerHeight - swipeHeight
+
+        x: root.SafeArea.margins.left
+        y: root.SafeArea.margins.top
+        width: root.width - root.SafeArea.margins.left - root.SafeArea.margins.right
+        height: root.height - root.SafeArea.margins.top - root.SafeArea.margins.bottom
+
+        XYAssignableParameter {
+            id: xyAssignableParameter
         }
 
-        Item {
-            id: viewContainer
-            anchors.centerIn: parent
-            width: root.portrait ? 1080 : 1920
-            height: root.portrait ? 1920 : 1080
+        ControlArea {
+            id: headerArea
 
-            scale: root.sizeScaleFactor
+            readonly property double vumeterWidth: width * 0.5
+            readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
+            readonly property double buttonWidth: viewContainer.rasterWidth * (root.portrait ? 1 : 2)
 
-            XYAssignableParameter {
-                id: xyAssignableParameter
-            }
+            x:viewContainer.elementSpace
+            y:viewContainer.elementSpace
 
-            ControlArea {
-                id: headerArea
+            width: viewContainer.contentWidth
+            height: viewContainer.headerHeight - 2*viewContainer.elementSpace
 
-                readonly property double vumeterWidth: viewRoot.baseWidth - 270
+            elementRadius: viewContainer.elementRadius
 
-                x:10
-                y:10
-                height: 70
-                width: viewRoot.baseWidth - 20
+            //text: `${root.title} w: ${root.width} h: ${root.height} pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
+            //text: `${root.title}  w: ${root.width} h: ${root.height} scale: ${root.sizeScaleFactor}  pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
+            text: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
 
-                //text: `${root.title} w: ${root.width} h: ${root.height} pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
-                text: `${root.title}  w: ${root.width} h: ${root.height} scale: ${root.sizeScaleFactor}  pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
+            Row {
+                x: viewContainer.elementSpace
+                y: viewContainer.elementSpace
+                padding: viewContainer.elementSpace
 
-                Switch {
+                ControlButton {
                     id: holdKeysSwitch
-                    x:10
-                    y:10
-                    width: 100
-                    height: 50
-                    text: qsTr("Hold")
-                    onCheckedChanged: function() {
-                        root.holdKeys=checked
-                        console.log("holdKeysSwitch " + checked)
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "hold"
+                    selected: root.holdKeys
+                    bgColor: root.holdKeys ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        root.holdKeys=!root.holdKeys
                     }
                 }
 
-                Switch {
+                ControlButton {
                     id: arpSwitch
-                    x:100
-                    y:10
-                    width: 100
-                    height: 50
-                    text: qsTr("Arp")
-                    onCheckedChanged: function() {
-                        root.synthContext.set_arpeggio_enabled(checked)
-                        console.log("arpSwitch " + checked)
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "arp"
+                    selected: root.arpOn
+                    bgColor: root.arpOn ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        root.arpOn=!root.arpOn
+                        root.synthContext.set_arpeggio_enabled(root.arpOn)
                     }
                 }
 
-                Rectangle {
-                    x:250
-                    y:2
-
-                    width: headerArea.vumeterWidth * root.synthContext.peak
-                    height: 15
-                    color: "Green"
-                }
-
-                Rectangle {
-                    visible: root.synthContext.clip
-                    x:250+headerArea.vumeterWidth
-                    y:2
-                    width: 50
-                    height: 15
-                    color: "Red"
-
-                    Text {
-                        anchors.fill: parent
-                        horizontalAlignment: Qt.AlignHCenter
-                        verticalAlignment: Qt.AlignVCenter
-                        text: root.synthContext.clipLen
-                        color: "White"
+                ControlButton {
+                    id: portraitSwitch
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "⤸"
+                    selected: pressed
+                    bgColor: pressed ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        if(root.width===1920) {
+                            root.width=1080
+                            root.height=1920
+                        } else {
+                            root.width=1920
+                            root.height=1080
+                        }
                     }
                 }
 
-                // TabBar for clicking to navigate pages
                 TabBar {
                     id: tabBar
 
                     readonly property int tabCount: 8
-                    readonly property double tabWidth: width / tabCount
+                    width: headerArea.buttonHeight*4
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    x:250
-                    y:20
-                    width: viewRoot.baseWidth - 320
                     currentIndex: swipeView.currentIndex
 
                     Repeater {
                         model: tabBar.tabCount
                         delegate: TabButton {
                             required property int index
-                            width: tabBar.tabWidth
                             text: `${index+1}`
                         }
                     }
                 }
             }
 
-            SwipeView {
-                id: swipeView
+            Rectangle {
+                x:250
+                y:2
 
-                readonly property double areasWidth: root.portrait ? parent.width - 20 : parent.width / 2 - 30
-
-                anchors {
-                    top: headerArea.bottom
-                    topMargin: 10
-                }
-
-                width: viewRoot.baseWidth - 20
-                contentWidth: areasWidth
-                height: 375
-                currentIndex: tabBar.currentIndex
-
-                interactive: true
-
-                AudioDevice {
-                    width: swipeView.areasWidth
-                    synthesizer: root.synthContext
-                }
-
-                ScaleConfig {
-                    id: scaleConfigArea
-                    width: swipeView.areasWidth
-                    bgColors: root.bgColors
-                    bgColorsActive: root.bgColorsActive
-                    fgColors: root.fgColors
-
-                    Connections {
-                        function onScaleModelUpdated(m) {
-                            console.log("onScaleModelUpdated:" + JSON.stringify(m))
-                            root.scaleModel = m
-                        }
-                    }
-                }
-
-                XYModAssign {
-                    id: xModAssign
-                    width: swipeView.areasWidth
-                    title: "X Mod Assign"
-                    sender: root.senderContext
-                    parameters: xyAssignableParameter
-                }
-
-                XYModAssign {
-                    id: yModAssign
-                    width: swipeView.areasWidth
-                    title: "Y Mod Assign"
-                    sender: root.senderContext
-                    parameters: xyAssignableParameter
-                }
-
-                Tuning {
-                    id: tuningArea
-                    width: swipeView.areasWidth
-                    bgColors: root.bgColors
-                    bgColorsActive: root.bgColorsActive
-                    fgColors: root.fgColors
-
-                    Connections {
-                        function onTuningUpdated(i,t) {
-                            console.log("onTuningUpdated:" + i + " " + t)
-                            switch(i) {
-                            case 1:
-                                playArea.tuningModel1 = t
-                                break
-                            case 2:
-                                playArea.tuningModel2 = t
-                                break
-                            case 3:
-                                playArea.tuningModel3 = t
-                                break
-                            case 4:
-                                playArea.tuningModel4 = t
-                                break
-                            case 5:
-                                playArea.tuningModel5 = t
-                                break
-                            case 6:
-                                playArea.tuningModel6 = t
-                                break
-                            case 7:
-                                playArea.tuningModel7 = t
-                                break
-                            case 8:
-                                playArea.tuningModel8 = t
-                                break
-                            case 9:
-                                playArea.tuningModel9 = t
-                                break
-                            case 10:
-                                playArea.tuningModel10 = t
-                                break
-                            case 11:
-                                playArea.tuningModel11 = t
-                                break
-                            default:
-                                playArea.tuningModel0 = t
-                                break
-                            }
-
-                        }
-                    }
-                }
-
-                Parameters {
-                    width: swipeView.areasWidth
-                    modAssign: xyAssignableParameter
-                    synthesizer: root.synthContext
-                }
-
-                Parameters_Osc {
-                    width: swipeView.areasWidth
-                    synthesizer: root.synthContext
-                }
-
-                Parameters_Osc_2 {
-                    width: swipeView.areasWidth
-                    synthesizer: root.synthContext
-                }
-
-                Parameters_Mod {
-                    width: swipeView.areasWidth
-                    modAssign: xyAssignableParameter
-                    synthesizer: root.synthContext
-                }
+                width: headerArea.vumeterWidth * root.synthContext.peak
+                height: 15
+                color: "Green"
             }
 
-            PlayArea {
-                id: playArea
-                x: 10
-                y: 450
-                width: viewRoot.baseWidth-20
-                height: viewRoot.baseHeight-475
-                keys: root.scaleModel
-                sender: root.senderContext
-                bgColors: root.bgColors
-                bgColorsActive: root.bgColorsActive
-                fgColors: root.fgColors
-            }
+            Rectangle {
+                visible: root.synthContext.clip
+                x:250+headerArea.vumeterWidth
+                y:2
+                width: 50
+                height: 15
+                color: "Red"
 
-            Connections {
-                target: playArea
-                function onXMod(voiceId :int, note :int, tuning :int, value :double) {
-                    xModAssign.xyMod(voiceId, note, tuning, value)
-                }
-            }
-
-            Connections {
-                target: playArea
-                function onYMod(voiceId :int, note :int, tuning :int, value :double) {
-                    yModAssign.xyMod(voiceId, note, tuning, value)
+                Text {
+                    anchors.fill: parent
+                    horizontalAlignment: Qt.AlignHCenter
+                    verticalAlignment: Qt.AlignVCenter
+                    text: root.synthContext.clipLen
+                    color: "White"
                 }
             }
         }
+
+
+
+        PlayArea {
+            id: playArea
+
+            x: viewContainer.elementSpace
+            y: viewContainer.swipeHeight + viewContainer.headerHeight
+
+            width: viewContainer.contentWidth
+            height: viewContainer.playAreaHeight - viewContainer.elementSpace
+
+            keys: root.scaleModel
+            sender: root.senderContext
+            bgColors: root.bgColors
+            bgColorsActive: root.bgColorsActive
+            fgColors: root.fgColors
+        }
+
+
+        SwipeView {
+            id: swipeView
+
+            x: viewContainer.elementSpace
+            y: viewContainer.headerHeight
+
+            width: viewContainer.contentWidth
+            height: viewContainer.swipeHeight - viewContainer.elementSpace
+
+            contentWidth: viewContainer.contentWidth
+            currentIndex: tabBar.currentIndex
+
+            /*
+            leftPadding: 0
+            rightPadding: viewContainer.elementSpace
+            horizontalPadding: viewContainer.elementSpace
+            */
+
+            interactive: true
+
+            ScaleConfig {
+                id: scaleConfigArea
+
+                width: swipeView.width
+                height: swipeView.height
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+
+                portrait: root.portrait
+
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onScaleModelUpdated(m) {
+                        console.log("onScaleModelUpdated:" + JSON.stringify(m))
+                        root.scaleModel = m
+                    }
+                }
+            }
+
+            RangeConfig {
+                id: rangeConfigArea
+
+                width: swipeView.width
+                height: swipeView.height
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+
+                portrait: root.portrait
+
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onBaseNoteUpdated(n) {
+                        console.log(`onBaseNoteUpdated: ${n}`)
+                        scaleConfigArea.baseNoteIndex = n
+                        scaleConfigArea.updateModel()
+                    }
+                }
+
+                Connections {
+                    function onLowOctaveUpdated(o) {
+                        console.log(`onLowOctaveUpdated: ${o}`)
+                        scaleConfigArea.lowOctave = o
+                        scaleConfigArea.updateModel()
+                    }
+                }
+
+                Connections {
+                    function onHighOctaveUpdated(o) {
+                        console.log(`onHighOctaveUpdated: ${o}`)
+                        scaleConfigArea.highOctave = o
+                        scaleConfigArea.updateModel()
+                    }
+                }
+            }
+
+            XYModAssign {
+                id: xModAssign
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
+                title: "X Mod Assign"
+                sender: root.senderContext
+                parameters: xyAssignableParameter
+            }
+
+            XYModAssign {
+                id: yModAssign
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
+                title: "Y Mod Assign"
+                sender: root.senderContext
+                parameters: xyAssignableParameter
+            }
+
+            Tuning {
+                id: tuningArea
+                //width: swipeView.areasWidth
+                height: swipeView.height * 2
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onTuningUpdated(i,t) {
+                        console.log("onTuningUpdated:" + i + " " + t)
+                        switch(i) {
+                        case 1:
+                            playArea.tuningModel1 = t
+                            break
+                        case 2:
+                            playArea.tuningModel2 = t
+                            break
+                        case 3:
+                            playArea.tuningModel3 = t
+                            break
+                        case 4:
+                            playArea.tuningModel4 = t
+                            break
+                        case 5:
+                            playArea.tuningModel5 = t
+                            break
+                        case 6:
+                            playArea.tuningModel6 = t
+                            break
+                        case 7:
+                            playArea.tuningModel7 = t
+                            break
+                        case 8:
+                            playArea.tuningModel8 = t
+                            break
+                        case 9:
+                            playArea.tuningModel9 = t
+                            break
+                        case 10:
+                            playArea.tuningModel10 = t
+                            break
+                        case 11:
+                            playArea.tuningModel11 = t
+                            break
+                        default:
+                            playArea.tuningModel0 = t
+                            break
+                        }
+                    }
+                }
+            }
+
+            Parameters {
+                //width: swipeView.width
+                modAssign: xyAssignableParameter
+                synthesizer: root.synthContext
+            }
+
+            Parameters_Osc {
+                //width: swipeView.areasWidth
+                synthesizer: root.synthContext
+            }
+
+            Parameters_Osc_2 {
+                //width: swipeView.areasWidth
+                synthesizer: root.synthContext
+            }
+
+            Parameters_Mod {
+                //width: swipeView.areasWidth
+                modAssign: xyAssignableParameter
+                synthesizer: root.synthContext
+            }
+
+            AudioDevice {
+                //id: audioDeviceArea
+                width: swipeView.areasWidth
+                height: swipeView.height
+                synthesizer: root.synthContext
+            }
+        }
+
+        Connections {
+            target: playArea
+            function onXMod(voiceId :int, note :int, tuning :int, value :double) {
+                xModAssign.xyMod(voiceId, note, tuning, value)
+            }
+        }
+
+        Connections {
+            target: playArea
+            function onYMod(voiceId :int, note :int, tuning :int, value :double) {
+                yModAssign.xyMod(voiceId, note, tuning, value)
+            }
+        }
+
+        /*
+        Rectangle {
+            x: 0
+            y: 0
+            width: viewContainer.elementSpace
+            height: viewContainer.headerHeight
+            color: "Red"
+        }
+        Rectangle {
+            x: 0
+            y: viewContainer.headerHeight
+            width: viewContainer.elementSpace
+            height: viewContainer.swipeHeight
+            color: "Green"
+        }
+        Rectangle {
+            x: 0
+            y: viewContainer.headerHeight + viewContainer.swipeHeight
+            width: viewContainer.elementSpace
+            height: viewContainer.playAreaHeight
+            color: "Blue"
+        }
+
+        Rectangle {
+            x: 0
+            y: viewContainer.headerHeight + viewContainer.swipeHeight + viewContainer.playAreaHeight - viewContainer.elementSpace
+            width: viewContainer.elementSpace
+            height: viewContainer.elementSpace
+            color: "Red"
+        }
+        */
     }
 }

@@ -9,7 +9,9 @@ Slider {
     id: controlSlider
 
     property string text: "Control"
-    property int ruler: 5
+    property double elementRadius: 5
+
+    //property int ruler: 5
 
     implicitWidth: 400
     implicitHeight: 50
@@ -18,23 +20,25 @@ Slider {
     to: 1000
     value: 1
 
-    background: Rectangle {
+    background: ControlEmboss {
         x: controlSlider.leftPadding
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
         implicitWidth: 200
         implicitHeight: 20
         width: controlSlider.availableWidth
-        height: implicitHeight
-        radius: 2
+        height: controlSlider.height
+        radius: controlSlider.elementRadius
         color: "#bdbebf"
 
         Rectangle {
+            y: controlSlider.height / 3
             width: controlSlider.visualPosition * parent.width
-            height: parent.height
+            height: controlSlider.height / 3
             color: "#21be2b"
-            radius: 2
+            radius: controlSlider.elementRadius
         }
 
+        /*
         Repeater {
             model: controlSlider.ruler
             property int rulerSize: controlSlider.ruler
@@ -47,14 +51,18 @@ Slider {
                 y: 0
             }
         }
+        */
     }
 
-    handle: Rectangle {
+    handle: ControlEmboss {
         x: controlSlider.leftPadding + controlSlider.visualPosition * (controlSlider.availableWidth - width)
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-        implicitWidth: 50
-        implicitHeight: 50
-        radius: 25
+        down: false
+        implicitWidth: controlSlider.height * 0.8
+        implicitHeight: controlSlider.height * 0.8
+        width: implicitWidth
+        height: implicitHeight
+        radius: implicitHeight
         color: controlSlider.pressed ? "#f0f0f0" : "#f6f6f6"
         border.color: "#bdbebf"
     }

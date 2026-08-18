@@ -8,6 +8,8 @@ import QtQuick.Controls
 Item {
     id: root
 
+    property int baseNoteIndex: 0
+
     property double rasterWidth: 50
     property double elementSpace: 5
     property double elementRadius: 5
@@ -17,197 +19,185 @@ Item {
     property var bgColorsActive: []
     property var fgColors: []
 
-    property bool binaryScale0
-    property bool binaryScale1
-    property bool binaryScale2
-    property bool binaryScale3
-    property bool binaryScale4
-    property bool binaryScale5
-    property bool binaryScale6
-    property bool binaryScale7
-    property bool binaryScale8
-    property bool binaryScale9
-    property bool binaryScale10
-    property bool binaryScale11
-
     readonly property double buttonSize: rasterWidth - 3*elementSpace
     
-    property alias scaleSelect: scaleSelect
+    property alias octaveRangeSlider: octaveRangeSlider
 
-    property alias scaleButton_ii: scaleButton_ii
-    property alias scaleButton_II: scaleButton_II
-    property alias scaleButton_iii: scaleButton_iii
-    property alias scaleButton_III: scaleButton_III
-    property alias scaleButton_IV: scaleButton_IV
-    property alias scaleButton_v: scaleButton_v
-    property alias scaleButton_V: scaleButton_V
-    property alias scaleButton_vi: scaleButton_vi
-    property alias scaleButton_VI: scaleButton_VI
-    property alias scaleButton_vii: scaleButton_vii
-    property alias scaleButton_VII: scaleButton_VII
-
-    property var scaleNames: [
-        "Major Scale (Inoian)",
-        "Minor Scale (Dorian)",
-        "Minor Triad",
-        "Custom"
-    ]
+    property alias baseButton_C: baseButton_C
+    property alias baseButton_Cs: baseButton_Cs
+    property alias baseButton_D: baseButton_D
+    property alias baseButton_Ds: baseButton_Ds
+    property alias baseButton_E: baseButton_E
+    property alias baseButton_F: baseButton_F
+    property alias baseButton_Fs: baseButton_Fs
+    property alias baseButton_G: baseButton_G
+    property alias baseButton_Gs: baseButton_Gs
+    property alias baseButton_A: baseButton_A
+    property alias baseButton_As: baseButton_As
+    property alias baseButton_B: baseButton_B
 
     ControlArea {
         width: root.width
         height: root.height
-        elementRadius: root.elementRadius
 
-        text: "Scale"
+        text: "Range"
 
         Column {
-            y: 2* root.elementSpace
+            y: root.elementSpace
             padding: root.elementSpace
-
-            ComboBox {
-                id: scaleSelect
-                width: root.buttonSize * (root.portrait ? 6 : 12)
-                height: root.buttonSize
-                model: root.scaleNames
-            }
 
             Grid {
                 columns: root.portrait ? 6 : 12
-                rows: 2
+                rows: 2 //root.portrait ? 2 : 1
 
                 padding: root.elementSpace
 
                 ControlButton {
-                    id: scaleButton_I
+                    id: baseButton_C
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "I"
+                    text: "C"
                     index: 0
-                    selected: root.binaryScale0
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_ii
+                    id: baseButton_Cs
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "ii"
+                    text: "C#"
                     index: 1
-                    selected: root.binaryScale1
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_II
+                    id: baseButton_D
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "II"
+                    text: "D"
                     index: 2
-                    selected: root.binaryScale2
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_iii
+                    id: baseButton_Ds
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "iii"
+                    text: "D#"
                     index: 3
-                    selected: root.binaryScale3
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_III
+                    id: baseButton_E
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "III"
+                    text: "E"
                     index: 4
-                    selected: root.binaryScale4
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_IV
+                    id: baseButton_F
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "IV"
+                    text: "F"
                     index: 5
-                    selected: root.binaryScale5
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_v
+                    id: baseButton_Fs
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "v"
+                    text: "F#"
                     index: 6
-                    selected: root.binaryScale6
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_V
+                    id: baseButton_G
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "V"
+                    text: "G"
                     index: 7
-                    selected: root.binaryScale7
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_vi
+                    id: baseButton_Gs
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "vi"
+                    text: "G#"
                     index: 8
-                    selected: root.binaryScale8
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_VI
+                    id: baseButton_A
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "VI"
+                    text: "A"
                     index: 9
-                    selected: root.binaryScale9
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_vii
+                    id: baseButton_As
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "vii"
+                    text: "A#"
                     index: 10
-                    selected: root.binaryScale10
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
 
                 ControlButton {
-                    id: scaleButton_VII
+                    id: baseButton_B
                     width: root.buttonSize
                     height: root.buttonSize
-                    text: "VII"
+                    text: "B"
                     index: 11
-                    selected: root.binaryScale11
+                    selected: index===root.baseNoteIndex
                     bgColor: selected ? root.bgColorsActive[index] : root.bgColors[index]
                     fgColor: root.fgColors[index]
                 }
+            }
+
+            ControlSliderRange {
+                id: octaveRangeSlider
+
+                width: root.width - 2*root.elementSpace
+                height: root.buttonSize
+
+                snapMode: Slider.SnapAlways
+                stepSize: 1
+
+                elementRadius:root.elementRadius
+
+                first.value: 4
+                second.value: 5
             }
         }
     }
