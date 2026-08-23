@@ -37,21 +37,6 @@ Slider {
             color: "#21be2b"
             radius: controlSlider.elementRadius
         }
-
-        /*
-        Repeater {
-            model: controlSlider.ruler
-            property int rulerSize: controlSlider.ruler
-
-            Rectangle {
-                required property int modelData
-                width: 1
-                height: parent.height
-                x: modelData*parent.width/controlSlider.ruler
-                y: 0
-            }
-        }
-        */
     }
 
     handle: ControlEmboss {

@@ -179,8 +179,8 @@ Window {
                 TabBar {
                     id: tabBar
 
-                    readonly property int tabCount: 8
-                    width: headerArea.buttonHeight*4
+                    readonly property int tabCount: 10
+                    width: headerArea.width - headerArea.buttonHeight*5
                     anchors.verticalCenter: parent.verticalCenter
 
                     currentIndex: swipeView.currentIndex
@@ -348,8 +348,10 @@ Window {
 
             Tuning {
                 id: tuningArea
-                //width: swipeView.areasWidth
-                height: swipeView.height * 2
+                height: swipeView.height + viewContainer.playAreaHeight
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive
                 fgColors: root.fgColors

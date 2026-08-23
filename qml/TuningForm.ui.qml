@@ -8,6 +8,12 @@ import QtQuick.Controls
 Item {
     id: root
 
+    property double rasterWidth: 50
+    property double elementSpace: 10
+    property bool portrait: false
+
+    readonly property double contentWidth: width - 2*elementSpace
+
     property var bgColors: []
     property var bgColorsActive: []
     property var fgColors: []
@@ -15,101 +21,124 @@ Item {
     signal tuningUpdated(var i, var t)
 
     ControlArea {
-        x:10
-        y:10
         width: root.width
         height: root.height
         text: "Tuning"
 
-        ComboBox {
-            x:10
-            y:20
-            model: ["Equal", "Pure", "Well-tempered", "Custom"]
-        }
+        Column {
+            y: 2* root.elementSpace
+            padding: root.elementSpace
 
-        ControlSliderTuning {
-            x:10
-            controller: root
-            index: 0
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:60
-            controller: root
-            index: 1
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:110
-            controller: root
-            index: 2
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:160
-            controller: root
-            index: 3
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:210
-            controller: root
-            index: 4
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:260
-            controller: root
-            index: 5
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:310
-            controller: root
-            index: 6
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:360
-            controller: root
-            index: 7
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:410
-            controller: root
-            index: 8
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:460
-            controller: root
-            index: 9
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:510
-            controller: root
-            index: 10
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:560
-            controller: root
-            index: 11
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
+            ComboBox {
+                width: root.width
+                height: root.rasterWidth
+                model: ["Equal", "Pure", "Well-tempered", "Custom"]
+            }
+
+            Row {
+                height: root.height - root.rasterWidth
+                padding: root.elementSpace
+
+                readonly property double elementWidth: root.width/12 - root.elementSpace
+
+                ControlSliderTuning {
+                    controller: root
+                    width: parent.elementWidth
+                    height: parent.height
+                    index: 0
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+
+                ControlSliderTuning {
+                    controller: root
+                    index: 1
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 2
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 3
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 4
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 5
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 6
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 7
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 8
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 9
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 10
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+                ControlSliderTuning {
+                    controller: root
+                    index: 11
+                    width: parent.elementWidth
+                    height: parent.height
+                    bgColor: root.bgColors[index]
+                    fgColor: root.fgColors[index]
+                }
+            }
         }
     }
 }
