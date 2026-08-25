@@ -253,12 +253,6 @@ Window {
             contentWidth: viewContainer.contentWidth
             currentIndex: tabBar.currentIndex
 
-            /*
-            leftPadding: 0
-            rightPadding: viewContainer.elementSpace
-            horizontalPadding: viewContainer.elementSpace
-            */
-
             interactive: true
 
             ScaleConfig {
@@ -289,7 +283,7 @@ Window {
                 id: rangeConfigArea
 
                 width: swipeView.width
-                height: swipeView.height
+                height: swipeView.height * 1.5
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -328,30 +322,44 @@ Window {
 
             XYModAssign {
                 id: xModAssign
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+
                 title: "X Mod Assign"
+
                 sender: root.senderContext
                 parameters: xyAssignableParameter
             }
 
             XYModAssign {
                 id: yModAssign
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+
                 title: "Y Mod Assign"
+
                 sender: root.senderContext
                 parameters: xyAssignableParameter
             }
 
             Tuning {
                 id: tuningArea
-                height: swipeView.height + viewContainer.playAreaHeight
+
+                sender: root.senderContext
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+
+                height: swipeView.height + viewContainer.playAreaHeight - viewContainer.elementSpace
+
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive
                 fgColors: root.fgColors
@@ -425,8 +433,8 @@ Window {
 
             AudioDevice {
                 //id: audioDeviceArea
-                width: swipeView.areasWidth
-                height: swipeView.height
+                //width: swipeView.areasWidth
+                //height: swipeView.height
                 synthesizer: root.synthContext
             }
         }

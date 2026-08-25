@@ -63,6 +63,7 @@ Item {
         Column {
             y: 2* root.elementSpace
             padding: root.elementSpace
+            spacing: root.elementSpace
 
             ComboBox {
                 id: scaleSelect
@@ -75,7 +76,7 @@ Item {
                 columns: root.portrait ? 6 : 12
                 rows: 2
 
-                padding: root.elementSpace
+                spacing: root.elementSpace
 
                 ControlButton {
                     id: scaleButton_I

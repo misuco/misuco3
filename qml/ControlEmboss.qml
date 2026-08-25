@@ -24,8 +24,8 @@ Rectangle {
         shadowColor: "Black"
         shadowBlur: 0.5
         shadowOpacity: 0.5
-        shadowHorizontalOffset: effectOffset
-        shadowVerticalOffset: effectOffset
+        shadowHorizontalOffset: root.effectOffset
+        shadowVerticalOffset: root.effectOffset
         autoPaddingEnabled: true
     }
 

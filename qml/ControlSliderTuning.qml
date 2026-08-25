@@ -4,20 +4,31 @@
 
 import QtQuick
 import QtQuick.Controls
+import misuco3
 
 Slider {
     id: controlSlider
 
-    property var controller
-    property int index
+    required property var controller
+    required property MasterSender sender
+
     property double elementRadius: 5
+    property var touchMapKey: new Map()
+    property int voiceId
+
+    property int index
+    property int note
+    property int keyPressed: 0
+    readonly property int offsetMidiChamberTone: 3
+    readonly property int tuningPreviewOctave: 4
+    readonly property double f: 6.875 * Math.pow( 2 , ((index + tuningPreviewOctave*12 + offsetMidiChamberTone) * 100 + value) / 1200)
 
     property color bgColor
     property color fgColor
 
-    x:10
-    y:80
-    height: 201
+    readonly property double sliderHeight: availableHeight * 0.9
+    readonly property double labelHeight: availableHeight * 0.1
+
     from: -50
     to: 50
     value: 0
@@ -25,99 +36,86 @@ Slider {
     stepSize: 1
     orientation: Qt.Vertical
 
-    onValueChanged: function() {
+    onValueChanged: {
+        console.log("updateSlider index: " + controlSlider.index + " f: " + controlSlider.f + " pitch: " + controlSlider.value)
         controller.tuningUpdated(index,value)
+        controlSlider.sender.pitch(controlSlider.voiceId,controlSlider.f,controlSlider.note,controlSlider.value)
     }
 
-    background: Rectangle {
-        //y: controlSlider.topPadding
-        x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
-        implicitHeight: 200
-        implicitWidth: controlSlider.width
-        height: controlSlider.availableHeight
-        width: implicitWidth
-        radius: controlSlider.elementRadius
-        color: controlSlider.bgColor // "#bdbebf"
-
-        Rectangle {
-            height: controlSlider.visualPosition * parent.height
-            width: parent.width
-            color: "#21be2b"
-            radius: 2
+    onPressedChanged: {
+        if(controlSlider.pressed) {
+            pressSlider()
+        } else {
+            releaseSlider()
         }
     }
 
-    handle: Rectangle {
-        y: /*controlSlider.topPadding + */ controlSlider.visualPosition * (controlSlider.availableHeight - height)
-        x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
-        implicitHeight: controlSlider.width
-        implicitWidth: controlSlider.width
-        radius: controlSlider.width / 2
-        color: controlSlider.fgColor
-        border.color: "#bdbebf"
+    function pressSlider() {
+        console.log("pressedSlider index: " + controlSlider.index + " f: " + controlSlider.f)
+        controlSlider.keyPressed++
+        controlSlider.voiceId=controlSlider.sender.noteOn(controlSlider.f,controlSlider.index,controlSlider.value,127)
     }
 
-    /*
+    function releaseSlider() {
+        console.log("releaseSlider index: " + controlSlider.index + " f: " + controlSlider.f + " pitch: " + controlSlider.value)
+        controlSlider.keyPressed--
+        controlSlider.sender.noteOff(controlSlider.voiceId)
+    }
+
     background: ControlEmboss {
-        //x: controlSlider.leftPadding
-        //y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-        implicitWidth: controlSlider.height //200
-        implicitHeight: controlSlider.availableWidth //20
-        width: controlSlider.height //availableWidth
-        height: controlSlider.availableWidth //height
+        x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
+        y: controlSlider.topPadding
+        implicitHeight: 200
+        //implicitWidth: controlSlider.width
+        height: controlSlider.sliderHeight
+        width: controlSlider.width
         radius: controlSlider.elementRadius
-        color: controlSlider.bgColor //"#bdbebf"
-
-        Rectangle {
-            y: controlSlider.height / 3
-            width: controlSlider.visualPosition * parent.width
-            height: controlSlider.height / 3
-            color: "#21be2b"
-            radius: controlSlider.elementRadius
-        }
+        bgColor: controlSlider.bgColor
     }
 
     handle: ControlEmboss {
-        property double size: controlSlider.width * 0.8
-        //x: controlSlider.leftPadding + controlSlider.visualPosition * (controlSlider.availableWidth - width)
-        //y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
+        x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
+        y: controlSlider.topPadding + controlSlider.visualPosition * (controlSlider.availableHeight - height)
+        implicitHeight: controlSlider.width
+        //implicitWidth: controlSlider.width
+        width: controlSlider.width
         down: false
-        implicitWidth: size //controlSlider.width * 0.8
-        implicitHeight: size //controlSlider.width * 0.8
-        width: size
-        height: size
-        radius: size
-        color: controlSlider.fgColor //root.fccontrolSlider.pressed ? "#f0f0f0" : "#f6f6f6"
-        border.color: controlSlider.fgColor // "#bdbebf"
+        radius: controlSlider.width / 2
+        bgColor: controlSlider.fgColor
     }
-    */
-
-    /*
-    Rectangle {
-        anchors.fill: parent
-        color: "Yellow" //root.bgColor
-        border {
-            width: 2
-            color: "Black"
-        }
-    }
-    */
 
     Rectangle {
-        anchors.top: parent.bottom
-        anchors.topMargin: 2
+        anchors.bottom: parent.bottom
         width: parent.width
-        height: 20
+        height: controlSlider.labelHeight
         color: controlSlider.bgColor
     }
 
     Text {
-        anchors.top: parent.bottom
-        anchors.topMargin: 2
+        anchors.bottom: parent.bottom
         width: parent.width
-        height: 20
+        height: controlSlider.labelHeight
         text: parent.value
         horizontalAlignment: Qt.AlignHCenter
         color: controlSlider.fgColor
     }
+
+    /*
+    MouseArea {
+        propagateComposedEvents: true
+        anchors.fill: parent
+        onPressed: pressSlider()
+        onCanceled: releaseSlider()
+        onReleased: releaseSlider()
+    }
+
+    MultiPointTouchArea {
+        anchors.fill: parent
+        maximumTouchPoints: 1
+        onPressed: pressSlider()
+        //onUpdated: updateSlider()
+        onCanceled: releaseSlider()
+        onReleased: releaseSlider()
+    }
+    */
 }
