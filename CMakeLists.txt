@@ -25,9 +25,11 @@ qt_add_qml_module(appmisuco3
         qml/ControlButton.qml
         qml/ControlDial.qml
         qml/ControlEmboss.qml
+        qml/ControlLabelTuning.qml
         qml/ControlSlider.qml
         qml/ControlSliderRange.qml
         qml/ControlSliderTuning.qml
+        qml/ControlTuning.qml
         qml/PlayArea.qml
         qml/Parameters.qml
         qml/ParametersForm.ui.qml

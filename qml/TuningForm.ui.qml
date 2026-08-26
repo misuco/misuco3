@@ -47,7 +47,7 @@ Item {
                 height: root.height - root.rasterWidth - 5*root.elementSpace
                 spacing: root.elementSpace
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     width: root.elementWidth
@@ -57,7 +57,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 1
@@ -67,7 +67,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 2
@@ -77,7 +77,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 3
@@ -87,7 +87,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 4
@@ -97,7 +97,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 5
@@ -107,7 +107,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 6
@@ -117,7 +117,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 7
@@ -127,7 +127,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 8
@@ -137,7 +137,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 9
@@ -147,7 +147,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 10
@@ -157,7 +157,7 @@ Item {
                     fgColor: root.fgColors[index]
                 }
 
-                ControlSliderTuning {
+                ControlTuning {
                     controller: root
                     sender: root.sender
                     index: 11
