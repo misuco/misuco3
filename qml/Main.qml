@@ -132,6 +132,7 @@ Window {
                 y: viewContainer.elementSpace
 
                 spacing: viewContainer.elementSpace
+                topPadding: viewContainer.elementSpace
                 rightPadding: viewContainer.elementSpace
 
                 ControlButton {
@@ -214,11 +215,13 @@ Window {
                                     width: parent.width / 2
                                     height: width
                                     radius: width / 2
-                                    down: false
+
+                                    down: mouseArea.pressed ? true : false
 
                                     anchors.centerIn: parent
 
-                                    bgColor: swipeView.currentIndex===tabIndicaator.index ? "Orange" : "Gray"
+                                    bgColor: swipeView.currentIndex===tabIndicaator.index || mouseArea.pressed ? "Orange" : "Gray"
+
                                     Text {
                                         anchors.fill: parent
                                         text: `${index+1}`
@@ -226,6 +229,7 @@ Window {
                                         verticalAlignment: Qt.AlignVCenter
                                     }
                                     MouseArea {
+                                        id: mouseArea
                                         anchors.fill: parent
                                         onClicked: swipeView.currentIndex=tabIndicaator.index
                                     }
