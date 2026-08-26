@@ -109,9 +109,11 @@ Window {
         ControlArea {
             id: headerArea
 
+            property int tabCount: 10
+
             readonly property double vumeterWidth: width * 0.5
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
-            readonly property double buttonWidth: viewContainer.rasterWidth * (root.portrait ? 1 : 2)
+            readonly property double buttonWidth: viewContainer.rasterWidth
 
             x:viewContainer.elementSpace
             y:viewContainer.elementSpace
@@ -128,7 +130,9 @@ Window {
             Row {
                 x: viewContainer.elementSpace
                 y: viewContainer.elementSpace
-                padding: viewContainer.elementSpace
+
+                spacing: viewContainer.elementSpace
+                rightPadding: viewContainer.elementSpace
 
                 ControlButton {
                     id: holdKeysSwitch
@@ -176,21 +180,71 @@ Window {
                     }
                 }
 
-                TabBar {
+                ControlButton {
+                    id: tabLeft
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "◀"
+                    selected: pressed
+                    bgColor: pressed ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        swipeView.currentIndex = Math.max(swipeView.currentIndex-1,0)
+                    }
+                }
+
+                ControlEmboss {
                     id: tabBar
 
-                    readonly property int tabCount: 10
-                    width: headerArea.width - headerArea.buttonHeight*5
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: headerArea.width - headerArea.buttonWidth*5 - 7*viewContainer.elementSpace
+                    height: headerArea.buttonHeight
+                    readonly property int tabWidth: width / headerArea.tabCount
 
-                    currentIndex: swipeView.currentIndex
+                    Row {
+                        width: tabBar.width
+                        height: tabBar.height
+                        Repeater {
+                            model: headerArea.tabCount
+                            delegate: Item {
+                                id: tabIndicaator
+                                required property int index
+                                width: tabBar.tabWidth
+                                height: tabBar.height
+                                ControlEmboss {
+                                    width: parent.width / 2
+                                    height: width
+                                    radius: width / 2
+                                    down: false
 
-                    Repeater {
-                        model: tabBar.tabCount
-                        delegate: TabButton {
-                            required property int index
-                            text: `${index+1}`
+                                    anchors.centerIn: parent
+
+                                    bgColor: swipeView.currentIndex===tabIndicaator.index ? "Orange" : "Gray"
+                                    Text {
+                                        anchors.fill: parent
+                                        text: `${index+1}`
+                                        horizontalAlignment: Qt.AlignHCenter
+                                        verticalAlignment: Qt.AlignVCenter
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: swipeView.currentIndex=tabIndicaator.index
+                                    }
+                                }
+                            }
                         }
+                    }
+                }
+
+                ControlButton {
+                    id: tabRight
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "▶"
+                    selected: pressed
+                    bgColor: pressed ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        swipeView.currentIndex = Math.min(swipeView.currentIndex+1,headerArea.tabCount-1)
                     }
                 }
             }
@@ -222,8 +276,6 @@ Window {
             }
         }
 
-
-
         PlayArea {
             id: playArea
 
@@ -240,7 +292,6 @@ Window {
             fgColors: root.fgColors
         }
 
-
         SwipeView {
             id: swipeView
 
@@ -251,7 +302,6 @@ Window {
             height: viewContainer.swipeHeight - viewContainer.elementSpace
 
             contentWidth: viewContainer.contentWidth
-            currentIndex: tabBar.currentIndex
 
             interactive: true
 
