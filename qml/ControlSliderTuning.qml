@@ -23,8 +23,8 @@ Slider {
     property color bgColor
     property color fgColor
 
-    from: -50
-    to: 50
+    from: -100
+    to: 100
     value: 0
     snapMode: Slider.SnapAlways
     stepSize: 1
@@ -68,7 +68,6 @@ Slider {
         x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
         y: controlSlider.topPadding + controlSlider.visualPosition * (controlSlider.availableHeight - height)
         implicitHeight: controlSlider.width
-        //implicitWidth: controlSlider.width
         width: controlSlider.width
         down: false
         radius: controlSlider.width / 2

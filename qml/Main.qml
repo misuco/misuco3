@@ -19,6 +19,10 @@ Window {
 
     readonly property bool portrait: height > width
 
+    onWidthChanged: { console.log(`root:Window w: ${width}`) }
+    onHeightChanged: { console.log(`root:Window h: ${height}`) }
+    onPortraitChanged: { console.log(`root:Window portrait: ${portrait}`) }
+
     property var scaleModel: [
         {
             note: 25
@@ -74,9 +78,12 @@ Window {
     ]
 
     visible: true
-    width: 1920 //Screen.width
-    height: 1080 //Screen.height
     title: qsTr("MISUCO3")
+
+    Component.onCompleted: {
+        width=1920 //Screen.width
+        height=1080 //Screen.height
+    }
 
     Rectangle {
         id: appBackground
@@ -207,7 +214,7 @@ Window {
                         Repeater {
                             model: headerArea.tabCount
                             delegate: Item {
-                                id: tabIndicaator
+                                id: tabIndicator
                                 required property int index
                                 width: tabBar.tabWidth
                                 height: tabBar.height
@@ -220,18 +227,18 @@ Window {
 
                                     anchors.centerIn: parent
 
-                                    bgColor: swipeView.currentIndex===tabIndicaator.index || mouseArea.pressed ? "Orange" : "Gray"
+                                    bgColor: swipeView.currentIndex===tabIndicator.index || mouseArea.pressed ? "Orange" : "Gray"
 
                                     Text {
                                         anchors.fill: parent
-                                        text: `${index+1}`
+                                        text: `${tabIndicator.index+1}`
                                         horizontalAlignment: Qt.AlignHCenter
                                         verticalAlignment: Qt.AlignVCenter
                                     }
                                     MouseArea {
                                         id: mouseArea
                                         anchors.fill: parent
-                                        onClicked: swipeView.currentIndex=tabIndicaator.index
+                                        onClicked: swipeView.currentIndex=tabIndicator.index
                                     }
                                 }
                             }
@@ -337,7 +344,7 @@ Window {
                 id: rangeConfigArea
 
                 width: swipeView.width
-                height: swipeView.height * 1.5
+                height: swipeView.height
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -412,7 +419,7 @@ Window {
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
 
-                height: swipeView.height + viewContainer.playAreaHeight - viewContainer.elementSpace
+                height: swipeView.height + playArea.height + viewContainer.elementSpace
 
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive

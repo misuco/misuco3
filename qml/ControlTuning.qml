@@ -6,7 +6,7 @@ import QtQuick
 import QtQuick.Controls
 import misuco3
 
-Slider {
+Item {
     id: root
 
     required property var controller
@@ -21,7 +21,6 @@ Slider {
 
     readonly property double sliderHeight: height * 0.9
     readonly property double labelHeight: height * 0.1
-
 
     ControlSliderTuning {
         id: slider
