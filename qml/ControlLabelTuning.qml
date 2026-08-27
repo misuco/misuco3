@@ -61,6 +61,7 @@ Item {
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         color: root.pressed > 0 ? root.bgColor : root.fgColor
-        font.pixelSize: height * 0.8
+        font.pixelSize: Math.min(width,height) * 0.8
+        rotation: height>width ? 90 : 0
     }
 }

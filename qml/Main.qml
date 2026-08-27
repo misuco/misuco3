@@ -19,10 +19,6 @@ Window {
 
     readonly property bool portrait: height > width
 
-    onWidthChanged: { console.log(`root:Window w: ${width}`) }
-    onHeightChanged: { console.log(`root:Window h: ${height}`) }
-    onPortraitChanged: { console.log(`root:Window portrait: ${portrait}`) }
-
     property var scaleModel: [
         {
             note: 25
@@ -81,8 +77,8 @@ Window {
     title: qsTr("MISUCO3")
 
     Component.onCompleted: {
-        width=1920 //Screen.width
-        height=1080 //Screen.height
+        width=Math.min(Screen.width,1920)
+        height=Math.min(Screen.height,1080)
     }
 
     Rectangle {
@@ -97,7 +93,9 @@ Window {
         // Raster 12mm @ 60x140mm display
         property double rasterWidth: root.portrait ? width / 6 : height / 6
         property double elementSpace: rasterWidth / 12
-        property double elementRadius: rasterWidth / 12
+        property double elementRadius: rasterWidth / 12        
+        property double effectSize: 3
+
         property double contentWidth: width - 2*elementSpace
 
         property double headerHeight: rasterWidth
@@ -118,7 +116,6 @@ Window {
 
             property int tabCount: 10
 
-            readonly property double vumeterWidth: width * 0.5
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
 
@@ -130,9 +127,7 @@ Window {
 
             elementRadius: viewContainer.elementRadius
 
-            //text: `${root.title} w: ${root.width} h: ${root.height} pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
-            //text: `${root.title}  w: ${root.width} h: ${root.height} scale: ${root.sizeScaleFactor}  pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
-            text: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
+            text: ""
 
             Row {
                 x: viewContainer.elementSpace
@@ -169,6 +164,7 @@ Window {
                     }
                 }
 
+                /*
                 ControlButton {
                     id: portraitSwitch
                     width: headerArea.buttonWidth
@@ -187,12 +183,13 @@ Window {
                         }
                     }
                 }
+                */
 
                 ControlButton {
                     id: tabLeft
                     width: headerArea.buttonWidth
                     height: headerArea.buttonHeight
-                    text: "◀"
+                    text: "<"
                     selected: pressed
                     bgColor: pressed ? "Orange" : "Gray"
                     fgColor: "White"
@@ -204,7 +201,8 @@ Window {
                 ControlEmboss {
                     id: tabBar
 
-                    width: headerArea.width - headerArea.buttonWidth*5 - 7*viewContainer.elementSpace
+                    visible: root.portrait===false
+                    width: headerArea.width - headerArea.buttonWidth*4 - 6*viewContainer.elementSpace
                     height: headerArea.buttonHeight
                     readonly property int tabWidth: width / headerArea.tabCount
 
@@ -219,8 +217,8 @@ Window {
                                 width: tabBar.tabWidth
                                 height: tabBar.height
                                 ControlEmboss {
-                                    width: parent.width / 2
-                                    height: width
+                                    width: parent.width
+                                    height: width / 2
                                     radius: width / 2
 
                                     down: mouseArea.pressed ? true : false
@@ -250,7 +248,7 @@ Window {
                     id: tabRight
                     width: headerArea.buttonWidth
                     height: headerArea.buttonHeight
-                    text: "▶"
+                    text: ">"
                     selected: pressed
                     bgColor: pressed ? "Orange" : "Gray"
                     fgColor: "White"
@@ -260,29 +258,38 @@ Window {
                 }
             }
 
-            Rectangle {
-                x:250
-                y:2
+            Item {
+                id: vuMeter
 
-                width: headerArea.vumeterWidth * root.synthContext.peak
-                height: 15
-                color: "Green"
-            }
+                readonly property double barWidth: width*0.95
+                readonly property double clipWidth: width*0.05
 
-            Rectangle {
-                visible: root.synthContext.clip
-                x:250+headerArea.vumeterWidth
-                y:2
-                width: 50
-                height: 15
-                color: "Red"
+                x:viewContainer.elementSpace
+                y:height + viewContainer.effectSize
+                width: headerArea.width - 4*viewContainer.elementSpace
+                height: viewContainer.elementSpace / 3
 
-                Text {
-                    anchors.fill: parent
-                    horizontalAlignment: Qt.AlignHCenter
-                    verticalAlignment: Qt.AlignVCenter
-                    text: root.synthContext.clipLen
-                    color: "White"
+                Rectangle {
+                    width: vuMeter.barWidth * root.synthContext.peak
+                    height: vuMeter.height
+                    color: "Green"
+                }
+
+                Rectangle {
+                    visible: root.synthContext.clip
+                    x:vuMeter.barWidth
+                    width: vuMeter.clipWidth
+                    height: vuMeter.height
+                    color: "Red"
+
+                    Text {
+                        anchors.fill: parent
+                        horizontalAlignment: Qt.AlignHCenter
+                        verticalAlignment: Qt.AlignVCenter
+                        text: root.synthContext.clipLen
+                        color: "White"
+                        font.pixelSize: vuMeter.height
+                    }
                 }
             }
         }
@@ -497,6 +504,7 @@ Window {
                 //width: swipeView.areasWidth
                 //height: swipeView.height
                 synthesizer: root.synthContext
+                displayInfo: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
             }
         }
 
@@ -513,37 +521,5 @@ Window {
                 yModAssign.xyMod(voiceId, note, tuning, value)
             }
         }
-
-        /*
-        Rectangle {
-            x: 0
-            y: 0
-            width: viewContainer.elementSpace
-            height: viewContainer.headerHeight
-            color: "Red"
-        }
-        Rectangle {
-            x: 0
-            y: viewContainer.headerHeight
-            width: viewContainer.elementSpace
-            height: viewContainer.swipeHeight
-            color: "Green"
-        }
-        Rectangle {
-            x: 0
-            y: viewContainer.headerHeight + viewContainer.swipeHeight
-            width: viewContainer.elementSpace
-            height: viewContainer.playAreaHeight
-            color: "Blue"
-        }
-
-        Rectangle {
-            x: 0
-            y: viewContainer.headerHeight + viewContainer.swipeHeight + viewContainer.playAreaHeight - viewContainer.elementSpace
-            width: viewContainer.elementSpace
-            height: viewContainer.elementSpace
-            color: "Red"
-        }
-        */
     }
 }

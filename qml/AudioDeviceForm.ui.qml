@@ -14,6 +14,8 @@ Item {
     property alias bufferSizeSelect: bufferSizeSelect
     property MobileSynth synthesizer
 
+    property string displayInfo
+
     ControlArea {
         width: root.width
         height: root.height
@@ -177,6 +179,12 @@ Item {
             x:160
             y:280
             text: root.synthesizer.bufferBytesFree
+        }
+
+        Text {
+            x:160
+            y:300
+            text: root.displayInfo
         }
     }
 }
