@@ -33,8 +33,13 @@ Item {
         "osc2 shift"
     ]
 
-    readonly property double elementWidth: width/2 - 3*elementSpace
-    readonly property double buttonSize: rasterWidth - 3*elementSpace
+    readonly property double contentWidth: width - 2*elementSpace
+    readonly property double elementWidth: portrait ? contentWidth : (contentWidth - elementSpace) / 2
+    readonly property double contentHeight: height - 2*elementSpace
+    readonly property double elementHeight: portrait ? (contentHeight - 4*elementSpace) / 5  : (contentHeight - elementSpace) / 2
+    readonly property int gridRows: portrait ? 4 : 2
+    readonly property int gridColumns: portrait ? 1 : 2
+    //readonly property double buttonSize: rasterWidth - 3*elementSpace
 
     ControlArea {
         width: root.width
@@ -43,26 +48,28 @@ Item {
         text: root.title
 
         Column {
+            x: root.elementSpace
             y: root.elementSpace
-            padding: root.elementSpace
+
+            spacing: root.elementSpace
 
             Grid {
-                columns: 2
-                rows: 2
+                rows: root.gridRows
+                columns: root.gridColumns
 
-                padding: root.elementSpace
+                spacing: root.elementSpace
 
                 ComboBox {
                     id: modAssignSelect
                     model: root.assignables
                     width: root.elementWidth
-                    height: root.buttonSize
+                    height: root.elementHeight
                 }
 
                 ControlSlider {
                     id: modAmountSlider
                     width: root.elementWidth
-                    height: root.buttonSize
+                    height: root.elementHeight
                     elementRadius: root.elementRadius
                     text: "Amount"
                     from: 0
@@ -73,7 +80,7 @@ Item {
                 ControlSlider {
                     id: modMinSlider
                     width: root.elementWidth
-                    height: root.buttonSize
+                    height: root.elementHeight
                     elementRadius: root.elementRadius
                     text: "Min"
                     from: 0
@@ -84,7 +91,7 @@ Item {
                 ControlSlider {
                     id: modMaxSlider
                     width: root.elementWidth
-                    height: root.buttonSize
+                    height: root.elementHeight
                     elementRadius: root.elementRadius
                     text: "Max"
                     from: 0
@@ -95,8 +102,9 @@ Item {
 
             ControlBarRange {
                 id: modBar
-                width: root.width
-                height: root.elementSpace
+                visible: root.portrait
+                width: root.elementWidth
+                height: root.elementHeight
                 minValue: modMinSlider.value
                 maxValue: modMaxSlider.value
             }
