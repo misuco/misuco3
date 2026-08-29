@@ -31,8 +31,10 @@ qt_add_qml_module(MISUCO3
         qml/ControlSliderTuning.qml
         qml/ControlTuning.qml
         qml/PlayArea.qml
-        qml/Parameters.qml
-        qml/ParametersForm.ui.qml
+        qml/Parameters_Arp.qml
+        qml/Parameters_ArpForm.ui.qml
+        qml/Parameters_Filter.qml
+        qml/Parameters_FilterForm.ui.qml
         qml/Parameters_Mod.qml
         qml/Parameters_ModForm.ui.qml
         qml/Parameters_Osc.qml

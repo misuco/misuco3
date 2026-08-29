@@ -114,7 +114,7 @@ Window {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 10
+            property int tabCount: 11
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -433,7 +433,6 @@ Window {
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
 
-
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive
                 fgColors: root.fgColors
@@ -483,10 +482,14 @@ Window {
                 }
             }
 
-            Parameters {
-                //width: swipeView.width
-                modAssign: xyAssignableParameter
+            Parameters_Arp {
                 synthesizer: root.synthContext
+                elementSpace: viewContainer.elementSpace
+            }
+
+            Parameters_Filter {
+                modAssign: xyAssignableParameter
+                elementSpace: viewContainer.elementSpace
             }
 
             Parameters_Osc {

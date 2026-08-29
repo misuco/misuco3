@@ -45,7 +45,7 @@ Item {
             Row {
                 id: tuningRow
 
-                height: root.height - root.rasterWidth - 4*root.elementSpace
+                height: root.height - root.rasterWidth - 5*root.elementSpace
                 spacing: root.elementSpace
 
                 Repeater {

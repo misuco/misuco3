@@ -7,10 +7,9 @@ import QtQuick.Controls
 import misuco3
 import "./"
 
-ParametersForm {
+Parameters_ArpForm {
     id: root
 
-    required property XYAssignableParameter modAssign
     property MobileSynth synthesizer
 
     Connections {
@@ -34,22 +33,6 @@ ParametersForm {
         function onValueChanged() {
             root.synthesizer.set_arpeggio_step(root.arpeggioStepSlider.value)
             console.log("set_arpeggio_step " + root.arpeggioStepSlider.value)
-        }
-    }
-
-    Connections {
-        target: root.filterCutoffSlider
-        function onValueChanged() {
-            root.modAssign.setBaseValue(74,root.filterCutoffSlider.value)
-            console.log("set_filter_cutoff " + root.filterCutoffSlider.value)
-        }
-    }
-
-    Connections {
-        target: root.filterResonanceSlider
-        function onValueChanged() {
-            root.modAssign.setBaseValue(71,root.filterResonanceSlider.value)
-            console.log("set_filter_resonance " + root.filterResonanceSlider.value)
         }
     }
 }
