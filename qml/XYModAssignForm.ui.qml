@@ -36,10 +36,9 @@ Item {
     readonly property double contentWidth: width - 2*elementSpace
     readonly property double elementWidth: portrait ? contentWidth : (contentWidth - elementSpace) / 2
     readonly property double contentHeight: height - 2*elementSpace
-    readonly property double elementHeight: portrait ? (contentHeight - 4*elementSpace) / 5  : (contentHeight - elementSpace) / 2
-    readonly property int gridRows: portrait ? 4 : 2
+    readonly property double elementHeight: portrait ? (contentHeight - 7*elementSpace) / 5  : (contentHeight - 4*elementSpace) / 2
+    readonly property int gridRows: 4 //portrait ? 4 : 2
     readonly property int gridColumns: portrait ? 1 : 2
-    //readonly property double buttonSize: rasterWidth - 3*elementSpace
 
     ControlArea {
         width: root.width
@@ -48,15 +47,14 @@ Item {
         text: root.title
 
         Column {
-            x: root.elementSpace
-            y: root.elementSpace
+            y: 2*root.elementSpace
 
+            leftPadding: root.elementSpace
             spacing: root.elementSpace
 
             Grid {
                 rows: root.gridRows
                 columns: root.gridColumns
-
                 spacing: root.elementSpace
 
                 ComboBox {

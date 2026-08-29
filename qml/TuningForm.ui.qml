@@ -23,12 +23,11 @@ Item {
     readonly property double contentWidth: width - 2*elementSpace
     readonly property double elementWidth: contentWidth/12 - elementSpace
 
-    signal tuningUpdated(var i, var t)
-
     ControlArea {
         width: root.width
         height: root.height
         elementRadius: root.elementRadius
+
 
         text: "Tuning"
 
@@ -44,127 +43,24 @@ Item {
             }
 
             Row {
-                height: root.height - root.rasterWidth - 5*root.elementSpace
+                id: tuningRow
+
+                height: root.height - root.rasterWidth - 4*root.elementSpace
                 spacing: root.elementSpace
 
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    width: root.elementWidth
-                    height: parent.height
-                    index: 0
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 1
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 2
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 3
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 4
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 5
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 6
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 7
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 8
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 9
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 10
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
-                }
-
-                ControlTuning {
-                    controller: root
-                    sender: root.sender
-                    index: 11
-                    width: root.elementWidth
-                    height: parent.height
-                    bgColor: root.bgColors[index]
-                    fgColor: root.fgColors[index]
+                Repeater {
+                    model: 12
+                    delegate: ControlTuning {
+                        id: control
+                        required property int index
+                        controller: root
+                        sender: root.sender
+                        width: root.elementWidth
+                        height: tuningRow.height
+                        noteIndex: control.index
+                        bgColor: root.bgColors[control.index]
+                        fgColor: root.fgColors[control.index]
+                    }
                 }
             }
         }

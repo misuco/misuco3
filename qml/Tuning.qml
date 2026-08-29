@@ -5,4 +5,5 @@
 import QtQuick
 
 TuningForm {
+    signal tuningUpdated(var i, var t)
 }

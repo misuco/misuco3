@@ -14,7 +14,7 @@ Item {
 
     property double elementRadius: 5
 
-    property int index
+    property int noteIndex
 
     property color bgColor
     property color fgColor
@@ -29,7 +29,7 @@ Item {
         controller: root.controller
         sender: root.sender
         elementRadius: root.elementRadius
-        index: root.index
+        index: root.noteIndex
         bgColor: root.bgColor
         fgColor: root.fgColor
     }
@@ -41,7 +41,7 @@ Item {
         anchors.top: slider.bottom
         sender: root.sender
         elementRadius: root.elementRadius
-        index: root.index
+        index: root.noteIndex
         value: slider.value
         bgColor: root.bgColor
         fgColor: root.fgColor

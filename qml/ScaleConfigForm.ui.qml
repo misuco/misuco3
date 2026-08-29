@@ -62,7 +62,8 @@ Item {
 
         Column {
             y: 2* root.elementSpace
-            padding: root.elementSpace
+
+            leftPadding: root.elementSpace
             spacing: root.elementSpace
 
             ComboBox {
@@ -74,8 +75,7 @@ Item {
 
             Grid {
                 columns: root.portrait ? 6 : 12
-                rows: 2
-
+                rows: 2 //root.portrait ? 2 : 1
                 spacing: root.elementSpace
 
                 ControlButton {

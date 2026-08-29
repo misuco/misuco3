@@ -99,7 +99,7 @@ Window {
         property double contentWidth: width - 2*elementSpace
 
         property double headerHeight: rasterWidth
-        property double swipeHeight: rasterWidth * (root.portrait ? 3 : 2)
+        property double swipeHeight: rasterWidth * (root.portrait ? 3 : 2) - viewContainer.elementSpace
         property double playAreaHeight: height - headerHeight - swipeHeight
 
         x: root.SafeArea.margins.left
@@ -202,13 +202,16 @@ Window {
                     id: tabBar
 
                     visible: root.portrait===false
-                    width: headerArea.width - headerArea.buttonWidth*4 - 6*viewContainer.elementSpace
+                    width: headerArea.width - headerArea.buttonWidth*4 - 8*viewContainer.elementSpace
                     height: headerArea.buttonHeight
-                    readonly property int tabWidth: width / headerArea.tabCount
+                    readonly property int tabWidth: width / headerArea.tabCount - viewContainer.elementSpace
 
                     Row {
                         width: tabBar.width
                         height: tabBar.height
+                        leftPadding: viewContainer.elementSpace
+                        spacing: viewContainer.elementSpace
+
                         Repeater {
                             model: headerArea.tabCount
                             delegate: Item {
@@ -298,7 +301,7 @@ Window {
             id: playArea
 
             x: viewContainer.elementSpace
-            y: viewContainer.swipeHeight + viewContainer.headerHeight
+            y: viewContainer.swipeHeight + viewContainer.headerHeight + viewContainer.elementSpace
 
             width: viewContainer.contentWidth
             height: viewContainer.playAreaHeight - viewContainer.elementSpace
@@ -317,7 +320,7 @@ Window {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: viewContainer.swipeHeight - viewContainer.elementSpace
+            height: currentIndex === 4  ? viewContainer.swipeHeight + viewContainer.playAreaHeight : viewContainer.swipeHeight
 
             contentWidth: viewContainer.contentWidth
 
@@ -326,8 +329,7 @@ Window {
             ScaleConfig {
                 id: scaleConfigArea
 
-                width: swipeView.width
-                height: swipeView.height
+                height: viewContainer.swipeHeight
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -350,8 +352,7 @@ Window {
             RangeConfig {
                 id: rangeConfigArea
 
-                width: swipeView.width
-                height: swipeView.height
+                height: viewContainer.swipeHeight
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -391,6 +392,8 @@ Window {
             XYModAssign {
                 id: xModAssign
 
+                height: viewContainer.swipeHeight
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
@@ -404,6 +407,8 @@ Window {
 
             XYModAssign {
                 id: yModAssign
+
+                height: viewContainer.swipeHeight
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -421,12 +426,13 @@ Window {
 
                 sender: root.senderContext
 
+                height: viewContainer.swipeHeight + viewContainer.playAreaHeight + viewContainer.elementSpace
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
 
-                height: swipeView.height + playArea.height + viewContainer.elementSpace
 
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive

@@ -19,7 +19,7 @@ Item {
     property var bgColorsActive: []
     property var fgColors: []
 
-    readonly property double buttonSize: rasterWidth - 3*elementSpace
+    readonly property double buttonSize: rasterWidth - 4*elementSpace
     
     property alias octaveRangeSlider: octaveRangeSlider
 
@@ -43,14 +43,15 @@ Item {
         text: "Range"
 
         Column {
-            y: root.elementSpace
-            padding: root.elementSpace
+            y: 2*root.elementSpace
+
+            leftPadding: root.elementSpace
+            spacing: root.elementSpace
 
             Grid {
                 columns: root.portrait ? 6 : 12
                 rows: 2 //root.portrait ? 2 : 1
-
-                padding: root.elementSpace
+                spacing: root.elementSpace
 
                 ControlButton {
                     id: baseButton_C
