@@ -25,8 +25,8 @@ Window {
         }
     ]
 
-    property bool holdKeys
-    property bool arpOn
+    property bool holdKeys: false
+    property bool arpOn: false
 
     property var bgColors: [
         "#403",
@@ -109,6 +109,7 @@ Window {
 
         XYAssignableParameter {
             id: xyAssignableParameter
+            sender: root.senderContext
         }
 
         ControlArea {
@@ -300,6 +301,8 @@ Window {
         PlayArea {
             id: playArea
 
+            sender: root.senderContext
+
             x: viewContainer.elementSpace
             y: viewContainer.swipeHeight + viewContainer.headerHeight + viewContainer.elementSpace
 
@@ -307,7 +310,7 @@ Window {
             height: viewContainer.playAreaHeight - viewContainer.elementSpace
 
             keys: root.scaleModel
-            sender: root.senderContext
+            holdKeys: root.holdKeys
             bgColors: root.bgColors
             bgColorsActive: root.bgColorsActive
             fgColors: root.fgColors

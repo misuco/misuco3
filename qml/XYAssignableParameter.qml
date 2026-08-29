@@ -6,11 +6,13 @@ import QtQuick
 import misuco3
 
 QtObject {
+    required property MasterSender sender
     property var valueMap: new Map()
 
     function setBaseValue(cc :int, value :double) {
         console.log(`setBaseValue ${cc} ${value}`)
         valueMap.set(cc,value)
+        sender.ccAllVoices(cc,value)
     }
 
     function getBaseValue(cc :int) :double {

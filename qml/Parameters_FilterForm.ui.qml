@@ -32,9 +32,9 @@ Item {
                 width: root.elementWidth
                 height: root.elementHeight
                 text: "Cutoff"
-                from: 1
-                to: 1000
-                value: 1
+                from: 0.0
+                to: 1.0
+                value: 0.5
             }
 
             ControlSlider {

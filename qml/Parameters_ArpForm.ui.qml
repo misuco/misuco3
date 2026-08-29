@@ -9,6 +9,7 @@ Item {
     id: root
 
     property double elementSpace: 5
+    property bool portrait: false
 
     readonly property double contentWidth: width - 2*elementSpace
     readonly property double elementWidth: portrait ? contentWidth : (contentWidth - elementSpace) / 2
