@@ -334,7 +334,9 @@ ApplicationWindow {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: currentIndex === 4  ? viewContainer.swipeHeight + viewContainer.playAreaHeight : viewContainer.swipeHeight
+            height: currentIndex === 4                  ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning
+                    currentIndex === 8 && root.portrait ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
+                    viewContainer.swipeHeight
 
             contentWidth: viewContainer.contentWidth
 
@@ -513,7 +515,10 @@ ApplicationWindow {
             }
 
             Parameters_Osc_2 {
-                //width: swipeView.areasWidth
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
                 synthesizer: root.synthContext
             }
 

@@ -8,7 +8,7 @@ import misuco3
 
 Parameters_Osc_1Form {
     id: root
-    property MobileSynth synthesizer
+    required property MobileSynth synthesizer
 
     Connections {
         target: root.levelSlider

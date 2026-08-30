@@ -41,6 +41,7 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_Osc_1Form.ui.qml
         qml/Parameters_Osc_2.qml
         qml/Parameters_Osc_2Form.ui.qml
+        qml/Parameters_Osc_WaveOctaveGrid.ui.qml
         qml/RangeConfig.qml
         qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
