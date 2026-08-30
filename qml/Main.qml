@@ -11,7 +11,7 @@ import "./"
 
 pragma ComponentBehavior: Bound
 
-Window {
+ApplicationWindow {
     id: root
 
     required property MasterSender senderContext
@@ -79,6 +79,17 @@ Window {
     Component.onCompleted: {
         width=Math.min(Screen.width,1920)
         height=Math.min(Screen.height,1080)
+    }
+
+    FontLoader {
+        id: misuco3font
+        source: "qrc:/qt/qml/misuco3/qml/fonts/alpha-prota/AlphaProta.otf"
+    }
+
+    font {
+        family: misuco3font.name
+        pixelSize: viewContainer.elementSpace * 2
+        bold: true
     }
 
     Rectangle {
@@ -337,7 +348,6 @@ Window {
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
-
                 portrait: root.portrait
 
                 bgColors: root.bgColors
@@ -360,7 +370,6 @@ Window {
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
-
                 portrait: root.portrait
 
                 bgColors: root.bgColors
@@ -495,8 +504,11 @@ Window {
                 elementSpace: viewContainer.elementSpace
             }
 
-            Parameters_Osc {
-                //width: swipeView.areasWidth
+            Parameters_Osc_1 {
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
                 synthesizer: root.synthContext
             }
 

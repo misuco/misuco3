@@ -37,8 +37,8 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_FilterForm.ui.qml
         qml/Parameters_Mod.qml
         qml/Parameters_ModForm.ui.qml
-        qml/Parameters_Osc.qml
-        qml/Parameters_OscForm.ui.qml
+        qml/Parameters_Osc_1.qml
+        qml/Parameters_Osc_1Form.ui.qml
         qml/Parameters_Osc_2.qml
         qml/Parameters_Osc_2Form.ui.qml
         qml/RangeConfig.qml
@@ -50,6 +50,13 @@ qt_add_qml_module(MISUCO3
         qml/XYAssignableParameter.qml
         qml/XYModAssign.qml
         qml/XYModAssignForm.ui.qml
+    RESOURCES
+        qml/icons/wave-sine.svg
+        qml/icons/wave-square.svg
+        qml/icons/wave-tri.svg
+        qml/icons/wave-saw.svg
+        qml/icons/wave-saw-rev.svg
+        qml/fonts/alpha-prota/AlphaProta.otf
 
     SOURCES
         misulib/comm/heartbeat.cpp

@@ -6,7 +6,7 @@ import QtQuick
 import QtQuick.Controls
 import misuco3
 
-Parameters_OscForm {
+Parameters_Osc_1Form {
     id: root
     property MobileSynth synthesizer
 
