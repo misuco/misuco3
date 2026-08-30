@@ -21,7 +21,7 @@ Item {
     property var bgColorsActive: []
     property var fgColors: []
 
-    readonly property double buttonSize: rasterWidth - 4*elementSpace
+    readonly property double buttonSize: rasterWidth - 3*elementSpace
     
     property alias octaveRangeSlider: octaveRangeSlider
 
@@ -49,7 +49,7 @@ Item {
         Column {
             y: 2*root.elementSpace
 
-            leftPadding: root.elementSpace
+            padding: root.elementSpace
             spacing: root.elementSpace
 
             Grid {
@@ -194,14 +194,14 @@ Item {
                 id: octaveRangeSlider
 
                 width: root.width - 2*root.elementSpace
-                height: root.buttonSize
+                height: root.buttonSize - 2*root.elementSpace
 
                 snapMode: Slider.SnapAlways
                 stepSize: 1
 
                 elementRadius:root.elementRadius
 
-                first.value: 4
+                first.value: 5
                 second.value: 5
             }
         }

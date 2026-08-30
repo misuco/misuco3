@@ -510,14 +510,18 @@ ApplicationWindow {
             Parameters_Arp {
                 synthesizer: root.synthContext
 
+                rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
             }
 
             Parameters_Filter {
                 modAssign: xyAssignableParameter
+                rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
             }

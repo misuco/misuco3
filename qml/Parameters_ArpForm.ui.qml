@@ -8,6 +8,7 @@ import QtQuick.Controls
 Item {
     id: root
 
+    property double rasterWidth: 50
     property double elementSpace: 5
     property bool portrait: false
 
@@ -16,8 +17,7 @@ Item {
 
     readonly property double contentWidth: width - 2*elementSpace
     readonly property double elementWidth: portrait ? contentWidth : (contentWidth - elementSpace) / 2
-    readonly property double contentHeight: height - 2*elementSpace
-    readonly property double elementHeight: portrait ? (contentHeight - 4*elementSpace) / 3  : (contentHeight - 3*elementSpace) / 2
+    readonly property double elementHeight: rasterWidth - (portrait ? 2 : 3)*elementSpace
     readonly property int gridRows: 2
     readonly property int gridColumns: portrait ? 1 : 2
 
@@ -36,8 +36,8 @@ Item {
         Column {
             y: 2*root.elementSpace
 
-            leftPadding: root.elementSpace
-            spacing: root.elementSpace
+            padding: root.elementSpace
+            //spacing: root.elementSpace
 
             Grid {
                 rows: root.gridRows

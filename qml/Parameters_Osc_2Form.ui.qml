@@ -52,8 +52,8 @@ Item {
         Column {
             y: 2*root.elementSpace
 
-            leftPadding: root.elementSpace
-            spacing: root.elementSpace
+            padding: root.elementSpace
+            //spacing: root.elementSpace
 
             Grid {
 

@@ -8,13 +8,15 @@ import QtQuick.Controls
 Item {
     id: root
 
+    property double rasterWidth: 50
     property double elementSpace: 5
+    property bool portrait: false
 
     property string fontFamily
     property double fontPixelSize: 10
 
     readonly property double elementWidth: width - 2*elementSpace
-    readonly property double elementHeight: (height - 4*elementSpace) / 2
+    readonly property double elementHeight: rasterWidth - (portrait ? 2 : 3)*elementSpace
 
     property alias filterCutoffSlider: filterCutoffSlider
     property alias filterResonanceSlider: filterResonanceSlider
@@ -22,12 +24,15 @@ Item {
     ControlArea {
         width: root.width
         height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
+
         text: "Filter"
 
         Column {
             y: 2*root.elementSpace
 
-            leftPadding: root.elementSpace
+            padding: root.elementSpace
             spacing: root.elementSpace
 
             ControlSlider {
