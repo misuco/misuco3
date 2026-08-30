@@ -549,17 +549,19 @@ ApplicationWindow {
             }
 
             Parameters_Mod {
-                //width: swipeView.areasWidth
                 modAssign: xyAssignableParameter
                 synthesizer: root.synthContext
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
             }
 
             AudioDevice {
-                //id: audioDeviceArea
-                //width: swipeView.areasWidth
-                //height: swipeView.height
                 synthesizer: root.synthContext
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
