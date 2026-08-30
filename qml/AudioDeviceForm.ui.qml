@@ -4,6 +4,8 @@
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Window
+import QtCore
 import misuco3
 
 Item {
@@ -14,181 +16,346 @@ Item {
     property alias bufferSizeSelect: bufferSizeSelect
     property MobileSynth synthesizer
 
-    property string displayInfo
+    property double rasterWidth: 50
+    property double elementSpace: 5
+    property double elementRadius: 5
+    property bool portrait: false
     property string fontFamily
     property double fontPixelSize: 10
+
+    readonly property double contentWidth: width - 2*elementSpace
+    readonly property double comboBoxWidth1: (contentWidth - 4*elementSpace) / 2
+    readonly property double comboBoxWidth2: (contentWidth - 4*elementSpace) / 4
+    readonly property double buttonSize: rasterWidth - 3*elementSpace
+
+    component GridText: Text {
+        font {
+            family: root.fontFamily
+            pixelSize: root.fontPixelSize
+            bold: true
+        }
+    }
 
     ControlArea {
         width: root.width
         height: root.height
         fontFamily: root.fontFamily
         fontPixelSize: root.fontPixelSize
-        text: "Audio Device"
+        text: "Audio Device / System Info"
 
-        ComboBox {
-            id: modeSelect
-            x:10
-            y:20
-            model: ["Pull", "Push"]
-        }
+        Column {
+            y: 2*root.elementSpace
+            spacing: root.elementSpace
+            padding: root.elementSpace
+            Row {
+                spacing: root.elementSpace
+                ComboBox {
+                    id: deviceSelect
+                    model: root.synthesizer.deviceList
+                    width: root.comboBoxWidth1
+                    height: root.buttonSize
+                }
 
-        ComboBox {
-            id: bufferSizeSelect
-            x:200
-            y:20
-            model: ["512", "1024", "2048", "4096", "8192", "16384"]
-        }
+                ComboBox {
+                    id: bufferSizeSelect
+                    model: ["512", "1024", "2048", "4096", "8192", "16384"]
+                    width: root.comboBoxWidth2
+                    height: root.buttonSize
+                }
 
-        ComboBox {
-            id: deviceSelect
-            x:400
-            y:20
-            model: root.synthesizer.deviceList
-        }
+                ComboBox {
+                    id: modeSelect
+                    model: ["Pull", "Push"]
+                    width: root.comboBoxWidth2
+                    height: root.buttonSize
+                }
+            }
 
-        Text {
-            x:10
-            y:80
-            text: "Read Data Bytes:"
-        }
+            Grid {
+                width: root.contentWidth
+                columns: 4
+                rows: 15
+                spacing: root.elementSpace
 
-        Text {
-            x:160
-            y:80
-            text: root.synthesizer.readDataLen
-        }
+                ////
 
-        Text {
-            x:10
-            y:100
-            text: "Sample Rate:"
-        }
+                GridText {
+                    text: "Sample Rate"
+                }
 
-        Text {
-            x:160
-            y:100
-            text: root.synthesizer.sampleRate
-        }
+                GridText {
+                    text: root.synthesizer.sampleRate
+                }
 
-        Text {
-            x:10
-            y:120
-            text: "Channel bits:"
-        }
+                GridText {
+                    text: "Sample format"
+                }
 
-        Text {
-            x:160
-            y:120
-            text: root.synthesizer.channelBytes * 8
-        }
+                GridText {
+                    property int format: root.synthesizer.sampleFormat
+                    text:   (format === 1 ? "UInt8" :
+                            format === 2 ? "Int16" :
+                            format === 3 ? "Int32" :
+                            format === 4 ? "Float" : "Unknown") + " / " +
+                            root.synthesizer.sampleLittleEndian ? "Little" : "Big"
+                }
 
-        Text {
-            x:10
-            y:140
-            text: "Channel count:"
-        }
+                ////
 
-        Text {
-            x:160
-            y:140
-            text: root.synthesizer.channelCount
-        }
+                GridText {
+                    text: "CH count"
+                }
 
-        Text {
-            x:10
-            y:160
-            text: "Sample format:"
-        }
+                GridText {
+                    text: root.synthesizer.channelCount
+                }
 
-        Text {
-            property int format: root.synthesizer.sampleFormat
-            x:160
-            y:160
-            text:   format === 1 ? "UInt8" :
-                    format === 2 ? "Int16" :
-                    format === 3 ? "Int32" :
-                    format === 4 ? "Float" : "Unknown"
-        }
+                GridText {
+                    text: "CH bits"
+                }
 
-        Text {
-            x:10
-            y:180
-            text: "Sample endianness:"
-        }
+                GridText {
+                    text: root.synthesizer.channelBytes * 8
+                }
 
-        Text {
-            x:160
-            y:180
-            text: root.synthesizer.sampleLittleEndian ? "Little" : "Big"
-        }
+                ////
 
-        Text {
-            x:10
-            y:200
-            text: "Mode:"
-        }
+                GridText {
+                    text: "State"
+                }
 
-        Text {
-            x:160
-            y:200
-            text: root.synthesizer.pullMode ? "Pull" : "Push"
-        }
+                GridText {
+                    text: root.synthesizer.audioState===0 ? "Active" :
+                          root.synthesizer.audioState===1 ? "Suspended" :
+                          root.synthesizer.audioState===2 ? "Stopped" :
+                          root.synthesizer.audioState===3 ? "Idle" : "Unknown"
+                }
 
-        Text {
-            x:10
-            y:220
-            text: "State:"
-        }
+                GridText {
+                    text: "Mode"
+                }
 
-        Text {
-            x:160
-            y:220
-            text: root.synthesizer.audioState===0 ? "Active" :
-                  root.synthesizer.audioState===1 ? "Suspended" :
-                  root.synthesizer.audioState===2 ? "Stopped" :
-                  root.synthesizer.audioState===3 ? "Idle" : "Unknown"
-        }
+                GridText {
+                    text: root.synthesizer.pullMode ? "Pull" : "Push"
+                }
 
-        Text {
-            x:10
-            y:240
-            text: "Buffer size:"
-        }
+                ////
 
-        Text {
-            x:160
-            y:240
-            text: root.synthesizer.bufferSize
-        }
+                GridText {
+                    text: "Buffer size"
+                }
 
-        Text {
-            x:10
-            y:260
-            text: "Buffer frames:"
-        }
+                GridText {
+                    text: root.synthesizer.bufferSize
+                }
 
-        Text {
-            x:160
-            y:260
-            text: root.synthesizer.bufferFrameCount
-        }
+                GridText {
+                    text: "Buffer frames"
+                }
 
-        Text {
-            x:10
-            y:280
-            text: "Buffer free:"
-        }
+                GridText {
+                    text: root.synthesizer.bufferFrameCount
+                }
 
-        Text {
-            x:160
-            y:280
-            text: root.synthesizer.bufferBytesFree
-        }
+                ////
 
-        Text {
-            x:160
-            y:300
-            text: root.displayInfo
+                GridText {
+                    text: "Read Bytes"
+                }
+
+                GridText {
+                    text: root.synthesizer.readDataLen
+                }
+
+
+                GridText {
+                    text: "Buffer free"
+                }
+
+                GridText {
+                    text: root.synthesizer.bufferBytesFree
+                }
+
+                ////
+
+                GridText {
+                    text: "- SCREEN -"
+                }
+
+                GridText {
+                    text: "-"
+                }
+
+                GridText {
+                    text: "-"
+                }
+
+                GridText {
+                    text: "-"
+                }
+
+                ////
+
+                GridText {
+                    text: "Width"
+                }
+
+                GridText {
+                    text: Screen.width
+                }
+
+                GridText {
+                    text: "Height"
+                }
+
+                GridText {
+                    text: Screen.height
+                }
+
+                ////
+
+                GridText {
+                    text: "PX dens"
+                }
+
+                GridText {
+                    text: Screen.pixelDensity
+                }
+
+                GridText {
+                    text: "ratio"
+                }
+
+                GridText {
+                    text: Screen.devicePixelRatio
+                }
+
+                ////
+
+                GridText {
+                    text: "Manu"
+                }
+
+                GridText {
+                    text: Screen.manufacturer
+                }
+
+                GridText {
+                    text: "Model"
+                }
+
+                GridText {
+                    text: Screen.model
+                }
+
+                ////
+
+                GridText {
+                    text: "Name"
+                }
+
+                GridText {
+                    text: Screen.name
+                }
+
+                GridText {
+                    text: "Serial"
+                }
+
+                GridText {
+                    text: Screen.serialNumber
+                }
+
+                ////
+
+                GridText {
+                    text: "- MACHINE -"
+                }
+
+                GridText {
+                    text: "-"
+                }
+
+                GridText {
+                    text: "-"
+                }
+
+                GridText {
+                    text: "-"
+                }
+
+                ////
+
+                GridText {
+                    text: "Kernel"
+                }
+
+                GridText {
+                    text: SystemInformation.kernelType
+                }
+
+                GridText {
+                    text: "version"
+                }
+
+                GridText {
+                    text: SystemInformation.kernelVersion
+                }
+
+                ////
+
+                GridText {
+                    text: "CPU"
+                }
+
+                GridText {
+                    text: SystemInformation.currentCpuArchitecture
+                }
+
+                GridText {
+                    text: "word"
+                }
+
+                GridText {
+                    text: SystemInformation.wordSize
+                }
+
+                ////
+
+                GridText {
+                    text: "Product"
+                }
+
+                GridText {
+                    text: SystemInformation.prettyProductName
+                }
+
+                GridText {
+                    text: "Type"
+                }
+
+                GridText {
+                    text: SystemInformation.productType
+                }
+
+                ////
+
+                GridText {
+                    text: "Name"
+                }
+
+                GridText {
+                    text: SystemInformation.machineHostName
+                }
+
+                GridText {
+                    text: "UID"
+                }
+
+                GridText {
+                    text: SystemInformation.machineUniqueId
+                }
+            }
         }
     }
 }

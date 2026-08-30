@@ -335,8 +335,8 @@ ApplicationWindow {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: currentIndex === 4                  ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning
-                    currentIndex === 8 && root.portrait ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
+            height: currentIndex === 4 || currentIndex === 10    ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning
+                    currentIndex === 8 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
                     viewContainer.swipeHeight
 
             contentWidth: viewContainer.contentWidth
@@ -563,9 +563,13 @@ ApplicationWindow {
 
             AudioDevice {
                 synthesizer: root.synthContext
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
-                displayInfo: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
+                //displayInfo: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
             }
         }
 

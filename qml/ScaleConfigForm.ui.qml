@@ -49,8 +49,8 @@ Item {
     property alias scaleButton_VII: scaleButton_VII
 
     property var scaleNames: [
-        "Major Scale (Inoian)",
-        "Minor Scale (Dorian)",
+        "Major Scale / Ionian",
+        "Minor Scale / Dorian",
         "Minor Triad",
         "Custom"
     ]
