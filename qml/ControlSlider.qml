@@ -9,9 +9,13 @@ Slider {
     id: controlSlider
 
     property string text: "Control"
+    property double elementSpace: 5
     property double elementRadius: 5
 
-    //property int ruler: 5
+    property string fontFamily
+    property double fontPixelSize: 10
+
+    readonly property int decimalPlaces: Math.ceil(Math.log10(stepSize)*-1)
 
     implicitWidth: 400
     implicitHeight: 50
@@ -53,10 +57,32 @@ Slider {
     }
 
     Text {
+        z: 1000
         text: controlSlider.text
         anchors {
-            bottom: parent.bottom
-            right: parent.right
+            top: controlSlider.top
+            left: controlSlider.left
+            leftMargin: controlSlider.elementSpace
+        }
+        font {
+            family: controlSlider.fontFamily
+            pixelSize: controlSlider.fontPixelSize
+            bold: true
+        }
+    }
+
+    Text {
+        z: 2
+        text: controlSlider.value.toFixed(controlSlider.decimalPlaces)
+        anchors {
+            top: controlSlider.top
+            right: controlSlider.right
+            rightMargin: controlSlider.elementSpace
+        }
+        font {
+            family: controlSlider.fontFamily
+            pixelSize: controlSlider.fontPixelSize
+            bold: true
         }
     }
 }

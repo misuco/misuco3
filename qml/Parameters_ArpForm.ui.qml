@@ -11,6 +11,9 @@ Item {
     property double elementSpace: 5
     property bool portrait: false
 
+    property string fontFamily
+    property double fontPixelSize: 10
+
     readonly property double contentWidth: width - 2*elementSpace
     readonly property double elementWidth: portrait ? contentWidth : (contentWidth - elementSpace) / 2
     readonly property double contentHeight: height - 2*elementSpace
@@ -25,6 +28,8 @@ Item {
     ControlArea {
         width: root.width
         height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
 
         text: "Arpeggio"
 
@@ -39,11 +44,12 @@ Item {
                 columns: root.gridColumns
                 spacing: root.elementSpace
 
-
                 ControlSlider {
                     id: arpeggioOctavesSlider
                     width: root.elementWidth
                     height: root.elementHeight
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Octaves"
                     from: 1
                     to: 5
@@ -56,10 +62,13 @@ Item {
                     id: arpeggioStepSlider
                     width: root.elementWidth
                     height: root.elementHeight
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Step"
-                    from: 0
+                    from: 1
                     to: 4
                     value: 1
+                    stepSize: 1
                 }
             }
 
@@ -67,10 +76,13 @@ Item {
                 id: arpeggioSamplesSlider
                 width: root.contentWidth
                 height: root.elementHeight
+                fontFamily: root.fontFamily
+                fontPixelSize: root.fontPixelSize
                 text: "Samples"
                 from: 1000
                 to: 200000
                 value: 48000
+                stepSize: 1
             }
         }
     }

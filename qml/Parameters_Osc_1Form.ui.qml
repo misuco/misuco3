@@ -16,6 +16,9 @@ Item {
     property double elementRadius: 5
     property bool portrait: false
 
+    property string fontFamily
+    property double fontPixelSize: 10
+
     property color bgColor: "Gray"
     property color bgColorActive: "Orange"
     property color fgColor: "Black"
@@ -40,6 +43,8 @@ Item {
     ControlArea {
         width: root.width
         height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
         text: "OSC1"
 
         Column {
@@ -52,10 +57,13 @@ Item {
                 id: levelSlider
                 width: root.contentWidth
                 height: root.buttonSize
+                fontFamily: root.fontFamily
+                fontPixelSize: root.fontPixelSize
                 text: "Level"
                 from: 0
                 to: 1
                 value: 0.5
+                stepSize: 0.01
             }
 
             Parameters_Osc_WaveOctaveGrid {

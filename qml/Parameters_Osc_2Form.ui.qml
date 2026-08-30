@@ -10,6 +10,9 @@ Item {
     property int wave
     property int octave
 
+    property string fontFamily
+    property double fontPixelSize: 10
+
     property double rasterWidth: 50
     property double elementSpace: 5
     property double elementRadius: 5
@@ -42,6 +45,8 @@ Item {
     ControlArea {
         width: root.width
         height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
         text: "OSC2"
 
         Column {
@@ -60,21 +65,26 @@ Item {
                     id: levelSlider
                     width: root.portrait ? root.contentWidth : root.contentWidth2
                     height: root.buttonSize
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Level"
                     from: 0
                     to: 1
-                    stepSize: 0.01
                     value: 0.5
+                    stepSize: 0.01
                 }
 
                 ControlSlider {
                     id: shiftSlider
                     width: root.portrait ? root.contentWidth : root.contentWidth2
                     height: root.buttonSize
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Shift"
                     from: 0
                     to: 1200
                     value: 0
+                    stepSize: 0.001
                 }
             }
 

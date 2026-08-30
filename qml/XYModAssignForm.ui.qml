@@ -18,6 +18,8 @@ Item {
     property double elementSpace: 5
     property double elementRadius: 5
     property bool portrait: false
+    property string fontFamily
+    property double fontPixelSize: 10
 
     property string title: "Mod Assign"
 
@@ -43,6 +45,8 @@ Item {
     ControlArea {
         width: root.width
         height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
 
         text: root.title
 
@@ -69,10 +73,13 @@ Item {
                     width: root.elementWidth
                     height: root.elementHeight
                     elementRadius: root.elementRadius
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Amount"
                     from: 0
                     to: 1
                     value: 0.5
+                    stepSize: 0.001
                 }
 
                 ControlSlider {
@@ -80,10 +87,13 @@ Item {
                     width: root.elementWidth
                     height: root.elementHeight
                     elementRadius: root.elementRadius
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Min"
                     from: 0
                     to: 1
                     value: 0
+                    stepSize: 0.001
                 }
 
                 ControlSlider {
@@ -91,10 +101,13 @@ Item {
                     width: root.elementWidth
                     height: root.elementHeight
                     elementRadius: root.elementRadius
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
                     text: "Max"
                     from: 0
                     to: 1
                     value: 1
+                    stepSize: 0.001
                 }
             }
 

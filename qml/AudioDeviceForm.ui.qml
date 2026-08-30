@@ -15,10 +15,14 @@ Item {
     property MobileSynth synthesizer
 
     property string displayInfo
+    property string fontFamily
+    property double fontPixelSize: 10
 
     ControlArea {
         width: root.width
         height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
         text: "Audio Device"
 
         ComboBox {

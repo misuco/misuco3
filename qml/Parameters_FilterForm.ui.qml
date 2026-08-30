@@ -10,6 +10,9 @@ Item {
 
     property double elementSpace: 5
 
+    property string fontFamily
+    property double fontPixelSize: 10
+
     readonly property double elementWidth: width - 2*elementSpace
     readonly property double elementHeight: (height - 4*elementSpace) / 2
 
@@ -31,20 +34,26 @@ Item {
                 id: filterCutoffSlider
                 width: root.elementWidth
                 height: root.elementHeight
+                fontFamily: root.fontFamily
+                fontPixelSize: root.fontPixelSize
                 text: "Cutoff"
                 from: 0.0
                 to: 1.0
                 value: 0.5
+                stepSize: 0.00001
             }
 
             ControlSlider {
                 id: filterResonanceSlider
                 width: root.elementWidth
                 height: root.elementHeight
+                fontFamily: root.fontFamily
+                fontPixelSize: root.fontPixelSize
                 text: "Resonance"
                 from: 0.0
                 to: 1.0
                 value: 0.1
+                stepSize: 0.0001
             }
         }
     }

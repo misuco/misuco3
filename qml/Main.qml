@@ -17,8 +17,6 @@ ApplicationWindow {
     required property MasterSender senderContext
     required property MobileSynth synthContext
 
-    readonly property bool portrait: height > width
-
     property var scaleModel: [
         {
             note: 25
@@ -73,6 +71,9 @@ ApplicationWindow {
         "#c6f"
     ]
 
+    readonly property bool portrait: height > width
+    readonly property double fontPixelSize: viewContainer.elementSpace * 2
+
     visible: true
     title: qsTr("MISUCO3")
 
@@ -88,7 +89,7 @@ ApplicationWindow {
 
     font {
         family: misuco3font.name
-        pixelSize: viewContainer.elementSpace * 2
+        pixelSize: root.fontPixelSize
         bold: true
     }
 
@@ -351,6 +352,8 @@ ApplicationWindow {
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
 
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive
@@ -373,6 +376,8 @@ ApplicationWindow {
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
 
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive
@@ -412,6 +417,8 @@ ApplicationWindow {
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
 
                 title: "X Mod Assign"
 
@@ -428,6 +435,8 @@ ApplicationWindow {
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
 
                 title: "Y Mod Assign"
 
@@ -446,6 +455,8 @@ ApplicationWindow {
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
 
                 bgColors: root.bgColors
                 bgColorsActive: root.bgColorsActive
@@ -498,34 +509,47 @@ ApplicationWindow {
 
             Parameters_Arp {
                 synthesizer: root.synthContext
+
                 elementSpace: viewContainer.elementSpace
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
             }
 
             Parameters_Filter {
                 modAssign: xyAssignableParameter
                 elementSpace: viewContainer.elementSpace
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
             }
 
             Parameters_Osc_1 {
+                synthesizer: root.synthContext
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
-                synthesizer: root.synthContext
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
             }
 
             Parameters_Osc_2 {
+                synthesizer: root.synthContext
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
-                synthesizer: root.synthContext
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
             }
 
             Parameters_Mod {
                 //width: swipeView.areasWidth
                 modAssign: xyAssignableParameter
                 synthesizer: root.synthContext
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
             }
 
             AudioDevice {
@@ -533,6 +557,8 @@ ApplicationWindow {
                 //width: swipeView.areasWidth
                 //height: swipeView.height
                 synthesizer: root.synthContext
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
                 displayInfo: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
             }
         }

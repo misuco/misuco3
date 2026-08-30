@@ -9,7 +9,10 @@ Item {
 
     property int source
     property int destination
-    
+
+    property string fontFamily
+    property double fontPixelSize: 10
+
     property alias amountSlider: amountSlider
     property alias freqSlider: freqSlider
     property alias sourceSquareButton: sourceSquareButton
@@ -25,6 +28,8 @@ Item {
         y:10
         width: root.width
         height: 240
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
         text: "MOD"
 
         ControlSlider {

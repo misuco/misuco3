@@ -15,6 +15,8 @@ Item {
     property double elementSpace: 10
     property double elementRadius: 5
     property bool portrait: false
+    property string fontFamily
+    property double fontPixelSize: 10
 
     property var bgColors: []
     property var bgColorsActive: []
@@ -26,8 +28,10 @@ Item {
     ControlArea {
         width: root.width
         height: root.height
-        elementRadius: root.elementRadius
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
 
+        elementRadius: root.elementRadius
 
         text: "Tuning"
 
