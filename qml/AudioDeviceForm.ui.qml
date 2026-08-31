@@ -73,8 +73,8 @@ Item {
 
             Grid {
                 width: root.contentWidth
-                columns: 4
-                rows: 15
+                columns: root.portrait ? 2 : 4
+                rows: 30
                 spacing: root.elementSpace
 
                 ////
@@ -187,10 +187,12 @@ Item {
                 }
 
                 GridText {
+                    visible: root.portrait===false
                     text: "-"
                 }
 
                 GridText {
+                    visible: root.portrait===false
                     text: "-"
                 }
 
@@ -237,7 +239,7 @@ Item {
                 }
 
                 GridText {
-                    text: Screen.manufacturer
+                    text: Screen.manufacturer + ":"
                 }
 
                 GridText {
@@ -245,7 +247,7 @@ Item {
                 }
 
                 GridText {
-                    text: Screen.model
+                    text: Screen.model + ":"
                 }
 
                 ////
@@ -255,7 +257,7 @@ Item {
                 }
 
                 GridText {
-                    text: Screen.name
+                    text: Screen.name + ":"
                 }
 
                 GridText {
@@ -263,7 +265,7 @@ Item {
                 }
 
                 GridText {
-                    text: Screen.serialNumber
+                    text: Screen.serialNumber + ":"
                 }
 
                 ////
@@ -277,10 +279,12 @@ Item {
                 }
 
                 GridText {
+                    visible: root.portrait===false
                     text: "-"
                 }
 
                 GridText {
+                    visible: root.portrait===false
                     text: "-"
                 }
 
