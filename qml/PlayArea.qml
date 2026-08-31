@@ -14,6 +14,7 @@ Item {
 
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
+    property var keyMapVid: new Map()
 
     property var bgColors: []
     property var bgColorsActive: []
@@ -46,9 +47,48 @@ Item {
     signal yMod(voiceId :int, note :int, tuning :int, value :double)
 
     onHoldKeysChanged: {
+        // transition for hold keys on/off
+        // transform still active touch points in other domain
         if(holdKeys===true) {
-            //keyRepeater.itemAt(keyIndex).pressed++
-
+            // turn off all regularly playing voices and clear pointId to voiceId map
+            console.log("noteOff all in touchMapVid")
+            touchMapVid.forEach((vid,pointId) => {
+                let keyIndex=touchMapKey.get(pointId)
+                console.log(`pointId ${pointId} vid ${vid} keyIndex ${keyIndex}`)
+                keyRepeater.itemAt(keyIndex).pressed--
+                root.sender.noteOff(vid)
+            })
+            touchMapVid.clear()
+            // set up keyIndex to voiceId map for active touch points and trigger voices
+            console.log("noteOn all in touchMapKey")
+            touchMapKey.forEach((keyIndex,pointId) => {
+                console.log(`pointId ${pointId} keyIndex ${keyIndex}`)
+                keyRepeater.itemAt(keyIndex).pressed=1
+                let frequency=keyRepeater.itemAt(keyIndex).f
+                let note=keyRepeater.itemAt(keyIndex).note
+                let tuning=keyRepeater.itemAt(keyIndex).tuning
+                let newVid=root.sender.noteOn(frequency,note,tuning,127)
+                keyMapVid.set(keyIndex,newVid)
+            })
+        } else {
+            console.log("enabe hold, keyMapVid -> touchMapVid")
+            console.log("noteOff all in keyMapVid")
+            keyMapVid.forEach((vid,keyIndex) => {
+                keyRepeater.itemAt(keyIndex).pressed=0
+                root.sender.noteOff(vid)
+                console.log(`keyIndex ${keyIndex} vid ${vid}`)
+            })
+            keyMapVid.clear()
+            console.log("noteOn all in touchMapKey")
+            touchMapKey.forEach((keyIndex,pointId) => {
+                console.log(`pointId ${pointId} keyIndex ${keyIndex}`)
+                keyRepeater.itemAt(keyIndex).pressed++
+                let frequency=keyRepeater.itemAt(keyIndex).f
+                let note=keyRepeater.itemAt(keyIndex).note
+                let tuning=keyRepeater.itemAt(keyIndex).tuning
+                let newVid=root.sender.noteOn(frequency,note,tuning,127)
+                touchMapVid.set(pointId,newVid)
+            })
         }
     }
 
@@ -62,20 +102,21 @@ Item {
 
             console.log("pressed keyIndex: " + keyIndex + " pointId: " + touchPoint.pointId + " x: " + touchPoint.x + " y: " + touchPoint.y + " f: " + frequency)
 
+            touchMapKey.set(touchPoint.pointId,keyIndex)
             if(root.holdKeys===false ) {
-                touchMapKey.set(touchPoint.pointId,keyIndex)
                 keyRepeater.itemAt(keyIndex).pressed++
                 let newVid=root.sender.noteOn(frequency,note,tuning,127)
                 touchMapVid.set(touchPoint.pointId,newVid)
             } else {
                 if(keyRepeater.itemAt(keyIndex).pressed>0) {
                     keyRepeater.itemAt(keyIndex).pressed=0
-                    root.sender.noteOff(touchMapVid.get(keyIndex))
+                    root.sender.noteOff(keyMapVid.get(keyIndex))
+                    keyMapVid.delete(keyIndex)
                 } else {
                     touchMapKey.set(touchPoint.pointId,keyIndex)
                     keyRepeater.itemAt(keyIndex).pressed=1
                     let newVid=root.sender.noteOn(frequency,note,tuning,127)
-                    touchMapVid.set(keyIndex,newVid)
+                    keyMapVid.set(keyIndex,newVid)
                 }
             }
         })
@@ -114,6 +155,7 @@ Item {
         touchPoints.forEach((touchPoint) => {
             let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
             console.log("released " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
+            touchMapKey.delete(touchPoint.pointId)
             if(root.holdKeys===false ) {
                 let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
                 keyRepeater.itemAt(keyIndex).pressed--
