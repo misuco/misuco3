@@ -207,7 +207,7 @@ ApplicationWindow {
                     bgColor: pressed ? "Orange" : "Gray"
                     fgColor: "White"
                     onPressed: {
-                        swipeView.currentIndex = Math.max(swipeView.currentIndex-1,0)
+                        confArea.currentIndex = Math.max(confArea.currentIndex-1,0)
                     }
                 }
 
@@ -241,7 +241,7 @@ ApplicationWindow {
 
                                     anchors.centerIn: parent
 
-                                    bgColor: swipeView.currentIndex===tabIndicator.index || mouseArea.pressed ? "Orange" : "Gray"
+                                    bgColor: confArea.currentIndex===tabIndicator.index || mouseArea.pressed ? "Orange" : "Gray"
 
                                     Text {
                                         anchors.fill: parent
@@ -252,7 +252,7 @@ ApplicationWindow {
                                     MouseArea {
                                         id: mouseArea
                                         anchors.fill: parent
-                                        onClicked: swipeView.currentIndex=tabIndicator.index
+                                        onClicked: confArea.currentIndex=tabIndicator.index
                                     }
                                 }
                             }
@@ -269,7 +269,7 @@ ApplicationWindow {
                     bgColor: pressed ? "Orange" : "Gray"
                     fgColor: "White"
                     onPressed: {
-                        swipeView.currentIndex = Math.min(swipeView.currentIndex+1,headerArea.tabCount-1)
+                        confArea.currentIndex = Math.min(confArea.currentIndex+1,headerArea.tabCount-1)
                     }
                 }
             }
@@ -328,8 +328,10 @@ ApplicationWindow {
             fgColors: root.fgColors
         }
 
-        SwipeView {
-            id: swipeView
+        Item {
+            id: confArea
+
+            property int currentIndex: 0
 
             x: viewContainer.elementSpace
             y: viewContainer.headerHeight
@@ -339,14 +341,12 @@ ApplicationWindow {
                     currentIndex === 8 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
                     viewContainer.swipeHeight
 
-            contentWidth: viewContainer.contentWidth
-
-            interactive: true
-
             ScaleConfig {
                 id: scaleConfigArea
 
-                height: viewContainer.swipeHeight
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===0
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -370,7 +370,9 @@ ApplicationWindow {
             RangeConfig {
                 id: rangeConfigArea
 
-                height: viewContainer.swipeHeight
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===1
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -411,7 +413,9 @@ ApplicationWindow {
             XYModAssign {
                 id: xModAssign
 
-                height: viewContainer.swipeHeight
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===2
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -429,7 +433,9 @@ ApplicationWindow {
             XYModAssign {
                 id: yModAssign
 
-                height: viewContainer.swipeHeight
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===3
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -449,7 +455,10 @@ ApplicationWindow {
 
                 sender: root.senderContext
 
-                height: viewContainer.swipeHeight + viewContainer.playAreaHeight + viewContainer.elementSpace
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===4
+                //height: viewContainer.swipeHeight + viewContainer.playAreaHeight + viewContainer.elementSpace
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -510,6 +519,10 @@ ApplicationWindow {
             Parameters_Arp {
                 synthesizer: root.synthContext
 
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===5
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 portrait: root.portrait
@@ -519,6 +532,11 @@ ApplicationWindow {
 
             Parameters_Filter {
                 modAssign: xyAssignableParameter
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===6
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 portrait: root.portrait
@@ -528,6 +546,10 @@ ApplicationWindow {
 
             Parameters_Osc_1 {
                 synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===7
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -539,6 +561,10 @@ ApplicationWindow {
 
             Parameters_Osc_2 {
                 synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===8
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -552,6 +578,10 @@ ApplicationWindow {
                 modAssign: xyAssignableParameter
                 synthesizer: root.synthContext
 
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===9
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
@@ -563,13 +593,17 @@ ApplicationWindow {
 
             AudioDevice {
                 synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===10
+
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
-                //displayInfo: `${root.title} w: ${viewContainer.width} h: ${viewContainer.height} w: ${Screen.width} / ${Screen.width/Screen.pixelDensity} mm h: ${Screen.height}  / ${Screen.height/Screen.pixelDensity} mm pixel ratio: ${Screen.devicePixelRatio} density: ${Screen.pixelDensity}`
             }
         }
 
