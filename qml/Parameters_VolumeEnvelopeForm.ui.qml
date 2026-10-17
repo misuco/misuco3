@@ -10,6 +10,7 @@ Item {
 
     property double rasterWidth: 50
     property double elementSpace: 5
+    property double elementRadius: rasterWidth / 12
     property bool portrait: false
 
     property string fontFamily
