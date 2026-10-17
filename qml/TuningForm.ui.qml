@@ -4,111 +4,69 @@
 
 import QtQuick
 import QtQuick.Controls
+import misuco3
 
 Item {
     id: root
+
+    required property MasterSender sender
+
+    property double rasterWidth: 50
+    property double elementSpace: 10
+    property double elementRadius: 5
+    property bool portrait: false
+    property string fontFamily
+    property double fontPixelSize: 10
 
     property var bgColors: []
     property var bgColorsActive: []
     property var fgColors: []
 
-    signal tuningUpdated(var i, var t)
+    readonly property double contentWidth: width - 2*elementSpace
+    readonly property double elementWidth: contentWidth/12 - elementSpace
 
     ControlArea {
-        x:10
-        y:10
-        height: 310
+        width: root.width
+        height: root.height
+        fontFamily: root.fontFamily
+        fontPixelSize: root.fontPixelSize
+
+        elementRadius: root.elementRadius
+
         text: "Tuning"
 
-        ComboBox {
-            x:10
-            y:20
-            model: ["Equal", "Pure", "Well-tempered", "Custom"]
-        }
+        Column {
+            y: 2*root.elementSpace
+            padding: root.elementSpace
+            spacing: root.elementSpace
 
-        ControlSliderTuning {
-            x:10
-            controller: root
-            index: 0
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:60
-            controller: root
-            index: 1
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:110
-            controller: root
-            index: 2
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:160
-            controller: root
-            index: 3
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:210
-            controller: root
-            index: 4
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:260
-            controller: root
-            index: 5
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:310
-            controller: root
-            index: 6
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:360
-            controller: root
-            index: 7
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:410
-            controller: root
-            index: 8
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:460
-            controller: root
-            index: 9
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:510
-            controller: root
-            index: 10
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
-        }
-        ControlSliderTuning {
-            x:560
-            controller: root
-            index: 11
-            bgColor: root.bgColors[index]
-            fgColor: root.fgColors[index]
+            ComboBox {
+                width: root.contentWidth
+                height: root.rasterWidth
+                model: ["Equal", "Pure", "Well-tempered", "Custom"]
+            }
+
+            Row {
+                id: tuningRow
+
+                height: root.height - root.rasterWidth - 5*root.elementSpace
+                spacing: root.elementSpace
+
+                Repeater {
+                    model: 12
+                    delegate: ControlTuning {
+                        id: control
+                        required property int index
+                        controller: root
+                        sender: root.sender
+                        width: root.elementWidth
+                        height: tuningRow.height
+                        noteIndex: control.index
+                        bgColor: root.bgColors[control.index]
+                        fgColor: root.fgColors[control.index]
+                    }
+                }
+            }
         }
     }
 }

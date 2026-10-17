@@ -4,9 +4,11 @@
 
 import QtQuick
 import QtQuick.Controls
+import misuco3
 
 Parameters_Osc_2Form {
     id: root
+    required property MobileSynth synthesizer
 
     Connections {
         target: root.levelSlider
@@ -17,26 +19,90 @@ Parameters_Osc_2Form {
     }
 
     Connections {
-        target: root.waveSlider
-        function onValueChanged() {
-            root.synthesizer.set_osc2_wave_type(root.waveSlider.value)
-            console.log("set_osc2_wave_type " + root.waveSlider.value)
-        }
-    }
-
-    Connections {
-        target: root.octaveSlider
-        function onValueChanged() {
-            root.synthesizer.set_osc2_octave(root.octaveSlider.value)
-            console.log("set_osc2_octave " + root.octaveSlider.value)
-        }
-    }
-
-    Connections {
         target: root.shiftSlider
         function onValueChanged() {
             root.synthesizer.set_osc2_shift(root.shiftSlider.value)
             console.log("set_osc2_shift " + root.shiftSlider.value)
+        }
+    }
+
+    Connections {
+        target: root.wave0Button
+        function onPressed() {
+            root.synthesizer.set_osc2_wave_type(0)
+            root.wave=0
+        }
+    }
+
+    Connections {
+        target: root.wave1Button
+        function onPressed() {
+            root.synthesizer.set_osc2_wave_type(1)
+            root.wave=1
+        }
+    }
+
+    Connections {
+        target: root.wave2Button
+        function onPressed() {
+            root.synthesizer.set_osc2_wave_type(2)
+            root.wave=2
+        }
+    }
+
+    Connections {
+        target: root.wave3Button
+        function onPressed() {
+            root.synthesizer.set_osc2_wave_type(3)
+            root.wave=3
+        }
+    }
+
+    Connections {
+        target: root.wave4Button
+        function onPressed() {
+            root.synthesizer.set_osc2_wave_type(4)
+            root.wave=4
+        }
+    }
+
+    Connections {
+        target: root.octave0Button
+        function onPressed() {
+            root.synthesizer.set_osc2_octave(0)
+            root.octave=0
+        }
+    }
+
+    Connections {
+        target: root.octave1Button
+        function onPressed() {
+            root.synthesizer.set_osc2_octave(1)
+            root.octave=1
+        }
+    }
+
+    Connections {
+        target: root.octave2Button
+        function onPressed() {
+            root.synthesizer.set_osc2_octave(2)
+            root.octave=2
+        }
+    }
+
+    Connections {
+        target: root.octave3Button
+        function onPressed() {
+            root.synthesizer.set_osc2_octave(3)
+            root.octave=3
+        }
+    }
+
+    Connections {
+        target: root.octave4Button
+        function onPressed() {
+            root.synthesizer.set_osc2_octave(4)
+            root.octave=4
         }
     }
 }

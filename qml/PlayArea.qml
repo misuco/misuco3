@@ -2,17 +2,19 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
+import misuco3
 
 pragma ComponentBehavior: Bound
 
 Item {
     id: root
 
-    required property var sender
+    required property MasterSender sender
 
     property var touchMapKey: new Map()
     property var touchMapVid: new Map()
+    property var keyMapVid: new Map()
 
     property var bgColors: []
     property var bgColorsActive: []
@@ -23,6 +25,7 @@ Item {
             note: 25
         }
     ]
+    property bool holdKeys
 
     // The tuning model is realized as separate properties to ensure update on value change
     property int tuningModel0: 0
@@ -40,6 +43,127 @@ Item {
 
     property double keyWidth: root.width / root.keys.length
 
+    signal xMod(voiceId :int, note :int, tuning :int, value :double)
+    signal yMod(voiceId :int, note :int, tuning :int, value :double)
+
+    onHoldKeysChanged: {
+        // transition for hold keys on/off
+        // transform still active touch points in other domain
+        if(holdKeys===true) {
+            // turn off all regularly playing voices and clear pointId to voiceId map
+            console.log("noteOff all in touchMapVid")
+            touchMapVid.forEach((vid,pointId) => {
+                let keyIndex=touchMapKey.get(pointId)
+                console.log(`pointId ${pointId} vid ${vid} keyIndex ${keyIndex}`)
+                keyRepeater.itemAt(keyIndex).pressed--
+                root.sender.noteOff(vid)
+            })
+            touchMapVid.clear()
+            // set up keyIndex to voiceId map for active touch points and trigger voices
+            console.log("noteOn all in touchMapKey")
+            touchMapKey.forEach((keyIndex,pointId) => {
+                console.log(`pointId ${pointId} keyIndex ${keyIndex}`)
+                keyRepeater.itemAt(keyIndex).pressed=1
+                let frequency=keyRepeater.itemAt(keyIndex).f
+                let note=keyRepeater.itemAt(keyIndex).note
+                let tuning=keyRepeater.itemAt(keyIndex).tuning
+                let newVid=root.sender.noteOn(frequency,note,tuning,127)
+                keyMapVid.set(keyIndex,newVid)
+            })
+        } else {
+            console.log("enabe hold, keyMapVid -> touchMapVid")
+            console.log("noteOff all in keyMapVid")
+            keyMapVid.forEach((vid,keyIndex) => {
+                keyRepeater.itemAt(keyIndex).pressed=0
+                root.sender.noteOff(vid)
+                console.log(`keyIndex ${keyIndex} vid ${vid}`)
+            })
+            keyMapVid.clear()
+            console.log("noteOn all in touchMapKey")
+            touchMapKey.forEach((keyIndex,pointId) => {
+                console.log(`pointId ${pointId} keyIndex ${keyIndex}`)
+                keyRepeater.itemAt(keyIndex).pressed++
+                let frequency=keyRepeater.itemAt(keyIndex).f
+                let note=keyRepeater.itemAt(keyIndex).note
+                let tuning=keyRepeater.itemAt(keyIndex).tuning
+                let newVid=root.sender.noteOn(frequency,note,tuning,127)
+                touchMapVid.set(pointId,newVid)
+            })
+        }
+    }
+
+    function handlePress(touchPoints) {
+        console.log("---------- onPressed -----------------")
+        touchPoints.forEach((touchPoint) => {
+            let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
+            let frequency=keyRepeater.itemAt(keyIndex).f
+            let note=keyRepeater.itemAt(keyIndex).note
+            let tuning=keyRepeater.itemAt(keyIndex).tuning
+
+            console.log("pressed keyIndex: " + keyIndex + " pointId: " + touchPoint.pointId + " x: " + touchPoint.x + " y: " + touchPoint.y + " f: " + frequency)
+
+            touchMapKey.set(touchPoint.pointId,keyIndex)
+            if(root.holdKeys===false ) {
+                keyRepeater.itemAt(keyIndex).pressed++
+                let newVid=root.sender.noteOn(frequency,note,tuning,127)
+                touchMapVid.set(touchPoint.pointId,newVid)
+            } else {
+                if(keyRepeater.itemAt(keyIndex).pressed>0) {
+                    keyRepeater.itemAt(keyIndex).pressed=0
+                    root.sender.noteOff(keyMapVid.get(keyIndex))
+                    keyMapVid.delete(keyIndex)
+                } else {
+                    touchMapKey.set(touchPoint.pointId,keyIndex)
+                    keyRepeater.itemAt(keyIndex).pressed=1
+                    let newVid=root.sender.noteOn(frequency,note,tuning,127)
+                    keyMapVid.set(keyIndex,newVid)
+                }
+            }
+        })
+    }
+
+    function handleUpdate(touchPoints) {
+        console.log("---------- onUpdated -----------------")
+        touchPoints.forEach((touchPoint) => {
+            let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
+            console.log("updated " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
+            let currentKeyIndex=touchMapKey.get(touchPoint.pointId)
+            let currentVid=touchMapVid.get(touchPoint.pointId)
+            let currentF = keyRepeater.itemAt(keyIndex).f
+            let currentNote = keyRepeater.itemAt(keyIndex).note
+            let currentTuning = keyRepeater.itemAt(keyIndex).tuning
+            if(currentKeyIndex!==keyIndex) {
+                keyRepeater.itemAt(currentKeyIndex).pressed--
+                keyRepeater.itemAt(keyIndex).pressed++
+                touchMapKey.set(touchPoint.pointId,keyIndex)
+                root.sender.noteOff(currentVid)
+                let newVid=root.sender.noteOn(currentF,currentNote,currentTuning,127)
+                touchMapVid.set(touchPoint.pointId,newVid)
+                currentVid=newVid
+            }
+
+            let xDiff=touchPoint.x-touchPoint.startX
+            let yDiff=touchPoint.startY-touchPoint.y
+
+            root.xMod(currentVid, currentNote, currentTuning, xDiff/root.keyWidth)
+            root.yMod(currentVid, currentNote, currentTuning, yDiff/root.height)
+        })
+    }
+
+    function handleRelease(touchPoints) {
+        console.log("---------- onReleased -----------------")
+        touchPoints.forEach((touchPoint) => {
+            let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
+            console.log("released " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
+            touchMapKey.delete(touchPoint.pointId)
+            if(root.holdKeys===false ) {
+                let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
+                keyRepeater.itemAt(keyIndex).pressed--
+                root.sender.noteOff(touchMapVid.get(touchPoint.pointId));
+            }
+        })
+    }
+
     Row {
         Repeater {
             id: keyRepeater
@@ -50,7 +174,8 @@ Item {
                 required property int index
                 required property var modelData
                 property int pressed: 0
-                property double f: 6.875 * Math.pow( 2 , ((modelData.note + 3) * 100 + tuning) / 1200)
+                readonly property int offsetMidiChamberTone: 3
+                property double f: 6.875 * Math.pow( 2 , ((modelData.note + offsetMidiChamberTone) * 100 + tuning) / 1200)
                 property int note: modelData.note
                 property int noteSymbol: note%12
 
@@ -76,11 +201,11 @@ Item {
                     radius: 15
                 }
 
-                Emboss {
+                ControlEmboss {
                     anchors.fill: rect
-                    source: rect
-                    offset: key.pressed>0 ? -2 : 2
+                    down: key.pressed
                     radius: 15
+                    bgColor: key.pressed>0 ? root.bgColorsActive[key.noteSymbol] : root.bgColors[key.noteSymbol]
                 }
 
                 Text {
@@ -112,67 +237,13 @@ Item {
             TouchPoint {id:touchPoint0}
         ]
 
-        onPressed: function(touchPoints) {
-            console.log("---------- onPressed -----------------")
-            touchPoints.forEach((touchPoint) => {
-                let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
-                let frequency=keyRepeater.itemAt(keyIndex).f
-                let note=keyRepeater.itemAt(keyIndex).note
-                let tuning=keyRepeater.itemAt(keyIndex).tuning
-                console.log("pressed keyIndex: " + keyIndex + " pointId: " + touchPoint.pointId + " x: " + touchPoint.x + " y: " + touchPoint.y + " f: " + frequency)
+        onPressed: function(tps) { root.handlePress(tps) }
 
-                touchMapKey.set(touchPoint.pointId,keyIndex)
-                keyRepeater.itemAt(keyIndex).pressed++
-                let newVid=root.sender.noteOn(frequency,note,tuning,127);
-                touchMapVid.set(touchPoint.pointId,newVid)
-            })
-        }
+        onUpdated: function(tps) { root.handleUpdate(tps) }
 
-        onUpdated: function(touchPoints) {
-            console.log("---------- onUpdated -----------------")
-            touchPoints.forEach((touchPoint) => {
-                let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
-                console.log("updated " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
-                let currentKeyIndex=touchMapKey.get(touchPoint.pointId)
-                let currentVid=touchMapVid.get(touchPoint.pointId)
-                let currentF = keyRepeater.itemAt(keyIndex).f;
-                let currentNote = keyRepeater.itemAt(keyIndex).note;
-                let currentTuning = keyRepeater.itemAt(keyIndex).tuning;
-                if(currentKeyIndex!==keyIndex) {
-                    keyRepeater.itemAt(currentKeyIndex).pressed--
-                    keyRepeater.itemAt(keyIndex).pressed++
-                    touchMapKey.set(touchPoint.pointId,keyIndex)
-                    root.sender.noteOff(currentVid);
-                    let newVid=root.sender.noteOn(currentF,currentNote,currentTuning,127);
-                    touchMapVid.set(touchPoint.pointId,newVid)
-                    currentVid=newVid
-                }
-                let pitchedTuning = touchPoint.startY-touchPoint.y
-                let pitchedF = Math.max( 10, currentF+(touchPoint.startY-touchPoint.y))
-                root.sender.pitch(currentVid,pitchedF,currentNote,pitchedTuning)
+        onCanceled: function(tps) { root.handleRelease(tps) }
 
-            })
-        }
-
-        onCanceled: function(touchPoints) {
-            console.log("---------- onCanceled -----------------")
-            touchPoints.forEach((touchPoint) => {
-                let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
-                console.log("canceled " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
-                keyRepeater.itemAt(keyIndex).pressed--
-                root.sender.noteOff(touchMapVid.get(touchPoint.pointId));
-            })
-        }
-
-        onReleased: function(touchPoints) {
-            console.log("---------- onReleased -----------------")
-            touchPoints.forEach((touchPoint) => {
-                let keyIndex=Math.floor(touchPoint.x / root.keyWidth)
-                console.log("released " + keyIndex + " " + touchPoint.pointId + " " + touchPoint.x + " " + touchPoint.y)
-                keyRepeater.itemAt(keyIndex).pressed--
-                root.sender.noteOff(touchMapVid.get(touchPoint.pointId));
-            })
-        }
+        onReleased: function(tps) { root.handleRelease(tps) }
     }
 
     Repeater {

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(polymobilesynth VERSION 0.1 LANGUAGES CXX)
+project(misuco3 VERSION 0.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -8,42 +8,56 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-qt_add_executable(appmisuco3
+qt_add_executable(MISUCO3
     main.cpp
 )
 
-set_source_files_properties(VoiceControl.js
-    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
-
-qt_add_qml_module(appmisuco3
+qt_add_qml_module(MISUCO3
     URI misuco3
     VERSION 1.0
     QML_FILES
         qml/Main.qml
-        qml/VoiceControl.js
+        qml/AudioDevice.qml
+        qml/AudioDeviceForm.ui.qml
         qml/ColorPalette.js
-        qml/Emboss.qml
         qml/ControlArea.qml
+        qml/ControlBarRange.qml
         qml/ControlButton.qml
         qml/ControlDial.qml
+        qml/ControlEmboss.qml
+        qml/ControlLabelTuning.qml
         qml/ControlSlider.qml
         qml/ControlSliderRange.qml
         qml/ControlSliderTuning.qml
+        qml/ControlTuning.qml
         qml/PlayArea.qml
-        qml/AudioDevice.qml
-        qml/AudioDeviceForm.ui.qml
-        qml/Parameters.qml
-        qml/ParametersForm.ui.qml
+        qml/Parameters_Arp.qml
+        qml/Parameters_ArpForm.ui.qml
+        qml/Parameters_Filter.qml
+        qml/Parameters_FilterForm.ui.qml
         qml/Parameters_Mod.qml
         qml/Parameters_ModForm.ui.qml
-        qml/Parameters_Osc.qml
-        qml/Parameters_OscForm.ui.qml
+        qml/Parameters_Osc_1.qml
+        qml/Parameters_Osc_1Form.ui.qml
         qml/Parameters_Osc_2.qml
         qml/Parameters_Osc_2Form.ui.qml
+        qml/Parameters_Osc_WaveOctaveGrid.ui.qml
+        qml/RangeConfig.qml
+        qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
         qml/ScaleConfigForm.ui.qml
         qml/Tuning.qml
         qml/TuningForm.ui.qml
+        qml/XYAssignableParameter.qml
+        qml/XYModAssign.qml
+        qml/XYModAssignForm.ui.qml
+    RESOURCES
+        qml/icons/wave-sine.svg
+        qml/icons/wave-square.svg
+        qml/icons/wave-tri.svg
+        qml/icons/wave-saw.svg
+        qml/icons/wave-saw-rev.svg
+        qml/fonts/alpha-prota/AlphaProta.otf
 
     SOURCES
         misulib/comm/heartbeat.cpp
@@ -101,28 +115,36 @@ qt_add_qml_module(appmisuco3
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
-set_target_properties(appmisuco3 PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appmisuco3
+set_target_properties(MISUCO3 PROPERTIES
+#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.MISUCO3
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+    QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
+    QT_ANDROID_PACKAGE_NAME "org.misuco.misuco3"
+    QT_ANDROID_APP_NAME "MISUCO3"
+    QT_ANDROID_TARGET_SDK_VERSION 36
+    QT_ANDROID_MIN_SDK_VERSION 28
+    QT_ANDROID_VERSION_NAME "1.0-RC1-20260927"
+    QT_ANDROID_VERSION_CODE 11
 )
 
-target_include_directories(appmisuco3 PRIVATE
+
+target_include_directories(MISUCO3 PRIVATE
     polymobilesynth/mobilesynth/Classes
     polymobilesynth/qt6
     misulib/comm
 )
 
-target_link_libraries(appmisuco3
+target_link_libraries(MISUCO3
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Multimedia
 )
 
 include(GNUInstallDirs)
 
-install(TARGETS appmisuco3
+install(TARGETS MISUCO3
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}

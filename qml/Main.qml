@@ -11,18 +11,11 @@ import "./"
 
 pragma ComponentBehavior: Bound
 
-Window {
+ApplicationWindow {
     id: root
-    visible: true
-    width: 1280
-    height: 768
-    title: qsTr("MISUCO3")
 
-    required property MasterSender senderContext;
-    required property MobileSynth synthContext;
-
-    property double buttonWidth: root.width/scaleModel.length
-    property double buttonHeight: root.height/2.2
+    required property MasterSender senderContext
+    required property MobileSynth synthContext
 
     property var scaleModel: [
         {
@@ -30,7 +23,8 @@ Window {
         }
     ]
 
-    property bool holdKeys
+    property bool holdKeys: false
+    property bool arpOn: false
 
     property var bgColors: [
         "#403",
@@ -77,193 +71,554 @@ Window {
         "#c6f"
     ]
 
+    readonly property bool portrait: height > width
+    readonly property double fontPixelSize: viewContainer.elementSpace * 2
+
+    visible: true
+    title: qsTr("MISUCO3")
+
     Component.onCompleted: {
-        console.log("Main.qml Component.onCompleted")
+        width=Math.min(Screen.width,1920)
+        height=Math.min(Screen.height,1080)
+    }
+
+    FontLoader {
+        id: misuco3font
+        source: "qrc:/qt/qml/misuco3/qml/fonts/alpha-prota/AlphaProta.otf"
+    }
+
+    font {
+        family: misuco3font.name
+        pixelSize: root.fontPixelSize
+        bold: true
     }
 
     Rectangle {
+        id: appBackground
         anchors.fill: parent
-        color: "#666"
+        color: "#333"
     }
 
-    PlayArea {
-        id: playArea
-        width: root.width
-        height: root.buttonHeight
-        y: root.height-root.buttonHeight
-        keys: root.scaleModel
-        sender: root.senderContext
-        bgColors: root.bgColors
-        bgColorsActive: root.bgColorsActive
-        fgColors: root.fgColors
-    }
+    Item {
+        id: viewContainer
 
-    ControlArea {
-        x:10
-        y:10
-        height: 70
-        width: 1260
+        // Raster 12mm @ 60x140mm display
+        property double rasterWidth: root.portrait ? width / 6 : height / 6
+        property double elementSpace: rasterWidth / 12
+        property double elementRadius: rasterWidth / 12        
+        property double effectSize: 3
 
-        Switch {
-            id: holdKeysSwitch
-            x:10
-            y:10
-            width: 100
-            height: 50
-            text: qsTr("Hold")
-            onCheckedChanged: function() {
-                root.holdKeys=checked
-                console.log("holdKeysSwitch " + checked)
-            }
+        property double contentWidth: width - 2*elementSpace
+
+        property double headerHeight: rasterWidth
+        property double swipeHeight: rasterWidth * (root.portrait ? 3 : 2) - viewContainer.elementSpace
+        property double playAreaHeight: height - headerHeight - swipeHeight
+
+        x: root.SafeArea.margins.left
+        y: root.SafeArea.margins.top
+        width: root.width - root.SafeArea.margins.left - root.SafeArea.margins.right
+        height: root.height - root.SafeArea.margins.top - root.SafeArea.margins.bottom
+
+        XYAssignableParameter {
+            id: xyAssignableParameter
+            sender: root.senderContext
         }
 
-        Switch {
-            id: arpSwitch
-            x:100
-            y:10
-            width: 100
-            height: 50
-            text: qsTr("Arp")
-            onCheckedChanged: function() {
-                root.synthContext.set_arpeggio_enabled(checked)
-                console.log("arpSwitch " + checked)
-            }
-        }
+        ControlArea {
+            id: headerArea
 
-        Rectangle {
-            x:250
-            y:2
-            width: 200 * root.synthContext.peak
-            height: 15
-            color: "Green"
-        }
+            property int tabCount: 11
 
-        Rectangle {
-            visible: root.synthContext.clip
-            x:450
-            y:2
-            width: 50
-            height: 15
-            color: "Red"
+            readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
+            readonly property double buttonWidth: viewContainer.rasterWidth
 
-            Text {
-                anchors.fill: parent
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                text: root.synthContext.clipLen
-                color: "White"
-            }
-        }
+            x:viewContainer.elementSpace
+            y:viewContainer.elementSpace
 
-        // TabBar for clicking to navigate pages
-        TabBar {
-            x:250
-            y:20
+            width: viewContainer.contentWidth
+            height: viewContainer.headerHeight - 2*viewContainer.elementSpace
 
-            id: tabBar
-            width: parent.width - 260
-            currentIndex: swipeView.currentIndex
+            elementRadius: viewContainer.elementRadius
 
-            TabButton { text: "P1" }
-            TabButton { text: "P2" }
-            TabButton { text: "P3" }
-            TabButton { text: "P4" }
-            TabButton { text: "P5" }
-            TabButton { text: "P6" }
-        }
-    }
+            text: ""
 
-    SwipeView {
-        id: swipeView
-        y: 80
-        width: 640
-        height: 375
-        currentIndex: tabBar.currentIndex
+            Row {
+                x: viewContainer.elementSpace
+                y: viewContainer.elementSpace
 
-        interactive: true
+                spacing: viewContainer.elementSpace
+                topPadding: viewContainer.elementSpace
+                rightPadding: viewContainer.elementSpace
 
-        AudioDevice {
-            synthesizer: root.synthContext
-        }
-
-        ScaleConfig {
-            bgColors: root.bgColors
-            bgColorsActive: root.bgColorsActive
-            fgColors: root.fgColors
-
-            Connections {
-                function onScaleModelUpdated(m) {
-                    console.log("onScaleModelUpdated:" + JSON.stringify(m))
-                    root.scaleModel = m
-                }
-            }
-        }
-
-        Tuning {
-            bgColors: root.bgColors
-            bgColorsActive: root.bgColorsActive
-            fgColors: root.fgColors
-
-            Connections {
-                function onTuningUpdated(i,t) {
-                    console.log("onTuningUpdated:" + i + " " + t)
-                    switch(i) {
-                    case 1:
-                        playArea.tuningModel1 = t
-                        break
-                    case 2:
-                        playArea.tuningModel2 = t
-                        break
-                    case 3:
-                        playArea.tuningModel3 = t
-                        break
-                    case 4:
-                        playArea.tuningModel4 = t
-                        break
-                    case 5:
-                        playArea.tuningModel5 = t
-                        break
-                    case 6:
-                        playArea.tuningModel6 = t
-                        break
-                    case 7:
-                        playArea.tuningModel7 = t
-                        break
-                    case 8:
-                        playArea.tuningModel8 = t
-                        break
-                    case 9:
-                        playArea.tuningModel9 = t
-                        break
-                    case 10:
-                        playArea.tuningModel10 = t
-                        break
-                    case 11:
-                        playArea.tuningModel11 = t
-                        break
-                    default:
-                        playArea.tuningModel0 = t
-                        break
+                ControlButton {
+                    id: holdKeysSwitch
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "hold"
+                    selected: root.holdKeys
+                    bgColor: root.holdKeys ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        root.holdKeys=!root.holdKeys
                     }
+                }
 
+                ControlButton {
+                    id: arpSwitch
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "arp"
+                    selected: root.arpOn
+                    bgColor: root.arpOn ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        root.arpOn=!root.arpOn
+                        root.synthContext.set_arpeggio_enabled(root.arpOn)
+                    }
+                }
+
+                /*
+                ControlButton {
+                    id: portraitSwitch
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "⤸"
+                    selected: pressed
+                    bgColor: pressed ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        if(root.width===1920) {
+                            root.width=1080
+                            root.height=1920
+                        } else {
+                            root.width=1920
+                            root.height=1080
+                        }
+                    }
+                }
+                */
+
+                ControlButton {
+                    id: tabLeft
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: "<"
+                    selected: pressed
+                    bgColor: pressed ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        confArea.currentIndex = Math.max(confArea.currentIndex-1,0)
+                    }
+                }
+
+                ControlEmboss {
+                    id: tabBar
+
+                    visible: root.portrait===false
+                    width: headerArea.width - headerArea.buttonWidth*4 - 8*viewContainer.elementSpace
+                    height: headerArea.buttonHeight
+                    readonly property int tabWidth: width / headerArea.tabCount - viewContainer.elementSpace
+
+                    Row {
+                        width: tabBar.width
+                        height: tabBar.height
+                        leftPadding: viewContainer.elementSpace
+                        spacing: viewContainer.elementSpace
+
+                        Repeater {
+                            model: headerArea.tabCount
+                            delegate: Item {
+                                id: tabIndicator
+                                required property int index
+                                width: tabBar.tabWidth
+                                height: tabBar.height
+                                ControlEmboss {
+                                    width: parent.width
+                                    height: width / 2
+                                    radius: width / 2
+
+                                    down: mouseArea.pressed ? true : false
+
+                                    anchors.centerIn: parent
+
+                                    bgColor: confArea.currentIndex===tabIndicator.index || mouseArea.pressed ? "Orange" : "Gray"
+
+                                    Text {
+                                        anchors.fill: parent
+                                        text: `${tabIndicator.index+1}`
+                                        horizontalAlignment: Qt.AlignHCenter
+                                        verticalAlignment: Qt.AlignVCenter
+                                    }
+                                    MouseArea {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        onClicked: confArea.currentIndex=tabIndicator.index
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ControlButton {
+                    id: tabRight
+                    width: headerArea.buttonWidth
+                    height: headerArea.buttonHeight
+                    text: ">"
+                    selected: pressed
+                    bgColor: pressed ? "Orange" : "Gray"
+                    fgColor: "White"
+                    onPressed: {
+                        confArea.currentIndex = Math.min(confArea.currentIndex+1,headerArea.tabCount-1)
+                    }
+                }
+            }
+
+            Item {
+                id: vuMeter
+
+                readonly property double barWidth: width*0.95
+                readonly property double clipWidth: width*0.05
+
+                x:viewContainer.elementSpace
+                y:height + viewContainer.effectSize
+                width: headerArea.width - 4*viewContainer.elementSpace
+                height: viewContainer.elementSpace / 3
+
+                Rectangle {
+                    width: vuMeter.barWidth * root.synthContext.peak
+                    height: vuMeter.height
+                    color: "Green"
+                }
+
+                Rectangle {
+                    visible: root.synthContext.clip
+                    x:vuMeter.barWidth
+                    width: vuMeter.clipWidth
+                    height: vuMeter.height
+                    color: "Red"
+
+                    Text {
+                        anchors.fill: parent
+                        horizontalAlignment: Qt.AlignHCenter
+                        verticalAlignment: Qt.AlignVCenter
+                        text: root.synthContext.clipLen
+                        color: "White"
+                        font.pixelSize: vuMeter.height
+                    }
                 }
             }
         }
 
-        Parameters {
-            synthesizer: root.synthContext
+        PlayArea {
+            id: playArea
+
+            sender: root.senderContext
+
+            x: viewContainer.elementSpace
+            y: viewContainer.swipeHeight + viewContainer.headerHeight + viewContainer.elementSpace
+
+            width: viewContainer.contentWidth
+            height: viewContainer.playAreaHeight - viewContainer.elementSpace
+
+            keys: root.scaleModel
+            holdKeys: root.holdKeys
+            bgColors: root.bgColors
+            bgColorsActive: root.bgColorsActive
+            fgColors: root.fgColors
         }
 
-        Parameters_Osc {
-            synthesizer: root.synthContext
+        Item {
+            id: confArea
+
+            property int currentIndex: 0
+
+            x: viewContainer.elementSpace
+            y: viewContainer.headerHeight
+
+            width: viewContainer.contentWidth
+            height: currentIndex === 4 || currentIndex === 10    ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning
+                    currentIndex === 8 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
+                    viewContainer.swipeHeight
+
+            ScaleConfig {
+                id: scaleConfigArea
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===0
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onScaleModelUpdated(m) {
+                        console.log("onScaleModelUpdated:" + JSON.stringify(m))
+                        root.scaleModel = m
+                    }
+                }
+            }
+
+            RangeConfig {
+                id: rangeConfigArea
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===1
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onBaseNoteUpdated(n) {
+                        console.log(`onBaseNoteUpdated: ${n}`)
+                        scaleConfigArea.baseNoteIndex = n
+                        scaleConfigArea.updateModel()
+                    }
+                }
+
+                Connections {
+                    function onLowOctaveUpdated(o) {
+                        console.log(`onLowOctaveUpdated: ${o}`)
+                        scaleConfigArea.lowOctave = o
+                        scaleConfigArea.updateModel()
+                    }
+                }
+
+                Connections {
+                    function onHighOctaveUpdated(o) {
+                        console.log(`onHighOctaveUpdated: ${o}`)
+                        scaleConfigArea.highOctave = o
+                        scaleConfigArea.updateModel()
+                    }
+                }
+            }
+
+            XYModAssign {
+                id: xModAssign
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===2
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+
+                title: "X Mod Assign"
+
+                sender: root.senderContext
+                parameters: xyAssignableParameter
+            }
+
+            XYModAssign {
+                id: yModAssign
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===3
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+
+                title: "Y Mod Assign"
+
+                sender: root.senderContext
+                parameters: xyAssignableParameter
+            }
+
+            Tuning {
+                id: tuningArea
+
+                sender: root.senderContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===4
+                //height: viewContainer.swipeHeight + viewContainer.playAreaHeight + viewContainer.elementSpace
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onTuningUpdated(i,t) {
+                        console.log("onTuningUpdated:" + i + " " + t)
+                        switch(i) {
+                        case 1:
+                            playArea.tuningModel1 = t
+                            break
+                        case 2:
+                            playArea.tuningModel2 = t
+                            break
+                        case 3:
+                            playArea.tuningModel3 = t
+                            break
+                        case 4:
+                            playArea.tuningModel4 = t
+                            break
+                        case 5:
+                            playArea.tuningModel5 = t
+                            break
+                        case 6:
+                            playArea.tuningModel6 = t
+                            break
+                        case 7:
+                            playArea.tuningModel7 = t
+                            break
+                        case 8:
+                            playArea.tuningModel8 = t
+                            break
+                        case 9:
+                            playArea.tuningModel9 = t
+                            break
+                        case 10:
+                            playArea.tuningModel10 = t
+                            break
+                        case 11:
+                            playArea.tuningModel11 = t
+                            break
+                        default:
+                            playArea.tuningModel0 = t
+                            break
+                        }
+                    }
+                }
+            }
+
+            Parameters_Arp {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===5
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            Parameters_Filter {
+                modAssign: xyAssignableParameter
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===6
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            Parameters_Osc_1 {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===7
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            Parameters_Osc_2 {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===8
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            Parameters_Mod {
+                modAssign: xyAssignableParameter
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===9
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            AudioDevice {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===10
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
         }
 
-        Parameters_Osc_2 {
-            synthesizer: root.synthContext
+        Connections {
+            target: playArea
+            function onXMod(voiceId :int, note :int, tuning :int, value :double) {
+                xModAssign.xyMod(voiceId, note, tuning, value)
+            }
         }
 
-        Parameters_Mod {
-            synthesizer: root.synthContext
+        Connections {
+            target: playArea
+            function onYMod(voiceId :int, note :int, tuning :int, value :double) {
+                yModAssign.xyMod(voiceId, note, tuning, value)
+            }
         }
     }
 }

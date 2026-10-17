@@ -4,18 +4,25 @@
 
 import QtQuick
 import QtQuick.Controls
+import misuco3
 
 Slider {
-    property var controller
+    id: controlSlider
+
+    required property var controller
+    required property MasterSender sender
+
+    property double elementRadius: 5
+    property int voiceId
+
     property int index
+    readonly property int offsetMidiChamberTone: 3
+    readonly property int tuningPreviewOctave: 4
+    readonly property double f: 6.875 * Math.pow( 2 , ((index + tuningPreviewOctave*12 + offsetMidiChamberTone) * 100 + value) / 1200)
 
     property color bgColor
-    property var fgColor
+    property color fgColor
 
-    id: root
-    x:10
-    y:80
-    height: 201
     from: -100
     to: 100
     value: 0
@@ -23,30 +30,47 @@ Slider {
     stepSize: 1
     orientation: Qt.Vertical
 
-    onValueChanged: function() {
+    onValueChanged: {
+        console.log("updateSlider index: " + controlSlider.index + " f: " + controlSlider.f + " pitch: " + controlSlider.value)
         controller.tuningUpdated(index,value)
+        controlSlider.sender.pitch(controlSlider.voiceId,controlSlider.f,controlSlider.index+1,controlSlider.value)
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: root.bgColor
+    onPressedChanged: {
+        if(controlSlider.pressed) {
+            pressSlider()
+        } else {
+            releaseSlider()
+        }
     }
 
-    Rectangle {
-        anchors.top: parent.bottom
-        anchors.topMargin: 2
-        width: parent.width
-        height: 20
-        color: root.bgColor
+    function pressSlider() {
+        console.log("pressedSlider index: " + controlSlider.index + " f: " + controlSlider.f)
+        controlSlider.voiceId=controlSlider.sender.noteOn(controlSlider.f,controlSlider.index+1,controlSlider.value,127)
     }
 
-    Text {
-        anchors.top: parent.bottom
-        anchors.topMargin: 2
-        width: parent.width
-        height: 20
-        text: parent.value
-        horizontalAlignment: Qt.AlignHCenter
-        color: root.fgColor
+    function releaseSlider() {
+        console.log("releaseSlider index: " + controlSlider.index + " f: " + controlSlider.f + " pitch: " + controlSlider.value)
+        controlSlider.sender.noteOff(controlSlider.voiceId)
+    }
+
+    background: ControlEmboss {
+        x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
+        y: controlSlider.topPadding
+        implicitHeight: 200
+        height: controlSlider.availableHeight
+        width: controlSlider.width
+        radius: controlSlider.elementRadius
+        bgColor: controlSlider.pressed ? controlSlider.fgColor : controlSlider.bgColor
+    }
+
+    handle: ControlEmboss {
+        x: controlSlider.leftPadding + controlSlider.availableWidth / 2 - width / 2
+        y: controlSlider.topPadding + controlSlider.visualPosition * (controlSlider.availableHeight - height)
+        implicitHeight: controlSlider.width
+        width: controlSlider.width
+        down: false
+        radius: controlSlider.width / 2
+        bgColor: controlSlider.fgColor
     }
 }

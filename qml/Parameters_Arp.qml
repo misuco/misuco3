@@ -5,8 +5,9 @@
 import QtQuick
 import QtQuick.Controls
 import misuco3
+import "./"
 
-ParametersForm {
+Parameters_ArpForm {
     id: root
 
     property MobileSynth synthesizer
@@ -32,22 +33,6 @@ ParametersForm {
         function onValueChanged() {
             root.synthesizer.set_arpeggio_step(root.arpeggioStepSlider.value)
             console.log("set_arpeggio_step " + root.arpeggioStepSlider.value)
-        }
-    }
-
-    Connections {
-        target: root.filterCutoffSlider
-        function onValueChanged() {
-            root.synthesizer.set_filter_cutoff(root.filterCutoffSlider.value)
-            console.log("set_filter_cutoff " + root.filterCutoffSlider.value)
-        }
-    }
-
-    Connections {
-        target: root.filterResonanceSlider
-        function onValueChanged() {
-            root.synthesizer.set_filter_resonance(root.filterResonanceSlider.value)
-            console.log("set_filter_resonance " + root.filterResonanceSlider.value)
         }
     }
 }

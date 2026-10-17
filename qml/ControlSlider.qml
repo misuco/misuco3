@@ -6,60 +6,83 @@ import QtQuick
 import QtQuick.Controls
 
 Slider {
-    property string text: "Control"
-    property int ruler: 5
-
     id: controlSlider
-    width: 400
-    height: 50
+
+    property string text: "Control"
+    property double elementSpace: 5
+    property double elementRadius: 5
+
+    property string fontFamily
+    property double fontPixelSize: 10
+
+    readonly property int decimalPlaces: Math.ceil(Math.log10(stepSize)*-1)
+
+    implicitWidth: 400
+    implicitHeight: 50
+
     from: 1
     to: 1000
     value: 1
 
-    background: Rectangle {
+    background: ControlEmboss {
         x: controlSlider.leftPadding
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
         implicitWidth: 200
         implicitHeight: 20
         width: controlSlider.availableWidth
-        height: implicitHeight
-        radius: 2
+        height: controlSlider.height
+        radius: controlSlider.elementRadius
         color: "#bdbebf"
 
         Rectangle {
+            y: controlSlider.height / 3
             width: controlSlider.visualPosition * parent.width
-            height: parent.height
+            height: controlSlider.height / 3
             color: "#21be2b"
-            radius: 2
-        }
-
-        Repeater {
-            model: controlSlider.ruler
-
-            Rectangle {
-                width: 1
-                height: parent.height
-                x: modelData*parent.width/controlSlider.ruler
-                y: 0
-            }
+            radius: controlSlider.elementRadius
         }
     }
 
-    handle: Rectangle {
+    handle: ControlEmboss {
         x: controlSlider.leftPadding + controlSlider.visualPosition * (controlSlider.availableWidth - width)
         y: controlSlider.topPadding + controlSlider.availableHeight / 2 - height / 2
-        implicitWidth: 50
-        implicitHeight: 50
-        radius: 25
+        down: false
+        implicitWidth: controlSlider.height * 0.8
+        implicitHeight: controlSlider.height * 0.8
+        width: implicitWidth
+        height: implicitHeight
+        radius: implicitHeight
         color: controlSlider.pressed ? "#f0f0f0" : "#f6f6f6"
         border.color: "#bdbebf"
     }
 
     Text {
+        z: 1000
         text: controlSlider.text
         anchors {
-            bottom: parent.bottom
-            right: parent.right
+            top: controlSlider.top
+            left: controlSlider.left
+            leftMargin: controlSlider.elementSpace
+        }
+        font {
+            family: controlSlider.fontFamily
+            pixelSize: controlSlider.fontPixelSize
+            bold: true
+        }
+    }
+
+    Text {
+        z: 2
+        text: controlSlider.value.toFixed(controlSlider.decimalPlaces)
+        anchors {
+            top: controlSlider.top
+            right: controlSlider.right
+            rightMargin: controlSlider.elementSpace
+        }
+        font {
+            family: controlSlider.fontFamily
+            pixelSize: controlSlider.fontPixelSize
+            bold: true
         }
     }
 }

@@ -8,6 +8,21 @@ import QtQuick.Controls
 ScaleConfigForm {
     id: root
 
+    property int baseNoteIndex: 0
+    property int lowOctave: 4
+    property int highOctave: 5
+
+    property var binaryScales: [
+        [1,0,1,0,1,1,0,1,0,1,0,1],
+        [1,0,1,1,0,1,0,1,0,1,0,1],
+        [1,0,0,1,0,0,0,1,0,0,0,0]
+    ]
+
+    property var binaryScaleIntValues: []
+    property var customBinaryScale: [1,0,0,0,0,0,0,0,0,0,0,0]
+
+    signal scaleModelUpdated(var m)
+
     function getBinaryScaleIntValue(s) {
         let value=0
         let bitValue=1
@@ -67,12 +82,6 @@ ScaleConfigForm {
             scaleSelect.currentIndex=binaryScales.length
         }
 
-        root.updateModel()
-    }
-
-    function baseButtonPressed(caller) {
-        console.log("pressed " + caller.text)
-        root.baseNoteIndex=caller.index
         root.updateModel()
     }
 
@@ -161,73 +170,5 @@ ScaleConfigForm {
     Connections {
         target: root.scaleButton_VII
         function onPressed() { root.scaleButtonPressed(root.scaleButton_VII) }
-    }
-    
-    // Connect base note buttons
-    Connections {
-        target: root.baseButton_C
-        function onPressed() { root.baseButtonPressed(root.baseButton_C) }
-    }
-    Connections {
-        target: root.baseButton_Cs
-        function onPressed() { root.baseButtonPressed(root.baseButton_Cs) }
-    }
-    Connections {
-        target: root.baseButton_D
-        function onPressed() { root.baseButtonPressed(root.baseButton_D) }
-    }
-    Connections {
-        target: root.baseButton_Ds
-        function onPressed() { root.baseButtonPressed(root.baseButton_Ds) }
-    }
-    Connections {
-        target: root.baseButton_E
-        function onPressed() { root.baseButtonPressed(root.baseButton_E) }
-    }
-    Connections {
-        target: root.baseButton_F
-        function onPressed() { root.baseButtonPressed(root.baseButton_F) }
-    }
-    Connections {
-        target: root.baseButton_Fs
-        function onPressed() { root.baseButtonPressed(root.baseButton_Fs) }
-    }
-    Connections {
-        target: root.baseButton_G
-        function onPressed() { root.baseButtonPressed(root.baseButton_G) }
-    }
-    Connections {
-        target: root.baseButton_Gs
-        function onPressed() { root.baseButtonPressed(root.baseButton_Gs) }
-    }
-    Connections {
-        target: root.baseButton_A
-        function onPressed() { root.baseButtonPressed(root.baseButton_A) }
-    }
-    Connections {
-        target: root.baseButton_As
-        function onPressed() { root.baseButtonPressed(root.baseButton_As) }
-    }
-    Connections {
-        target: root.baseButton_B
-        function onPressed() { root.baseButtonPressed(root.baseButton_B) }
-    }
-    
-    // Connect octave range slider
-    Connections {
-        target: root.octaveRangeSlider.first
-        function onValueChanged() {
-            console.log("set_low_octave " + root.octaveRangeSlider.first.value)
-            root.lowOctave = root.octaveRangeSlider.first.value
-            root.updateModel()
-        }
-    }
-    Connections {
-        target: root.octaveRangeSlider.second
-        function onValueChanged() {
-            console.log("set_high_octave " + root.octaveRangeSlider.second.value)
-            root.highOctave = root.octaveRangeSlider.second.value
-            root.updateModel()
-        }
-    }
+    }    
 }

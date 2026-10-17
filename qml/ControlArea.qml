@@ -2,35 +2,38 @@
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
-import QtQuick 2.12
+import QtQuick
 
-Rectangle {
+Item {
     id: controlArea
+
+    property double elementSpace: 10
+    property double elementRadius: 10
+    property string fontFamily
+    property double fontPixelSize: 10
+
     property string text: "Area"
 
     width: 620
     height: 50
 
-    Text {
-        x: 10
-        text: controlArea.text
+    ControlEmboss {
+        radius: controlArea.elementRadius
+        bgColor: "Gray"
+
+        anchors {
+            fill: parent
+            rightMargin: controlArea.elementSpace
+        }
+
+        Text {
+            x: controlArea.elementSpace
+            text: controlArea.text
+            font {
+                family: controlArea.fontFamily
+                pixelSize: controlArea.fontPixelSize
+                bold: true
+            }
+        }
     }
-
-    radius: 10
-    color: "Transparent"
-
-    border {
-        color: "Gray"
-        width: 1
-    }
-
-    /*
-    Emboss {
-        anchors.fill: parent
-        source: parent
-        offset: -2
-        radius: 10
-    }
-    */
-
 }
