@@ -1,4 +1,4 @@
-// /^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\
+// /^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\
 // Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
 // SPDX-License-Identifier: GPL-3.0
 
@@ -105,7 +105,7 @@ ApplicationWindow {
         // Raster 12mm @ 60x140mm display
         property double rasterWidth: root.portrait ? width / 6 : height / 6
         property double elementSpace: rasterWidth / 12
-        property double elementRadius: rasterWidth / 12        
+        property double elementRadius: rasterWidth / 12
         property double effectSize: 3
 
         property double contentWidth: width - 2*elementSpace
@@ -337,8 +337,8 @@ ApplicationWindow {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: currentIndex === 4 || currentIndex === 12    ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning or AudioDevice
-                    currentIndex === 10 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
+            height: currentIndex === 4 || currentIndex === 10    ? viewContainer.swipeHeight + viewContainer.playAreaHeight :
+                    currentIndex === 8 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
                     viewContainer.swipeHeight
 
             ScaleConfig {
@@ -458,7 +458,6 @@ ApplicationWindow {
                 width: confArea.width
                 height: confArea.height
                 visible: confArea.currentIndex===4
-                //height: viewContainer.swipeHeight + viewContainer.playAreaHeight + viewContainer.elementSpace
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -544,7 +543,7 @@ ApplicationWindow {
                 fontPixelSize: root.fontPixelSize
             }
 
-            Parameters_VolumeEnvelope {
+            Parameters_Osc_1 {
                 synthesizer: root.synthContext
 
                 width: confArea.width
@@ -559,42 +558,12 @@ ApplicationWindow {
                 fontPixelSize: root.fontPixelSize
             }
 
-            Parameters_FilterEnvelope {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===8
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_Osc_1 {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===9
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
             Parameters_Osc_2 {
                 synthesizer: root.synthContext
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===10
+                visible: confArea.currentIndex===8
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -610,7 +579,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===11
+                visible: confArea.currentIndex===9
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -621,12 +590,29 @@ ApplicationWindow {
                 fontPixelSize: root.fontPixelSize
             }
 
+            PresetManager {
+                id: presetManager
+                synthesizer: root.synthContext
+                modAssign: xyAssignableParameter
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===10
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
             AudioDevice {
                 synthesizer: root.synthContext
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===12
+                visible: confArea.currentIndex===11
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
