@@ -10,6 +10,7 @@ Item {
 
     property double rasterWidth: 50
     property double elementSpace: 5
+    property double elementRadius: rasterWidth / 12
     property bool portrait: false
 
     property string fontFamily
@@ -44,8 +45,8 @@ Item {
                 fontFamily: root.fontFamily
                 fontPixelSize: root.fontPixelSize
                 text: "Attack"
-                from: 0
-                to: 5000
+                from: 1
+                to: 160000
                 value: 10
                 stepSize: 1
             }
@@ -57,8 +58,8 @@ Item {
                 fontFamily: root.fontFamily
                 fontPixelSize: root.fontPixelSize
                 text: "Decay"
-                from: 0
-                to: 5000
+                from: 1
+                to: 160000
                 value: 100
                 stepSize: 1
             }
@@ -83,8 +84,8 @@ Item {
                 fontFamily: root.fontFamily
                 fontPixelSize: root.fontPixelSize
                 text: "Release"
-                from: 0
-                to: 5000
+                from: 1
+                to: 160000
                 value: 300
                 stepSize: 1
             }
