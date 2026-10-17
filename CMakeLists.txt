@@ -44,6 +44,9 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_Osc_2Form.ui.qml
         qml/Parameters_Osc_WaveOctaveGrid.ui.qml
         qml/Parameters_VolumeEnvelopeForm.ui.qml
+        qml/Parameters_FilterEnvelopeForm.ui.qml
+        qml/Parameters_VolumeEnvelope.qml
+        qml/Parameters_FilterEnvelope.qml
         qml/PresetManager.qml
         qml/PresetSaveDialog.qml
         qml/RangeConfig.qml
