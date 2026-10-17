@@ -4,8 +4,8 @@ import "./"
 
 ControlArea {
     id: root
-    property alias synthesizer: synthesizer
-    property alias modAssign: modAssign
+    required property MobileSynth synthesizer
+    required property XYAssignableParameter modAssign
 
     width: parent.width
     height: parent.height
@@ -26,7 +26,6 @@ ControlArea {
                 onCurrentIndexChanged: {
                     if (currentIndex >= 0) {
                         var p = PresetStore.getPreset(currentIndex)
-                        // apply available fields
                         if (p.osc1) {
                             if (p.osc1.level !== undefined) synthesizer.set_osc1_level(p.osc1.level)
                             if (p.osc1.wave_type !== undefined) synthesizer.set_osc1_wave_type(p.osc1.wave_type)
@@ -78,11 +77,44 @@ ControlArea {
         onSaveRequested: function(name, mode) {
             var p = {}
             p.name = name
-            // minimal snapshot: only name is guaranteed; additional fields kept empty if not available
-            // attempt to grab some synth properties if available
+
             try {
-                p.osc1 = { level: synthesizer.get_osc1_level ? synthesizer.get_osc1_level() : undefined }
-            } catch(e) {}
+                p.osc1 = {
+                    level: synthesizer.get_osc1_level ? synthesizer.get_osc1_level() : undefined,
+                    wave_type: synthesizer.get_osc1_wave_type ? synthesizer.get_osc1_wave_type() : undefined,
+                    octave: synthesizer.get_osc1_octave ? synthesizer.get_osc1_octave() : undefined
+                }
+            } catch (e) {}
+
+            try {
+                p.osc2 = {
+                    level: synthesizer.get_osc2_level ? synthesizer.get_osc2_level() : undefined,
+                    shift: synthesizer.get_osc2_shift ? synthesizer.get_osc2_shift() : undefined,
+                    wave_type: synthesizer.get_osc2_wave_type ? synthesizer.get_osc2_wave_type() : undefined,
+                    octave: synthesizer.get_osc2_octave ? synthesizer.get_osc2_octave() : undefined
+                }
+            } catch (e) {}
+
+            try {
+                p.volume_envelope = {
+                    attack: synthesizer.get_volume_attack ? synthesizer.get_volume_attack() : undefined,
+                    decay: synthesizer.get_volume_decay ? synthesizer.get_volume_decay() : undefined,
+                    sustain: synthesizer.get_volume_sustain ? synthesizer.get_volume_sustain() : undefined,
+                    release: synthesizer.get_volume_release ? synthesizer.get_volume_release() : undefined
+                }
+            } catch (e) {}
+
+            try {
+                p.filter_envelope = {
+                    attack: synthesizer.get_filter_attack ? synthesizer.get_filter_attack() : undefined,
+                    decay: synthesizer.get_filter_decay ? synthesizer.get_filter_decay() : undefined,
+                    sustain: synthesizer.get_filter_sustain ? synthesizer.get_filter_sustain() : undefined,
+                    release: synthesizer.get_filter_release ? synthesizer.get_filter_release() : undefined
+                }
+            } catch (e) {}
+
+            try { p.filter_cutoff = modAssign.getBaseValue(74) } catch (e) {}
+            try { p.filter_resonance = modAssign.getBaseValue(71) } catch (e) {}
 
             PresetStore.saveUserPreset(p, mode === "overwrite", -1)
         }
