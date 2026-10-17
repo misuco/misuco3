@@ -35,6 +35,8 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_ArpForm.ui.qml
         qml/Parameters_Filter.qml
         qml/Parameters_FilterForm.ui.qml
+        qml/Parameters_FilterEnvelope.qml
+        qml/Parameters_FilterEnvelopeForm.ui.qml
         qml/Parameters_Mod.qml
         qml/Parameters_ModForm.ui.qml
         qml/Parameters_Osc_1.qml
@@ -42,6 +44,8 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_Osc_2.qml
         qml/Parameters_Osc_2Form.ui.qml
         qml/Parameters_Osc_WaveOctaveGrid.ui.qml
+        qml/Parameters_VolumeEnvelope.qml
+        qml/Parameters_VolumeEnvelopeForm.ui.qml
         qml/RangeConfig.qml
         qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
