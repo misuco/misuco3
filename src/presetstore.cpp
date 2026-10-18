@@ -30,7 +30,7 @@ void PresetStore::ensureAppDirs()
 void PresetStore::loadFactoryPresets()
 {
     // Prefer embedded factory presets (resource) if available
-    QFile resFile(":/qml/factory_presets.json");
+    QFile resFile(":/qt/qml/misuco3/qml/factory_presets.json");
     if (resFile.exists() && resFile.open(QIODevice::ReadOnly)) {
         const QByteArray data = resFile.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
@@ -40,6 +40,8 @@ void PresetStore::loadFactoryPresets()
             return;
         }
         resFile.close();
+    } else {
+        qDebug() << "Cannot open :/qml/factory_presets.json" ;
     }
 
     // Fallback: try to load factory presets from writable app data location

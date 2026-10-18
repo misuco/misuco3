@@ -65,6 +65,7 @@ qt_add_qml_module(MISUCO3
         qml/icons/wave-saw.svg
         qml/icons/wave-saw-rev.svg
         qml/fonts/alpha-prota/AlphaProta.otf
+        qml/factory_presets.json
 
     SOURCES
         src/presetstore.cpp
