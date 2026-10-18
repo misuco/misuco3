@@ -1,1 +1,178 @@
 [
+  {
+    "name": "Acoustic Grand Piano",
+    "osc1": { "level": 0.8, "wave_type": 0, "octave": 0 },
+    "osc2": { "level": 0.2, "shift": 0, "wave_type": 2, "octave": 0 },
+    "volume_envelope": { "attack": 8, "decay": 120, "sustain": 0.6, "release": 300 },
+    "filter_envelope": { "attack": 5, "decay": 80, "sustain": 0.7, "release": 250 },
+    "filter_cutoff": 0.9,
+    "filter_resonance": 0.05,
+    "mod_amount": 0.15,
+    "mod_freq": 0.5
+  },
+  {
+    "name": "Bright Acoustic Piano",
+    "osc1": { "level": 0.85, "wave_type": 0, "octave": 0 },
+    "osc2": { "level": 0.25, "shift": 0, "wave_type": 1, "octave": 0 },
+    "volume_envelope": { "attack": 6, "decay": 100, "sustain": 0.65, "release": 260 },
+    "filter_envelope": { "attack": 5, "decay": 70, "sustain": 0.7, "release": 220 },
+    "filter_cutoff": 0.92,
+    "filter_resonance": 0.07,
+    "mod_amount": 0.12,
+    "mod_freq": 0.6
+  },
+  {
+    "name": "Electric Grand Piano",
+    "osc1": { "level": 0.75, "wave_type": 1, "octave": 0 },
+    "osc2": { "level": 0.35, "shift": 0, "wave_type": 3, "octave": 0 },
+    "volume_envelope": { "attack": 6, "decay": 90, "sustain": 0.7, "release": 300 },
+    "filter_envelope": { "attack": 8, "decay": 110, "sustain": 0.6, "release": 320 },
+    "filter_cutoff": 0.85,
+    "filter_resonance": 0.12,
+    "mod_amount": 0.18,
+    "mod_freq": 0.8
+  },
+  {
+    "name": "Honky-tonk Piano",
+    "osc1": { "level": 0.9, "wave_type": 1, "octave": 0 },
+    "osc2": { "level": 0.4, "shift": -12, "wave_type": 2, "octave": 0 },
+    "volume_envelope": { "attack": 4, "decay": 80, "sustain": 0.55, "release": 200 },
+    "filter_envelope": { "attack": 3, "decay": 60, "sustain": 0.6, "release": 180 },
+    "filter_cutoff": 0.88,
+    "filter_resonance": 0.08,
+    "mod_amount": 0.2,
+    "mod_freq": 1.0
+  },
+  {
+    "name": "Electric Piano 1",
+    "osc1": { "level": 0.7, "wave_type": 3, "octave": 0 },
+    "osc2": { "level": 0.4, "shift": 0, "wave_type": 1, "octave": 0 },
+    "volume_envelope": { "attack": 5, "decay": 120, "sustain": 0.7, "release": 400 },
+    "filter_envelope": { "attack": 10, "decay": 140, "sustain": 0.6, "release": 420 },
+    "filter_cutoff": 0.78,
+    "filter_resonance": 0.1,
+    "mod_amount": 0.25,
+    "mod_freq": 0.9
+  },
+  {
+    "name": "Electric Piano 2",
+    "osc1": { "level": 0.65, "wave_type": 1, "octave": 0 },
+    "osc2": { "level": 0.35, "shift": 0, "wave_type": 0, "octave": 0 },
+    "volume_envelope": { "attack": 5, "decay": 110, "sustain": 0.68, "release": 380 },
+    "filter_envelope": { "attack": 8, "decay": 120, "sustain": 0.62, "release": 360 },
+    "filter_cutoff": 0.8,
+    "filter_resonance": 0.09,
+    "mod_amount": 0.22,
+    "mod_freq": 0.7
+  },
+  {
+    "name": "Harpsichord",
+    "osc1": { "level": 0.9, "wave_type": 2, "octave": 0 },
+    "osc2": { "level": 0.2, "shift": 0, "wave_type": 2, "octave": 0 },
+    "volume_envelope": { "attack": 0, "decay": 60, "sustain": 0.35, "release": 80 },
+    "filter_envelope": { "attack": 0, "decay": 40, "sustain": 0.4, "release": 70 },
+    "filter_cutoff": 0.9,
+    "filter_resonance": 0.02,
+    "mod_amount": 0.05,
+    "mod_freq": 0.3
+  },
+  {
+    "name": "Clavinet",
+    "osc1": { "level": 0.85, "wave_type": 1, "octave": 0 },
+    "osc2": { "level": 0.3, "shift": 0, "wave_type": 1, "octave": 0 },
+    "volume_envelope": { "attack": 1, "decay": 40, "sustain": 0.5, "release": 60 },
+    "filter_envelope": { "attack": 1, "decay": 50, "sustain": 0.5, "release": 80 },
+    "filter_cutoff": 0.86,
+    "filter_resonance": 0.12,
+    "mod_amount": 0.18,
+    "mod_freq": 1.2
+  },
+  {
+    "name": "Celesta",
+    "osc1": { "level": 0.7, "wave_type": 0, "octave": 0 },
+    "osc2": { "level": 0.25, "shift": 0, "wave_type": 2, "octave": 0 },
+    "volume_envelope": { "attack": 4, "decay": 200, "sustain": 0.5, "release": 500 },
+    "filter_envelope": { "attack": 3, "decay": 150, "sustain": 0.6, "release": 480 },
+    "filter_cutoff": 0.95,
+    "filter_resonance": 0.03,
+    "mod_amount": 0.1,
+    "mod_freq": 0.6
+  },
+  {
+    "name": "Glockenspiel",
+    "osc1": { "level": 0.75, "wave_type": 0, "octave": 1 },
+    "osc2": { "level": 0.15, "shift": 0, "wave_type": 0, "octave": 1 },
+    "volume_envelope": { "attack": 1, "decay": 120, "sustain": 0.2, "release": 150 },
+    "filter_envelope": { "attack": 0, "decay": 80, "sustain": 0.3, "release": 120 },
+    "filter_cutoff": 0.98,
+    "filter_resonance": 0.02,
+    "mod_amount": 0.05,
+    "mod_freq": 0.4
+  },
+  {
+    "name": "Music Box",
+    "osc1": { "level": 0.6, "wave_type": 0, "octave": 1 },
+    "osc2": { "level": 0.2, "shift": 0, "wave_type": 2, "octave": 1 },
+    "volume_envelope": { "attack": 5, "decay": 180, "sustain": 0.35, "release": 400 },
+    "filter_envelope": { "attack": 4, "decay": 160, "sustain": 0.4, "release": 360 },
+    "filter_cutoff": 0.96,
+    "filter_resonance": 0.03,
+    "mod_amount": 0.06,
+    "mod_freq": 0.3
+  },
+  {
+    "name": "Vibraphone",
+    "osc1": { "level": 0.7, "wave_type": 2, "octave": 0 },
+    "osc2": { "level": 0.3, "shift": 0, "wave_type": 3, "octave": 0 },
+    "volume_envelope": { "attack": 6, "decay": 250, "sustain": 0.7, "release": 800 },
+    "filter_envelope": { "attack": 6, "decay": 200, "sustain": 0.7, "release": 700 },
+    "filter_cutoff": 0.88,
+    "filter_resonance": 0.06,
+    "mod_amount": 0.25,
+    "mod_freq": 5.0
+  },
+  {
+    "name": "Marimba",
+    "osc1": { "level": 0.8, "wave_type": 2, "octave": 0 },
+    "osc2": { "level": 0.25, "shift": -12, "wave_type": 2, "octave": 0 },
+    "volume_envelope": { "attack": 2, "decay": 300, "sustain": 0.4, "release": 500 },
+    "filter_envelope": { "attack": 2, "decay": 220, "sustain": 0.45, "release": 420 },
+    "filter_cutoff": 0.82,
+    "filter_resonance": 0.05,
+    "mod_amount": 0.08,
+    "mod_freq": 0.4
+  },
+  {
+    "name": "Xylophone",
+    "osc1": { "level": 0.85, "wave_type": 3, "octave": 1 },
+    "osc2": { "level": 0.15, "shift": 0, "wave_type": 2, "octave": 1 },
+    "volume_envelope": { "attack": 0, "decay": 180, "sustain": 0.2, "release": 200 },
+    "filter_envelope": { "attack": 0, "decay": 120, "sustain": 0.25, "release": 180 },
+    "filter_cutoff": 0.97,
+    "filter_resonance": 0.02,
+    "mod_amount": 0.04,
+    "mod_freq": 0.3
+  },
+  {
+    "name": "Tubular Bells",
+    "osc1": { "level": 0.9, "wave_type": 0, "octave": 1 },
+    "osc2": { "level": 0.1, "shift": 0, "wave_type": 0, "octave": 1 },
+    "volume_envelope": { "attack": 2, "decay": 1000, "sustain": 0.1, "release": 1200 },
+    "filter_envelope": { "attack": 1, "decay": 600, "sustain": 0.2, "release": 800 },
+    "filter_cutoff": 0.99,
+    "filter_resonance": 0.01,
+    "mod_amount": 0.02,
+    "mod_freq": 0.2
+  },
+  {
+    "name": "Dulcimer",
+    "osc1": { "level": 0.7, "wave_type": 2, "octave": 0 },
+    "osc2": { "level": 0.2, "shift": 0, "wave_type": 0, "octave": 0 },
+    "volume_envelope": { "attack": 3, "decay": 250, "sustain": 0.35, "release": 400 },
+    "filter_envelope": { "attack": 2, "decay": 180, "sustain": 0.4, "release": 350 },
+    "filter_cutoff": 0.9,
+    "filter_resonance": 0.03,
+    "mod_amount": 0.05,
+    "mod_freq": 0.4
+  }
+]
