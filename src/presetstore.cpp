@@ -29,68 +29,33 @@ void PresetStore::ensureAppDirs()
 
 void PresetStore::loadFactoryPresets()
 {
-    QFile f(m_factoryFilePath);
-    if (!f.exists()) {
-        // generate 100 simple factory presets
-        QVariantList presets;
-        for (int i = 0; i < 100; ++i) {
-            QVariantMap p;
-            p["name"] = QString("Factory %1").arg(i+1);
-
-            QVariantMap osc1;
-            osc1["level"] = 0.6;
-            osc1["wave_type"] = i % 5;
-            osc1["octave"] = i % 5;
-            p["osc1"] = osc1;
-
-            QVariantMap osc2;
-            osc2["level"] = 0.4;
-            osc2["shift"] = (i % 7) - 3;
-            osc2["wave_type"] = (i + 2) % 5;
-            osc2["octave"] = (4 - (i % 5));
-            p["osc2"] = osc2;
-
-            QVariantMap volEnv;
-            volEnv["attack"] = 10 + (i * 50 % 8000);
-            volEnv["decay"] = 100 + (i * 30 % 10000);
-            volEnv["sustain"] = 0.2 + ((i % 5) / 10.0);
-            volEnv["release"] = 200 + (i * 40 % 12000);
-            p["volume_envelope"] = volEnv;
-
-            QVariantMap filtEnv = volEnv;
-            filtEnv["sustain"] = 0.5;
-            p["filter_envelope"] = filtEnv;
-
-            p["filter_cutoff"] = (i % 100) / 100.0;
-            p["filter_resonance"] = ((i * 7) % 100) / 100.0;
-
-            p["mod_amount"] = 0.5;
-            p["mod_freq"] = 0.5 + (i % 5) * 0.2;
-
-            presets.append(p);
+    // Prefer embedded factory presets (resource) if available
+    QFile resFile(":/qml/factory_presets.json");
+    if (resFile.exists() && resFile.open(QIODevice::ReadOnly)) {
+        const QByteArray data = resFile.readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        if (doc.isArray()) {
+            m_factoryPresets = doc.array().toVariantList();
+            resFile.close();
+            return;
         }
-
-        // persist
-        QJsonArray arr;
-        for (const QVariant &v : presets) {
-            arr.append(QJsonObject::fromVariantMap(v.toMap()));
-        }
-        QFile out(m_factoryFilePath);
-        if (out.open(QIODevice::WriteOnly)) {
-            out.write(QJsonDocument(arr).toJson(QJsonDocument::Indented));
-            out.close();
-        }
-        m_factoryPresets = presets;
-    } else {
-        if (f.open(QIODevice::ReadOnly)) {
-            const QByteArray data = f.readAll();
-            QJsonDocument doc = QJsonDocument::fromJson(data);
-            if (doc.isArray()) {
-                m_factoryPresets = doc.array().toVariantList();
-            }
-            f.close();
-        }
+        resFile.close();
     }
+
+    // Fallback: try to load factory presets from writable app data location
+    QFile f(m_factoryFilePath);
+    if (f.open(QIODevice::ReadOnly)) {
+        const QByteArray data = f.readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        if (doc.isArray()) {
+            m_factoryPresets = doc.array().toVariantList();
+        }
+        f.close();
+        return;
+    }
+
+    // If nothing found, leave factory presets empty
+    m_factoryPresets = {};
 }
 
 void PresetStore::loadUserPresets()
