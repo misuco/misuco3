@@ -16,7 +16,8 @@ Item {
     property string fontFamily
     property double fontPixelSize: 10
 
-    readonly property double elementWidth: width - 2*elementSpace
+    readonly property double contentWidth: width - 2*elementSpace
+    readonly property double contentWidth2: (width - 3*elementSpace) / 2
     readonly property double elementHeight: rasterWidth - (portrait ? 2 : 3)*elementSpace
 
     property alias attackSlider: attackSlider
@@ -38,56 +39,63 @@ Item {
             padding: root.elementSpace
             spacing: root.elementSpace
 
-            ControlSlider {
-                id: attackSlider
-                width: root.elementWidth
-                height: root.elementHeight
-                fontFamily: root.fontFamily
-                fontPixelSize: root.fontPixelSize
-                text: "Attack"
-                from: 1
-                to: 160000
-                value: 10
-                stepSize: 1
-            }
+            Grid {
 
-            ControlSlider {
-                id: decaySlider
-                width: root.elementWidth
-                height: root.elementHeight
-                fontFamily: root.fontFamily
-                fontPixelSize: root.fontPixelSize
-                text: "Decay"
-                from: 1
-                to: 160000
-                value: 100
-                stepSize: 1
-            }
+                rows: 4
+                columns: root.portrait ? 1 : 2
+                spacing: root.elementSpace
 
-            ControlSlider {
-                id: sustainSlider
-                width: root.elementWidth
-                height: root.elementHeight
-                fontFamily: root.fontFamily
-                fontPixelSize: root.fontPixelSize
-                text: "Sustain"
-                from: 0.0
-                to: 1.0
-                value: 0.8
-                stepSize: 0.01
-            }
+                ControlSlider {
+                    id: attackSlider
+                    width: root.portrait ? root.contentWidth : root.contentWidth2
+                    height: root.elementHeight
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
+                    text: "Attack"
+                    from: 1
+                    to: 160000
+                    value: 10
+                    stepSize: 1
+                }
 
-            ControlSlider {
-                id: releaseSlider
-                width: root.elementWidth
-                height: root.elementHeight
-                fontFamily: root.fontFamily
-                fontPixelSize: root.fontPixelSize
-                text: "Release"
-                from: 1
-                to: 160000
-                value: 300
-                stepSize: 1
+                ControlSlider {
+                    id: decaySlider
+                    width: root.portrait ? root.contentWidth : root.contentWidth2
+                    height: root.elementHeight
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
+                    text: "Decay"
+                    from: 1
+                    to: 160000
+                    value: 100
+                    stepSize: 1
+                }
+
+                ControlSlider {
+                    id: sustainSlider
+                    width: root.portrait ? root.contentWidth : root.contentWidth2
+                    height: root.elementHeight
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
+                    text: "Sustain"
+                    from: 0.0
+                    to: 1.0
+                    value: 0.8
+                    stepSize: 0.01
+                }
+
+                ControlSlider {
+                    id: releaseSlider
+                    width: root.portrait ? root.contentWidth : root.contentWidth2
+                    height: root.elementHeight
+                    fontFamily: root.fontFamily
+                    fontPixelSize: root.fontPixelSize
+                    text: "Release"
+                    from: 1
+                    to: 160000
+                    value: 300
+                    stepSize: 1
+                }
             }
         }
     }

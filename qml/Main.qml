@@ -127,7 +127,7 @@ ApplicationWindow {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 13
+            property int tabCount: 14
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -337,8 +337,9 @@ ApplicationWindow {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: currentIndex === 4 || currentIndex === 10    ? viewContainer.swipeHeight + viewContainer.playAreaHeight :
-                    currentIndex === 8 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
+            height: currentIndex === 4 || currentIndex === 13    ? viewContainer.swipeHeight + viewContainer.playAreaHeight :
+                    currentIndex === 12                          ? viewContainer.swipeHeight + viewContainer.rasterWidth :
+                    (currentIndex === 8 || currentIndex === 9 || currentIndex === 10 ) && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
                     viewContainer.swipeHeight
 
             ScaleConfig {
@@ -573,13 +574,43 @@ ApplicationWindow {
                 fontPixelSize: root.fontPixelSize
             }
 
+            Parameters_VolumeEnvelope {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===9
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            Parameters_FilterEnvelope {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===10
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
             Parameters_Mod {
                 modAssign: xyAssignableParameter
                 synthesizer: root.synthContext
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===9
+                visible: confArea.currentIndex===11
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -597,7 +628,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===10
+                visible: confArea.currentIndex===12
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -612,7 +643,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===11
+                visible: confArea.currentIndex===13
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
