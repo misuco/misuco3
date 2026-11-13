@@ -70,8 +70,9 @@ The result is an unsigned release APK in `build-android/android-build/build/outp
 
 Every push to `main` is built by the
 [Android Build](https://github.com/misuco/misuco3/actions/workflows/qt68_android.yml) workflow.
-Its artifact is an APK signed with a key made for that run only: it can be installed for
-testing, but not updated over a build of another run.
+It has two artifacts: an APK signed with a key made for that run only, which can be
+installed for testing but not updated over a build of another run, and an unsigned app
+bundle (AAB) to be signed with the upload key for the play store.
 
 ## Repository layout
 

@@ -101,3 +101,17 @@ jobs:
         name: MISUCO3-android-arm64-v8a
         path: MISUCO3-arm64-v8a.apk
         if-no-files-found: error
+
+    # The app bundle is what the play store takes. It is uploaded unsigned,
+    # the upload key stays with the publisher: sign it with jarsigner.
+    - name: Build AAB
+      run: |
+        cmake --build build --target aab
+        cp build/android-build/build/outputs/bundle/release/android-build-release.aab MISUCO3-unsigned.aab
+
+    - name: Upload AAB
+      uses: actions/upload-artifact@v4
+      with:
+        name: MISUCO3-android-aab-unsigned
+        path: MISUCO3-unsigned.aab
+        if-no-files-found: error
