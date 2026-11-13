@@ -4,61 +4,100 @@ on:
   push:
     branches:
       - main
+      # push a branch named ci/... to try a change without opening a pull request
+      - 'ci/**'
   pull_request:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The tool versions belong together, see
+  # https://doc.qt.io/qt-6.11/android-configure-dev-environment.html
+  # android/build.gradle is the template of the same Qt version.
+  QT_VERSION: '6.11.3'
+  QT_ARCH: 'android_arm64_v8a'
+  AQT_VERSION: '3.3.0'
+  JDK_VERSION: '21'
+  NDK_VERSION: '27.2.12479018'
+  SDK_PLATFORM: 'android-36'
+  SDK_BUILD_TOOLS: '36.0.0'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+    - uses: actions/checkout@v4
       with:
-        distribution: 'adopt'
-        java-version: '11'
+        submodules: true
 
-    - name: Set up Android SDK
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wget unzip
-        wget https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip
-        mkdir -p $HOME/android-sdk/cmdline-tools
-        unzip -q commandlinetools-linux-6609375_latest.zip -d $HOME/android-sdk/cmdline-tools
-        export ANDROID_HOME=$HOME/android-sdk
-        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH
-        yes | sdkmanager --licenses
-        sdkmanager "platform-tools" "build-tools;30.0.2" "platforms;android-30"
+    # fluidsynth only needs gcem, not its test data and optional modules
+    - name: Fetch gcem
+      run: git -C fluidsynth submodule update --init --depth 1 gcem
 
-    - name: Set up NDK
-      run: |
-        export ANDROID_HOME=$HOME/android-sdk
-        export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH
-        sdkmanager --install "ndk;21.4.7075529"
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: ${{ env.JDK_VERSION }}
 
-    - name: Set up Qt
+    - name: Set up Android SDK and NDK
       run: |
-        sudo apt-get install -y build-essential
-        wget https://download.qt.io/official_releases/qt/6.8/6.8.1/single/qt-everywhere-src-6.8.1.tar.xz
-        tar -xvf qt-everywhere-src-6.8.1.tar.xz
-        cd qt-everywhere-src-6.8.1
-        ./configure -prefix $PWD/qtbase
-        make -j$(nproc)
-        make install
+        SDKMANAGER=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | tail -1)
+        yes | "$SDKMANAGER" --licenses > /dev/null || true
+        "$SDKMANAGER" "platform-tools" "platforms;$SDK_PLATFORM" "build-tools;$SDK_BUILD_TOOLS" "ndk;$NDK_VERSION"
 
-    - name: Build Project
+    - name: Install Ninja
+      run: sudo apt-get update && sudo apt-get install -y ninja-build
+
+    - name: Restore cached Qt
+      id: cache-qt
+      uses: actions/cache@v4
+      with:
+        path: ${{ runner.temp }}/Qt
+        key: qt-${{ runner.os }}-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-multimedia
+
+    # --autodesktop also installs the desktop Qt, its tools run during the build
+    - name: Install Qt
+      if: steps.cache-qt.outputs.cache-hit != 'true'
       run: |
-        mkdir build
-        cd build
-        $PWD/qtbase/bin/qmake ..
-        make
-        make install
+        python3 -m venv "$RUNNER_TEMP/aqt"
+        "$RUNNER_TEMP/aqt/bin/pip" install "aqtinstall==$AQT_VERSION"
+        "$RUNNER_TEMP/aqt/bin/aqt" install-qt linux android "$QT_VERSION" "$QT_ARCH" \
+          -m qtmultimedia --autodesktop -O "$RUNNER_TEMP/Qt"
+
+    - name: Configure
+      run: |
+        chmod +x "$RUNNER_TEMP/Qt/$QT_VERSION/$QT_ARCH/bin/qt-cmake"
+        "$RUNNER_TEMP/Qt/$QT_VERSION/$QT_ARCH/bin/qt-cmake" -S . -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DQT_HOST_PATH="$RUNNER_TEMP/Qt/$QT_VERSION/gcc_64" \
+          -DANDROID_SDK_ROOT="$ANDROID_HOME" \
+          -DANDROID_NDK_ROOT="$ANDROID_HOME/ndk/$NDK_VERSION"
+
+    - name: Build APK
+      run: cmake --build build --target apk
+
+    # The release apk is unsigned and could not be installed. It is signed
+    # with a key made for this run only: good enough to try the build on a
+    # device (uninstall a build of another run first), not for the store.
+    - name: Sign APK for testing
+      run: |
+        keytool -genkeypair -keystore "$RUNNER_TEMP/ci.keystore" -storepass android -keypass android \
+          -alias ci -keyalg RSA -keysize 2048 -validity 30 -dname "CN=misuco3 ci build"
+        "$ANDROID_HOME/build-tools/$SDK_BUILD_TOOLS/apksigner" sign \
+          --ks "$RUNNER_TEMP/ci.keystore" --ks-pass pass:android --key-pass pass:android --ks-key-alias ci \
+          --out MISUCO3-arm64-v8a.apk \
+          build/android-build/build/outputs/apk/release/android-build-release-unsigned.apk
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: android-apk
-        path: build/path/to/your/apk/*.apk
+        name: MISUCO3-android-arm64-v8a
+        path: MISUCO3-arm64-v8a.apk
+        if-no-files-found: error
