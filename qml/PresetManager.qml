@@ -1,11 +1,15 @@
 import QtQuick
 import QtQuick.Controls
+import misuco3
 import "./"
 
 ControlArea {
     id: root
-    property alias synthesizer: synthesizer
-    property alias modAssign: modAssign
+    property MobileSynth synthesizer
+    property XYAssignableParameter modAssign
+
+    property double rasterWidth: 50
+    property bool portrait: false
 
     signal presetApplied(var preset)
 

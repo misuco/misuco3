@@ -8,6 +8,31 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Multimedia)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
+# FluidSynth is the soundfont engine behind polysoundfont. Only the synth
+# core is built, as a static library: no audio or midi drivers and no
+# external dependencies, the audio output is done with Qt.
+#   git submodule update --init --recursive
+function(misuco3_add_fluidsynth)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/gcem/CMakeLists.txt")
+        message(FATAL_ERROR "fluidsynth/gcem is missing, run: git submodule update --init --recursive")
+    endif()
+
+    set(BUILD_SHARED_LIBS OFF)
+    set(osal "cpp11" CACHE STRING "" FORCE)
+    # single precision dsp, cheaper on mobile cpus
+    set(enable-floats ON CACHE BOOL "" FORCE)
+    foreach(feature
+            alsa aufile dbus ipv6 jack ladspa libsndfile midishare opensles oboe
+            network oss dsound wasapi waveout winmidi sdl3 pulseaudio pipewire
+            readline openmp native-dls signalsmith systemd coreaudio coremidi
+            framework dart kai portaudio profiling)
+        set(enable-${feature} OFF CACHE BOOL "" FORCE)
+    endforeach()
+
+    add_subdirectory(fluidsynth EXCLUDE_FROM_ALL)
+endfunction()
+misuco3_add_fluidsynth()
+
 qt_add_executable(MISUCO3
     main.cpp
 )
@@ -53,6 +78,8 @@ qt_add_qml_module(MISUCO3
         qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
         qml/ScaleConfigForm.ui.qml
+        qml/SoundFont.qml
+        qml/SoundFontForm.ui.qml
         qml/Tuning.qml
         qml/TuningForm.ui.qml
         qml/XYAssignableParameter.qml
@@ -66,6 +93,8 @@ qt_add_qml_module(MISUCO3
         qml/icons/wave-saw-rev.svg
         qml/fonts/alpha-prota/AlphaProta.otf
         qml/factory_presets.json
+        fluidsynth/sf2/VintageDreamsWaves-v2.sf2
+        fluidsynth/sf2/COPYRIGHT.txt
 
     SOURCES
         src/presetstore.cpp
@@ -79,6 +108,8 @@ qt_add_qml_module(MISUCO3
         misulib/comm/sendermobilesynth.h
         misulib/comm/senderoscmidigeneric.cpp
         misulib/comm/senderoscmidigeneric.h
+        misulib/comm/sendersoundfont.cpp
+        misulib/comm/sendersoundfont.h
         misulib/comm/senderreaktor.cpp
         misulib/comm/senderreaktor.h
         misulib/comm/sendersupercollider.cpp
@@ -98,6 +129,10 @@ qt_add_qml_module(MISUCO3
         misulib/comm/libofqf/qosctypes.cpp
         misulib/comm/libofqf/qosctypes.h
 
+        polysoundfont/qt6/soundfontsynth.cpp
+        polysoundfont/qt6/soundfontsynth.h
+
+        polymobilesynth/qt6/audiosource.h
         polymobilesynth/qt6/mobilesynth.h
         polymobilesynth/qt6/mobilesynth.cpp
         polymobilesynth/qt6/qt68wraper.h
@@ -144,12 +179,14 @@ target_include_directories(MISUCO3 PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     polymobilesynth/mobilesynth/Classes
     polymobilesynth/qt6
+    polysoundfont/qt6
     misulib/comm
 )
 
 target_link_libraries(MISUCO3
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Multimedia
+    PRIVATE libfluidsynth
 )
 
 include(GNUInstallDirs)

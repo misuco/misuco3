@@ -4,3 +4,6 @@
 [submodule "misulib"]
 	path = misulib
 	url = git@github.com:misuco/misulib.git
+[submodule "fluidsynth"]
+	path = fluidsynth
+	url = https://github.com/misuco/fluidsynth.git
