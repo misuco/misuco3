@@ -1,7 +1,3 @@
-// /^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\v/^\
-// Copyright (C) 2024 c1audio.com / Claudio Zopfi <c1audio@x21.ch>
-// SPDX-License-Identifier: GPL-3.0
-
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -9,6 +5,7 @@
 #include <mastersender.h>
 #include <sendermobilesynth.h>
 #include <senderoscmidigeneric.h>
+#include "presetstore.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +31,10 @@ int main(int argc, char *argv[])
         {"senderContext", QVariant::fromValue(&masterSender)},
         {"synthContext", QVariant::fromValue(synth.get())}
     });
+
+    // Expose PresetStore to QML
+    PresetStore *presetStore = new PresetStore(&engine);
+    engine.rootContext()->setContextProperty("PresetStore", presetStore);
 
     QObject::connect(
         &engine,

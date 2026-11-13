@@ -35,6 +35,7 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_ArpForm.ui.qml
         qml/Parameters_Filter.qml
         qml/Parameters_FilterForm.ui.qml
+        qml/Parameters_FilterEnvelopeForm.ui.qml
         qml/Parameters_Mod.qml
         qml/Parameters_ModForm.ui.qml
         qml/Parameters_Osc_1.qml
@@ -42,6 +43,12 @@ qt_add_qml_module(MISUCO3
         qml/Parameters_Osc_2.qml
         qml/Parameters_Osc_2Form.ui.qml
         qml/Parameters_Osc_WaveOctaveGrid.ui.qml
+        qml/Parameters_VolumeEnvelopeForm.ui.qml
+        qml/Parameters_FilterEnvelopeForm.ui.qml
+        qml/Parameters_VolumeEnvelope.qml
+        qml/Parameters_FilterEnvelope.qml
+        qml/PresetManager.qml
+        qml/PresetSaveDialog.qml
         qml/RangeConfig.qml
         qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
@@ -58,8 +65,12 @@ qt_add_qml_module(MISUCO3
         qml/icons/wave-saw.svg
         qml/icons/wave-saw-rev.svg
         qml/fonts/alpha-prota/AlphaProta.otf
+        qml/factory_presets.json
 
     SOURCES
+        src/presetstore.cpp
+        src/presetstore.h
+
         misulib/comm/heartbeat.cpp
         misulib/comm/heartbeat.h
         misulib/comm/mastersender.cpp
@@ -77,7 +88,6 @@ qt_add_qml_module(MISUCO3
 
         misulib/comm/libofqf/qoscclient.cpp
         misulib/comm/libofqf/qoscclient.h
-        misulib/comm/libofqf/qoscclientinterface.h
         misulib/comm/libofqf/qoscmsgparser.cpp
         misulib/comm/libofqf/qoscmsgparser.h
         misulib/comm/libofqf/qoscserver.cpp
@@ -116,7 +126,6 @@ qt_add_qml_module(MISUCO3
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 set_target_properties(MISUCO3 PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.MISUCO3
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -130,8 +139,9 @@ set_target_properties(MISUCO3 PROPERTIES
     QT_ANDROID_VERSION_CODE 11
 )
 
-
 target_include_directories(MISUCO3 PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     polymobilesynth/mobilesynth/Classes
     polymobilesynth/qt6
     misulib/comm
@@ -149,4 +159,3 @@ install(TARGETS MISUCO3
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-

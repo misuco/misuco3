@@ -105,7 +105,7 @@ ApplicationWindow {
         // Raster 12mm @ 60x140mm display
         property double rasterWidth: root.portrait ? width / 6 : height / 6
         property double elementSpace: rasterWidth / 12
-        property double elementRadius: rasterWidth / 12        
+        property double elementRadius: rasterWidth / 12
         property double effectSize: 3
 
         property double contentWidth: width - 2*elementSpace
@@ -127,7 +127,7 @@ ApplicationWindow {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 11
+            property int tabCount: 14
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -337,8 +337,9 @@ ApplicationWindow {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: currentIndex === 4 || currentIndex === 10    ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning
-                    currentIndex === 8 && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :    // OSC2 Parameters
+            height: currentIndex === 4 || currentIndex === 13    ? viewContainer.swipeHeight + viewContainer.playAreaHeight :
+                    currentIndex === 12                          ? viewContainer.swipeHeight + viewContainer.rasterWidth :
+                    (currentIndex === 8 || currentIndex === 9 || currentIndex === 10 ) && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
                     viewContainer.swipeHeight
 
             ScaleConfig {
@@ -458,7 +459,6 @@ ApplicationWindow {
                 width: confArea.width
                 height: confArea.height
                 visible: confArea.currentIndex===4
-                //height: viewContainer.swipeHeight + viewContainer.playAreaHeight + viewContainer.elementSpace
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -574,8 +574,7 @@ ApplicationWindow {
                 fontPixelSize: root.fontPixelSize
             }
 
-            Parameters_Mod {
-                modAssign: xyAssignableParameter
+            Parameters_VolumeEnvelope {
                 synthesizer: root.synthContext
 
                 width: confArea.width
@@ -586,7 +585,55 @@ ApplicationWindow {
                 elementSpace: viewContainer.elementSpace
                 elementRadius: viewContainer.elementRadius
                 portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
 
+            Parameters_FilterEnvelope {
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===10
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            Parameters_Mod {
+                modAssign: xyAssignableParameter
+                synthesizer: root.synthContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===11
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            PresetManager {
+                id: presetManager
+                synthesizer: root.synthContext
+                modAssign: xyAssignableParameter
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===12
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
                 fontFamily: misuco3font.name
                 fontPixelSize: root.fontPixelSize
             }
@@ -596,7 +643,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===10
+                visible: confArea.currentIndex===13
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
