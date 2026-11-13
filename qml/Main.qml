@@ -16,6 +16,7 @@ ApplicationWindow {
 
     required property MasterSender senderContext
     required property MobileSynth synthContext
+    required property SoundFontSynth soundFontContext
 
     property var scaleModel: [
         {
@@ -127,7 +128,7 @@ ApplicationWindow {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 14
+            property int tabCount: 15
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -644,6 +645,23 @@ ApplicationWindow {
                 width: confArea.width
                 height: confArea.height
                 visible: confArea.currentIndex===13
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            SoundFont {
+                sender: root.senderContext
+                synthesizer: root.synthContext
+                soundFont: root.soundFontContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===14
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
