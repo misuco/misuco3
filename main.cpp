@@ -6,6 +6,8 @@
 #include <sendermobilesynth.h>
 #include <senderoscmidigeneric.h>
 #include <sendersoundfont.h>
+#include <senderrtpmidi.h>
+#include <rtpmidicontrol.h>
 #include <soundfontsynth.h>
 #include "presetstore.h"
 
@@ -38,12 +40,18 @@ int main(int argc, char *argv[])
     masterSender.addSenderThread(&senderOscMidi,"OscSender");
     masterSender.onToggleSender("OscSender",true);
 
+    // midi over ethernet, it is switched on in the network midi view
+    SenderRtpMidi senderRtpMidi;
+    masterSender.addSenderThread(&senderRtpMidi,RtpMidiControl::SenderName);
+    RtpMidiControl rtpMidiControl(&masterSender, &senderRtpMidi);
+
     QQmlApplicationEngine engine;
 
     engine.setInitialProperties({
         {"senderContext", QVariant::fromValue(&masterSender)},
         {"synthContext", QVariant::fromValue(synth.get())},
-        {"soundFontContext", QVariant::fromValue(soundFontSynth.get())}
+        {"soundFontContext", QVariant::fromValue(soundFontSynth.get())},
+        {"rtpMidiContext", QVariant::fromValue(&rtpMidiControl)}
     });
 
     // Expose PresetStore to QML

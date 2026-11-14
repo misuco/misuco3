@@ -1,6 +1,8 @@
 <?xml version='1.0'?>
 <manifest android:installLocation="auto" android:versionCode="-- %%INSERT_VERSION_CODE%% --" android:versionName="-- %%INSERT_VERSION_NAME%% --" package="org.misuco.misuco3" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- %%INSERT_PERMISSIONS -->
+    <!-- network midi: the mDNS search needs a multicast lock -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
     <!--%%INSERT_FEATURES-->
     <application android:allowBackup="true" android:enableOnBackInvokedCallback="false" android:fullBackupOnly="false" android:hardwareAccelerated="true" android:icon="@drawable/icon" android:label="-- %%INSERT_APP_NAME%% --" android:name="org.qtproject.qt.android.bindings.QtApplication" android:requestLegacyExternalStorage="true" android:theme="@style/splashScreenTheme">

@@ -4,7 +4,7 @@ project(misuco3 VERSION 0.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Multimedia)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Multimedia Network)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -42,6 +42,8 @@ qt_add_qml_module(MISUCO3
     VERSION 1.0
     QML_FILES
         qml/Main.qml
+        qml/NetworkMidi.qml
+        qml/NetworkMidiForm.ui.qml
         qml/AudioDevice.qml
         qml/AudioDeviceForm.ui.qml
         qml/ColorPalette.js
@@ -102,8 +104,14 @@ qt_add_qml_module(MISUCO3
 
         misulib/comm/heartbeat.cpp
         misulib/comm/heartbeat.h
+        misulib/comm/bonjourannouncer.cpp
+        misulib/comm/bonjourannouncer.h
         misulib/comm/mastersender.cpp
         misulib/comm/mastersender.h
+        misulib/comm/mdnsbrowser.cpp
+        misulib/comm/mdnsbrowser.h
+        misulib/comm/rtpmidicontrol.cpp
+        misulib/comm/rtpmidicontrol.h
         misulib/comm/sendermobilesynth.cpp
         misulib/comm/sendermobilesynth.h
         misulib/comm/senderoscmidigeneric.cpp
@@ -112,6 +120,8 @@ qt_add_qml_module(MISUCO3
         misulib/comm/sendersoundfont.h
         misulib/comm/senderreaktor.cpp
         misulib/comm/senderreaktor.h
+        misulib/comm/senderrtpmidi.cpp
+        misulib/comm/senderrtpmidi.h
         misulib/comm/sendersupercollider.cpp
         misulib/comm/sendersupercollider.h
         misulib/comm/senderthread.cpp
@@ -186,8 +196,14 @@ target_include_directories(MISUCO3 PRIVATE
 target_link_libraries(MISUCO3
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Multimedia
+    PRIVATE Qt6::Network
     PRIVATE libfluidsynth
 )
+
+# the Bonjour announcement of the network midi session (DnsServiceRegister)
+if(WIN32)
+    target_link_libraries(MISUCO3 PRIVATE dnsapi)
+endif()
 
 include(GNUInstallDirs)
 
