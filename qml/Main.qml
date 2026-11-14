@@ -129,7 +129,7 @@ ApplicationWindow {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 5 // 15 with the PolyMobileSynth layouts, without network midi
+            property int tabCount: 6 // 15 with the PolyMobileSynth layouts, without network midi
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -345,7 +345,7 @@ ApplicationWindow {
             //         currentIndex === 12                          ? viewContainer.swipeHeight + viewContainer.rasterWidth :
             //         (currentIndex === 8 || currentIndex === 9 || currentIndex === 10 ) && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
             //         viewContainer.swipeHeight
-            height: currentIndex === 3 ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // AudioDevice
+            height: currentIndex === 3 || currentIndex === 4 ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // Tuning, AudioDevice
                     viewContainer.swipeHeight
 
             ScaleConfig {
@@ -353,7 +353,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===0
+                visible: confArea.currentIndex===1
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -379,7 +379,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===1
+                visible: confArea.currentIndex===2
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -417,6 +417,71 @@ ApplicationWindow {
                 }
             }
 
+            Tuning {
+                id: tuningArea
+
+                sender: root.senderContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===3
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+
+                bgColors: root.bgColors
+                bgColorsActive: root.bgColorsActive
+                fgColors: root.fgColors
+
+                Connections {
+                    function onTuningUpdated(i,t) {
+                        console.log("onTuningUpdated:" + i + " " + t)
+                        switch(i) {
+                        case 1:
+                            playArea.tuningModel1 = t
+                            break
+                        case 2:
+                            playArea.tuningModel2 = t
+                            break
+                        case 3:
+                            playArea.tuningModel3 = t
+                            break
+                        case 4:
+                            playArea.tuningModel4 = t
+                            break
+                        case 5:
+                            playArea.tuningModel5 = t
+                            break
+                        case 6:
+                            playArea.tuningModel6 = t
+                            break
+                        case 7:
+                            playArea.tuningModel7 = t
+                            break
+                        case 8:
+                            playArea.tuningModel8 = t
+                            break
+                        case 9:
+                            playArea.tuningModel9 = t
+                            break
+                        case 10:
+                            playArea.tuningModel10 = t
+                            break
+                        case 11:
+                            playArea.tuningModel11 = t
+                            break
+                        default:
+                            playArea.tuningModel0 = t
+                            break
+                        }
+                    }
+                }
+            }
+
             // PolyMobileSynth layouts 3-13 hidden for the fluidsynth release
             // XYModAssign {
                 // id: xModAssign
@@ -443,7 +508,7 @@ ApplicationWindow {
 
                 // width: confArea.width
                 // height: confArea.height
-                // visible: confArea.currentIndex===3
+                // visible: confArea.currentIndex===4
 
                 // rasterWidth: viewContainer.rasterWidth
                 // elementSpace: viewContainer.elementSpace
@@ -456,71 +521,6 @@ ApplicationWindow {
 
                 // sender: root.senderContext
                 // parameters: xyAssignableParameter
-            // }
-
-            // Tuning {
-                // id: tuningArea
-
-                // sender: root.senderContext
-
-                // width: confArea.width
-                // height: confArea.height
-                // visible: confArea.currentIndex===4
-
-                // rasterWidth: viewContainer.rasterWidth
-                // elementSpace: viewContainer.elementSpace
-                // elementRadius: viewContainer.elementRadius
-                // portrait: root.portrait
-                // fontFamily: misuco3font.name
-                // fontPixelSize: root.fontPixelSize
-
-                // bgColors: root.bgColors
-                // bgColorsActive: root.bgColorsActive
-                // fgColors: root.fgColors
-
-                // Connections {
-                    // function onTuningUpdated(i,t) {
-                        // console.log("onTuningUpdated:" + i + " " + t)
-                        // switch(i) {
-                        // case 1:
-                            // playArea.tuningModel1 = t
-                            // break
-                        // case 2:
-                            // playArea.tuningModel2 = t
-                            // break
-                        // case 3:
-                            // playArea.tuningModel3 = t
-                            // break
-                        // case 4:
-                            // playArea.tuningModel4 = t
-                            // break
-                        // case 5:
-                            // playArea.tuningModel5 = t
-                            // break
-                        // case 6:
-                            // playArea.tuningModel6 = t
-                            // break
-                        // case 7:
-                            // playArea.tuningModel7 = t
-                            // break
-                        // case 8:
-                            // playArea.tuningModel8 = t
-                            // break
-                        // case 9:
-                            // playArea.tuningModel9 = t
-                            // break
-                        // case 10:
-                            // playArea.tuningModel10 = t
-                            // break
-                        // case 11:
-                            // playArea.tuningModel11 = t
-                            // break
-                        // default:
-                            // playArea.tuningModel0 = t
-                            // break
-                        // }
-                    // }
-                // }
             // }
 
             // Parameters_Arp {
@@ -652,7 +652,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===2
+                visible: confArea.currentIndex===0
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -667,7 +667,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===3
+                visible: confArea.currentIndex===4
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -682,7 +682,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===4
+                visible: confArea.currentIndex===5
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
