@@ -31,26 +31,27 @@ SoundFontForm {
         }
     }
 
-    mobileSynthSwitch.onPressed: function() {
-        mobileSynthOn = !mobileSynthOn
-        sender.onToggleSender("MobileSynth", mobileSynthOn)
-        if(!mobileSynthOn) {
-            // release the notes that would never get their note off
-            for(let voiceId=1; voiceId<=87; voiceId++) {
-                synthesizer.noteOff(voiceId)
-            }
-        }
-    }
+    // synth / sf2 switches hidden for the fluidsynth release, sf2 is always on
+    // mobileSynthSwitch.onPressed: function() {
+        // mobileSynthOn = !mobileSynthOn
+        // sender.onToggleSender("MobileSynth", mobileSynthOn)
+        // if(!mobileSynthOn) {
+            // // release the notes that would never get their note off
+            // for(let voiceId=1; voiceId<=87; voiceId++) {
+                // synthesizer.noteOff(voiceId)
+            // }
+        // }
+    // }
 
-    soundFontSwitch.onPressed: function() {
-        if(soundFont.enabled) {
-            sender.onToggleSender("SoundFont", false)
-            soundFont.enabled = false
-        } else {
-            soundFont.enabled = true
-            sender.onToggleSender("SoundFont", true)
-        }
-    }
+    // soundFontSwitch.onPressed: function() {
+        // if(soundFont.enabled) {
+            // sender.onToggleSender("SoundFont", false)
+            // soundFont.enabled = false
+        // } else {
+            // soundFont.enabled = true
+            // sender.onToggleSender("SoundFont", true)
+        // }
+    // }
 
     loadButton.onClicked: function() {
         fileDialog.open()

@@ -128,7 +128,7 @@ ApplicationWindow {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 15
+            property int tabCount: 4 // 15 with the PolyMobileSynth layouts
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -164,19 +164,20 @@ ApplicationWindow {
                     }
                 }
 
-                ControlButton {
-                    id: arpSwitch
-                    width: headerArea.buttonWidth
-                    height: headerArea.buttonHeight
-                    text: "arp"
-                    selected: root.arpOn
-                    bgColor: root.arpOn ? "Orange" : "Gray"
-                    fgColor: "White"
-                    onPressed: {
-                        root.arpOn=!root.arpOn
-                        root.synthContext.set_arpeggio_enabled(root.arpOn)
-                    }
-                }
+                // PolyMobileSynth arpeggiator hidden for the fluidsynth release
+                // ControlButton {
+                    // id: arpSwitch
+                    // width: headerArea.buttonWidth
+                    // height: headerArea.buttonHeight
+                    // text: "arp"
+                    // selected: root.arpOn
+                    // bgColor: root.arpOn ? "Orange" : "Gray"
+                    // fgColor: "White"
+                    // onPressed: {
+                        // root.arpOn=!root.arpOn
+                        // root.synthContext.set_arpeggio_enabled(root.arpOn)
+                    // }
+                // }
 
                 /*
                 ControlButton {
@@ -216,9 +217,9 @@ ApplicationWindow {
                     id: tabBar
 
                     visible: root.portrait===false
-                    width: headerArea.width - headerArea.buttonWidth*4 - 8*viewContainer.elementSpace
+                    width: headerArea.width - headerArea.buttonWidth*3 - 7*viewContainer.elementSpace // *4 - 8* with the arp button
                     height: headerArea.buttonHeight
-                    readonly property int tabWidth: width / headerArea.tabCount - viewContainer.elementSpace
+                    readonly property int tabWidth: (width - viewContainer.elementSpace) / headerArea.tabCount - viewContainer.elementSpace
 
                     Row {
                         width: tabBar.width
@@ -235,8 +236,8 @@ ApplicationWindow {
                                 height: tabBar.height
                                 ControlEmboss {
                                     width: parent.width
-                                    height: width / 2
-                                    radius: width / 2
+                                    height: Math.min(width / 2, parent.height - 2*viewContainer.elementSpace)
+                                    radius: height / 2
 
                                     down: mouseArea.pressed ? true : false
 
@@ -338,9 +339,12 @@ ApplicationWindow {
             y: viewContainer.headerHeight
 
             width: viewContainer.contentWidth
-            height: currentIndex === 4 || currentIndex === 13    ? viewContainer.swipeHeight + viewContainer.playAreaHeight :
-                    currentIndex === 12                          ? viewContainer.swipeHeight + viewContainer.rasterWidth :
-                    (currentIndex === 8 || currentIndex === 9 || currentIndex === 10 ) && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
+            // with the PolyMobileSynth layouts:
+            // height: currentIndex === 4 || currentIndex === 13    ? viewContainer.swipeHeight + viewContainer.playAreaHeight :
+            //         currentIndex === 12                          ? viewContainer.swipeHeight + viewContainer.rasterWidth :
+            //         (currentIndex === 8 || currentIndex === 9 || currentIndex === 10 ) && root.portrait === true ? viewContainer.swipeHeight + viewContainer.rasterWidth :
+            //         viewContainer.swipeHeight
+            height: currentIndex === 3 ? viewContainer.swipeHeight + viewContainer.playAreaHeight : // AudioDevice
                     viewContainer.swipeHeight
 
             ScaleConfig {
@@ -412,224 +416,242 @@ ApplicationWindow {
                 }
             }
 
-            XYModAssign {
-                id: xModAssign
+            // PolyMobileSynth layouts 3-13 hidden for the fluidsynth release
+            // XYModAssign {
+                // id: xModAssign
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===2
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+
+                // title: "X Mod Assign"
+
+                // sender: root.senderContext
+                // parameters: xyAssignableParameter
+            // }
+
+            // XYModAssign {
+                // id: yModAssign
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===3
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+
+                // title: "Y Mod Assign"
+
+                // sender: root.senderContext
+                // parameters: xyAssignableParameter
+            // }
+
+            // Tuning {
+                // id: tuningArea
+
+                // sender: root.senderContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===4
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+
+                // bgColors: root.bgColors
+                // bgColorsActive: root.bgColorsActive
+                // fgColors: root.fgColors
+
+                // Connections {
+                    // function onTuningUpdated(i,t) {
+                        // console.log("onTuningUpdated:" + i + " " + t)
+                        // switch(i) {
+                        // case 1:
+                            // playArea.tuningModel1 = t
+                            // break
+                        // case 2:
+                            // playArea.tuningModel2 = t
+                            // break
+                        // case 3:
+                            // playArea.tuningModel3 = t
+                            // break
+                        // case 4:
+                            // playArea.tuningModel4 = t
+                            // break
+                        // case 5:
+                            // playArea.tuningModel5 = t
+                            // break
+                        // case 6:
+                            // playArea.tuningModel6 = t
+                            // break
+                        // case 7:
+                            // playArea.tuningModel7 = t
+                            // break
+                        // case 8:
+                            // playArea.tuningModel8 = t
+                            // break
+                        // case 9:
+                            // playArea.tuningModel9 = t
+                            // break
+                        // case 10:
+                            // playArea.tuningModel10 = t
+                            // break
+                        // case 11:
+                            // playArea.tuningModel11 = t
+                            // break
+                        // default:
+                            // playArea.tuningModel0 = t
+                            // break
+                        // }
+                    // }
+                // }
+            // }
+
+            // Parameters_Arp {
+                // synthesizer: root.synthContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===5
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // Parameters_Filter {
+                // modAssign: xyAssignableParameter
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===6
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // Parameters_Osc_1 {
+                // synthesizer: root.synthContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===7
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // Parameters_Osc_2 {
+                // synthesizer: root.synthContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===8
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // Parameters_VolumeEnvelope {
+                // synthesizer: root.synthContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===9
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // Parameters_FilterEnvelope {
+                // synthesizer: root.synthContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===10
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // Parameters_Mod {
+                // modAssign: xyAssignableParameter
+                // synthesizer: root.synthContext
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===11
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            // PresetManager {
+                // id: presetManager
+                // synthesizer: root.synthContext
+                // modAssign: xyAssignableParameter
+
+                // width: confArea.width
+                // height: confArea.height
+                // visible: confArea.currentIndex===12
+
+                // rasterWidth: viewContainer.rasterWidth
+                // elementSpace: viewContainer.elementSpace
+                // elementRadius: viewContainer.elementRadius
+                // portrait: root.portrait
+                // fontFamily: misuco3font.name
+                // fontPixelSize: root.fontPixelSize
+            // }
+
+            SoundFont {
+                sender: root.senderContext
+                synthesizer: root.synthContext
+                soundFont: root.soundFontContext
 
                 width: confArea.width
                 height: confArea.height
                 visible: confArea.currentIndex===2
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-
-                title: "X Mod Assign"
-
-                sender: root.senderContext
-                parameters: xyAssignableParameter
-            }
-
-            XYModAssign {
-                id: yModAssign
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===3
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-
-                title: "Y Mod Assign"
-
-                sender: root.senderContext
-                parameters: xyAssignableParameter
-            }
-
-            Tuning {
-                id: tuningArea
-
-                sender: root.senderContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===4
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-
-                bgColors: root.bgColors
-                bgColorsActive: root.bgColorsActive
-                fgColors: root.fgColors
-
-                Connections {
-                    function onTuningUpdated(i,t) {
-                        console.log("onTuningUpdated:" + i + " " + t)
-                        switch(i) {
-                        case 1:
-                            playArea.tuningModel1 = t
-                            break
-                        case 2:
-                            playArea.tuningModel2 = t
-                            break
-                        case 3:
-                            playArea.tuningModel3 = t
-                            break
-                        case 4:
-                            playArea.tuningModel4 = t
-                            break
-                        case 5:
-                            playArea.tuningModel5 = t
-                            break
-                        case 6:
-                            playArea.tuningModel6 = t
-                            break
-                        case 7:
-                            playArea.tuningModel7 = t
-                            break
-                        case 8:
-                            playArea.tuningModel8 = t
-                            break
-                        case 9:
-                            playArea.tuningModel9 = t
-                            break
-                        case 10:
-                            playArea.tuningModel10 = t
-                            break
-                        case 11:
-                            playArea.tuningModel11 = t
-                            break
-                        default:
-                            playArea.tuningModel0 = t
-                            break
-                        }
-                    }
-                }
-            }
-
-            Parameters_Arp {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===5
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_Filter {
-                modAssign: xyAssignableParameter
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===6
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_Osc_1 {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===7
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_Osc_2 {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===8
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_VolumeEnvelope {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===9
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_FilterEnvelope {
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===10
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            Parameters_Mod {
-                modAssign: xyAssignableParameter
-                synthesizer: root.synthContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===11
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            PresetManager {
-                id: presetManager
-                synthesizer: root.synthContext
-                modAssign: xyAssignableParameter
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===12
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -644,24 +666,7 @@ ApplicationWindow {
 
                 width: confArea.width
                 height: confArea.height
-                visible: confArea.currentIndex===13
-
-                rasterWidth: viewContainer.rasterWidth
-                elementSpace: viewContainer.elementSpace
-                elementRadius: viewContainer.elementRadius
-                portrait: root.portrait
-                fontFamily: misuco3font.name
-                fontPixelSize: root.fontPixelSize
-            }
-
-            SoundFont {
-                sender: root.senderContext
-                synthesizer: root.synthContext
-                soundFont: root.soundFontContext
-
-                width: confArea.width
-                height: confArea.height
-                visible: confArea.currentIndex===14
+                visible: confArea.currentIndex===3
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
@@ -672,18 +677,19 @@ ApplicationWindow {
             }
         }
 
-        Connections {
-            target: playArea
-            function onXMod(voiceId :int, note :int, tuning :int, value :double) {
-                xModAssign.xyMod(voiceId, note, tuning, value)
-            }
-        }
+        // PolyMobileSynth: X/Y mod assign hidden for the fluidsynth release
+        // Connections {
+            // target: playArea
+            // function onXMod(voiceId :int, note :int, tuning :int, value :double) {
+                // xModAssign.xyMod(voiceId, note, tuning, value)
+            // }
+        // }
 
-        Connections {
-            target: playArea
-            function onYMod(voiceId :int, note :int, tuning :int, value :double) {
-                yModAssign.xyMod(voiceId, note, tuning, value)
-            }
-        }
+        // Connections {
+            // target: playArea
+            // function onYMod(voiceId :int, note :int, tuning :int, value :double) {
+                // yModAssign.xyMod(voiceId, note, tuning, value)
+            // }
+        // }
     }
 }

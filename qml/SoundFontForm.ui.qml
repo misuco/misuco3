@@ -9,8 +9,8 @@ import misuco3
 Item {
     id: root
 
-    property alias mobileSynthSwitch: mobileSynthSwitch
-    property alias soundFontSwitch: soundFontSwitch
+    // property alias mobileSynthSwitch: mobileSynthSwitch
+    // property alias soundFontSwitch: soundFontSwitch
     property alias loadButton: loadButton
     property alias reverbSwitch: reverbSwitch
     property alias chorusSwitch: chorusSwitch
@@ -51,25 +51,26 @@ Item {
             Row {
                 spacing: root.elementSpace
 
-                ControlButton {
-                    id: mobileSynthSwitch
-                    width: root.rasterWidth
-                    height: root.buttonSize
-                    text: "synth"
-                    selected: root.mobileSynthOn
-                    bgColor: selected ? "Orange" : "Gray"
-                    fgColor: "White"
-                }
+                // synth / sf2 switches hidden for the fluidsynth release, sf2 is always on
+                // ControlButton {
+                    // id: mobileSynthSwitch
+                    // width: root.rasterWidth
+                    // height: root.buttonSize
+                    // text: "synth"
+                    // selected: root.mobileSynthOn
+                    // bgColor: selected ? "Orange" : "Gray"
+                    // fgColor: "White"
+                // }
 
-                ControlButton {
-                    id: soundFontSwitch
-                    width: root.rasterWidth
-                    height: root.buttonSize
-                    text: "sf2"
-                    selected: root.soundFont.enabled
-                    bgColor: selected ? "Orange" : "Gray"
-                    fgColor: "White"
-                }
+                // ControlButton {
+                    // id: soundFontSwitch
+                    // width: root.rasterWidth
+                    // height: root.buttonSize
+                    // text: "sf2"
+                    // selected: root.soundFont.enabled
+                    // bgColor: selected ? "Orange" : "Gray"
+                    // fgColor: "White"
+                // }
 
                 ControlButton {
                     id: loadButton
