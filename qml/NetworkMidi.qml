@@ -26,6 +26,10 @@ NetworkMidiForm {
         rtpMidi.name = nameField.text.trim()
     }
 
+    // a typed address is not the selected session any more
+    hostField.onTextEdited: sessionSelected = false
+    portField.onTextEdited: sessionSelected = false
+
     hostField.onEditingFinished: storeFields()
     portField.onEditingFinished: storeFields()
     nameField.onEditingFinished: storeFields()
@@ -39,11 +43,13 @@ NetworkMidiForm {
     }
 
     searchButton.onPressed: function() {
+        sessionSelected = false
         rtpMidi.search()
     }
 
     sessionSelect.onActivated: function(index) {
         rtpMidi.selectSession(index)
+        sessionSelected = true
         hostField.text = rtpMidi.host
         portField.text = rtpMidi.port
     }

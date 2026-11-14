@@ -19,6 +19,8 @@ Item {
     property alias nameField: nameField
 
     property RtpMidiControl rtpMidi
+    // a found session has been taken, it is shown in the session select
+    property bool sessionSelected: false
 
     property double rasterWidth: 50
     property double elementSpace: 5
@@ -108,6 +110,7 @@ Item {
                     enabled: !root.rtpMidi.enabled && root.rtpMidi.sessions.length > 0
                     model: root.rtpMidi.sessions
                     displayText: root.rtpMidi.searching ? "searching..." :
+                                 root.sessionSelected && currentIndex >= 0 ? currentText :
                                  root.rtpMidi.sessions.length > 0 ? "found: " + root.rtpMidi.sessions.length + " / select" :
                                  "press search to find sessions"
                     font.family: root.fontFamily
