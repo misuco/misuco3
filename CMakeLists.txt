@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(misuco3 VERSION 0.3 LANGUAGES CXX)
+project(misuco3 VERSION 0.4 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -80,8 +80,10 @@ qt_add_qml_module(MISUCO3
         qml/RangeConfigForm.ui.qml
         qml/ScaleConfig.qml
         qml/ScaleConfigForm.ui.qml
+        qml/Scales.js
         qml/SoundFont.qml
         qml/SoundFontForm.ui.qml
+        qml/StoreSelect.qml
         qml/Tunings.js
         qml/Tuning.qml
         qml/TuningForm.ui.qml
@@ -102,8 +104,8 @@ qt_add_qml_module(MISUCO3
     SOURCES
         src/presetstore.cpp
         src/presetstore.h
-        src/tuningstore.cpp
-        src/tuningstore.h
+        src/liststore.cpp
+        src/liststore.h
 
         misulib/comm/heartbeat.cpp
         misulib/comm/heartbeat.h

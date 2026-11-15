@@ -351,6 +351,8 @@ ApplicationWindow {
             ScaleConfig {
                 id: scaleConfigArea
 
+                store: ScaleStore
+
                 width: confArea.width
                 height: confArea.height
                 visible: confArea.currentIndex===1

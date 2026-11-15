@@ -10,7 +10,7 @@
 #include <rtpmidicontrol.h>
 #include <soundfontsynth.h>
 #include "presetstore.h"
-#include "tuningstore.h"
+#include "liststore.h"
 
 int main(int argc, char *argv[])
 {
@@ -59,9 +59,11 @@ int main(int argc, char *argv[])
     PresetStore *presetStore = new PresetStore(&engine);
     engine.rootContext()->setContextProperty("PresetStore", presetStore);
 
-    // the tunings of the user
-    TuningStore *tuningStore = new TuningStore(&engine);
+    // the tunings and the scales of the user
+    ListStore *tuningStore = new ListStore("tuning", "cents", 12, -100, 100, &engine);
     engine.rootContext()->setContextProperty("TuningStore", tuningStore);
+    ListStore *scaleStore = new ListStore("scale", "steps", 12, 0, 1, &engine);
+    engine.rootContext()->setContextProperty("ScaleStore", scaleStore);
 
     QObject::connect(
         &engine,

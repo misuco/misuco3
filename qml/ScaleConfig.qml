@@ -4,6 +4,7 @@
 
 import QtQuick
 import QtQuick.Controls
+import "Scales.js" as Scales
 
 ScaleConfigForm {
     id: root
@@ -12,31 +13,38 @@ ScaleConfigForm {
     property int lowOctave: 4
     property int highOctave: 5
 
-    property var binaryScales: [
-        [1,0,1,0,1,1,0,1,0,1,0,1],
-        [1,0,1,1,0,1,0,1,0,1,0,1],
-        [1,0,0,1,0,0,0,1,0,0,0,0]
-    ]
+    // the ListStore with the scales of the user
+    required property var store
 
-    property var binaryScaleIntValues: []
-    property var customBinaryScale: [1,0,0,0,0,0,0,0,0,0,0,0]
+    property var userScales: []
 
     signal scaleModelUpdated(var m)
 
-    function getBinaryScaleIntValue(s) {
-        let value=0
-        let bitValue=1
-        s.forEach((bit) => {
-            if(bit) { value+=bitValue }
-            bitValue*=2
-        });
-        return value;
+    function loadUserScales() {
+        userScales = store.userEntries()
+        scaleNames = Scales.names().concat(userScales.map(s => s.name))
     }
 
-    Component.onCompleted: {
-        root.binaryScales.forEach((scale,index) => {
-            root.binaryScaleIntValues[index] = getBinaryScaleIntValue(scale);
-        });
+    // the steps of the scale with this index in the list
+    function stepsOf(index) {
+        return index < builtInCount ? Scales.steps(index) : userScales[index - builtInCount].values
+    }
+
+    // the steps that are switched on, 1 or 0 for each of the twelve steps
+    function steps() {
+        let s = []
+        for(let i = 0; i < 12; i++) {
+            s.push(root["binaryScale"+i] ? 1 : 0)
+        }
+        return s
+    }
+
+    function setSteps(s) {
+        // the root note is always part of the scale
+        root.binaryScale0 = true
+        for(let i = 1; i < 12; i++) {
+            root["binaryScale"+i] = s[i] > 0
+        }
     }
 
     function updateModel() {
@@ -55,77 +63,88 @@ ScaleConfigForm {
         root.scaleModelUpdated(scaleModel)
     }
 
+    // the scale in use is stored a moment after the last change
+    Timer {
+        id: storeTimer
+        interval: 500
+        onTriggered: root.store.setCurrent(root.storeSelect.currentName, root.steps())
+    }
+
+    // shows the scale of the list that has the steps that are switched on
     function updateScaleSelect() {
-        let currentBinaryScaleArray = [
-            root.binaryScale0,
-            root.binaryScale1,
-            root.binaryScale2,
-            root.binaryScale3,
-            root.binaryScale4,
-            root.binaryScale5,
-            root.binaryScale6,
-            root.binaryScale7,
-            root.binaryScale8,
-            root.binaryScale9,
-            root.binaryScale10,
-            root.binaryScale11
-        ]
-
-        let currentIntValue = getBinaryScaleIntValue( currentBinaryScaleArray )
-
-        let regularScaleIndex=root.binaryScaleIntValues.indexOf(currentIntValue)
-
-        if(regularScaleIndex>=0) {
-            scaleSelect.currentIndex=regularScaleIndex
-        } else {
-            root.customBinaryScale=currentBinaryScaleArray
-            scaleSelect.currentIndex=binaryScales.length
+        let current = steps().join("")
+        let index = -1
+        for(let i = 0; i < scaleNames.length && index < 0; i++) {
+            if(stepsOf(i).join("") === current) {
+                index = i
+            }
         }
+        storeSelect.currentIndex = index
+        edited = index < 0
+    }
 
+    // sets the steps to the scale of the list
+    function applyScale(index) {
+        if(index < 0 || index >= scaleNames.length) {
+            return
+        }
+        setSteps(stepsOf(index))
+        storeSelect.currentIndex = index
+        edited = false
         root.updateModel()
+        storeTimer.restart()
     }
 
     function scaleButtonPressed(caller) {
-        console.log("pressed " + caller.text)
         root["binaryScale"+caller.index]=!root["binaryScale"+caller.index]
         root.updateScaleSelect()
+        root.updateModel()
+        storeTimer.restart()
     }
-    
-    // Connect scale select combo box
-    Connections {
-        target: root.scaleSelect
-        function onCurrentIndexChanged() {
-            if(root.scaleSelect.currentIndex>=root.binaryScales.length) {
-                root.binaryScale0=root.customBinaryScale[0]
-                root.binaryScale1=root.customBinaryScale[1]
-                root.binaryScale2=root.customBinaryScale[2]
-                root.binaryScale3=root.customBinaryScale[3]
-                root.binaryScale4=root.customBinaryScale[4]
-                root.binaryScale5=root.customBinaryScale[5]
-                root.binaryScale6=root.customBinaryScale[6]
-                root.binaryScale7=root.customBinaryScale[7]
-                root.binaryScale8=root.customBinaryScale[8]
-                root.binaryScale9=root.customBinaryScale[9]
-                root.binaryScale10=root.customBinaryScale[10]
-                root.binaryScale11=root.customBinaryScale[11]
-            } else {
-                root.binaryScale0=root.binaryScales[root.scaleSelect.currentIndex][0]
-                root.binaryScale1=root.binaryScales[root.scaleSelect.currentIndex][1]
-                root.binaryScale2=root.binaryScales[root.scaleSelect.currentIndex][2]
-                root.binaryScale3=root.binaryScales[root.scaleSelect.currentIndex][3]
-                root.binaryScale4=root.binaryScales[root.scaleSelect.currentIndex][4]
-                root.binaryScale5=root.binaryScales[root.scaleSelect.currentIndex][5]
-                root.binaryScale6=root.binaryScales[root.scaleSelect.currentIndex][6]
-                root.binaryScale7=root.binaryScales[root.scaleSelect.currentIndex][7]
-                root.binaryScale8=root.binaryScales[root.scaleSelect.currentIndex][8]
-                root.binaryScale9=root.binaryScales[root.scaleSelect.currentIndex][9]
-                root.binaryScale10=root.binaryScales[root.scaleSelect.currentIndex][10]
-                root.binaryScale11=root.binaryScales[root.scaleSelect.currentIndex][11]
-            }
-            root.updateModel()
+
+    storeSelect.onActivated: function(index) {
+        applyScale(index)
+    }
+
+    storeSelect.onSaveRequested: function(name) {
+        store.save(name, steps())
+        loadUserScales()
+        storeSelect.currentIndex = scaleNames.indexOf(name)
+        edited = false
+        storeTimer.restart()
+    }
+
+    storeSelect.onDeleteRequested: function(name) {
+        // the steps stay as they are
+        store.remove(name)
+        loadUserScales()
+        updateScaleSelect()
+        storeTimer.restart()
+    }
+
+    Component.onCompleted: {
+        builtInCount = Scales.names().length
+        // for the question when a scale is saved with a name that exists
+        storeSelect.identical = function(name) {
+            return stepsOf(scaleNames.indexOf(name)).join("") === steps().join("")
         }
+        loadUserScales()
+        let current = store.current()
+        if(current.values === undefined) {
+            applyScale(0)
+            return
+        }
+        setSteps(current.values)
+        let index = scaleNames.indexOf(current.name)
+        if(index >= 0 && stepsOf(index).join("") === steps().join("")) {
+            storeSelect.currentIndex = index
+            edited = false
+        } else {
+            updateScaleSelect()
+        }
+        root.updateModel()
     }
-    
+
     // Connect scale note buttons
     Connections {
         target: root.scaleButton_ii

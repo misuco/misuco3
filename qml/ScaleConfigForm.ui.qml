@@ -34,7 +34,7 @@ Item {
 
     readonly property double buttonSize: rasterWidth - 3*elementSpace
     
-    property alias scaleSelect: scaleSelect
+    property alias storeSelect: storeSelect
 
     property alias scaleButton_ii: scaleButton_ii
     property alias scaleButton_II: scaleButton_II
@@ -48,12 +48,11 @@ Item {
     property alias scaleButton_vii: scaleButton_vii
     property alias scaleButton_VII: scaleButton_VII
 
-    property var scaleNames: [
-        "Major Scale / Ionian",
-        "Minor Scale / Dorian",
-        "Minor Triad",
-        "Custom"
-    ]
+    // the names of the built in scales and the scales of the user
+    property var scaleNames: []
+    property int builtInCount: 0
+    // the steps have been changed, the scale is not one of the list
+    property bool edited: false
 
     ControlArea {
         width: root.width
@@ -70,11 +69,18 @@ Item {
             padding: root.elementSpace
             spacing: root.elementSpace
 
-            ComboBox {
-                id: scaleSelect
-                width: root.buttonSize * (root.portrait ? 6 : 12)
+            StoreSelect {
+                id: storeSelect
+                width: root.width - 4*root.elementSpace
                 height: root.buttonSize
-                model: root.scaleNames
+                spacing: root.elementSpace
+                names: root.scaleNames
+                builtInCount: root.builtInCount
+                edited: root.edited
+                what: "scale"
+                buttonWidth: 1.5*root.rasterWidth
+                fontFamily: root.fontFamily
+                fontPixelSize: root.fontPixelSize
             }
 
             Grid {
