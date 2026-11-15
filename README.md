@@ -22,8 +22,8 @@ It is the successor of [misuco2](https://github.com/misuco/misuco2), rewritten f
 - **SoundFont player**: plays the presets of SoundFont 2 (`.sf2`) files in the same tuning as the
   synthesizer. A small soundfont is included, others can be loaded from a file.
 - **Presets**: factory sounds and your own, stored on the device.
-- **OSC output**: notes, pitch and controllers are also sent as OSC messages to the local network
-  (UDP port 3150), to play other instruments.
+- **OSC output**: notes, pitch and controllers are sent as OSC messages over UDP or TCP, in one of
+  three formats: MIDI generic, Reaktor or SuperCollider (`/s_new`, `/n_set` to the synth server).
 - **MIDI over ethernet**: notes are sent as RTP-MIDI (AppleMIDI) to a Mac, Windows or Linux computer
   in the local network, see [MIDI over ethernet](#midi-over-ethernet).
 - **Audio settings**: output device, buffer size and a level meter with clip indicator.
@@ -168,6 +168,7 @@ bundle (AAB) to be signed with the upload key for the play store.
 | `polymobilesynth/` | The built-in synthesizer and the audio output (submodule) |
 | `polysoundfont/` | SoundFont player, a Qt wrapper around FluidSynth |
 | `fluidsynth/` | FluidSynth (submodule) |
+| `ofq/` | libofqf, OSC for Qt (submodule) |
 | `android/` | Android manifest, Gradle file and resources |
 | `docs/` | Notes on the frequency formula and the MIDI controller numbers |
 

@@ -4,7 +4,8 @@
 #include <mobilesynth.h>
 #include <mastersender.h>
 #include <sendermobilesynth.h>
-#include <senderoscmidigeneric.h>
+#include <senderosc.h>
+#include <osccontrol.h>
 #include <sendersoundfont.h>
 #include <senderrtpmidi.h>
 #include <rtpmidicontrol.h>
@@ -37,14 +38,15 @@ int main(int argc, char *argv[])
     soundFontSynth->setEnabled(true);
     masterSender.onToggleSender("SoundFont",true);
 
-    SenderOscMidiGeneric senderOscMidi;
-    masterSender.addSenderThread(&senderOscMidi,"OscSender");
-    masterSender.onToggleSender("OscSender",true);
+    // osc to other instruments, it is switched on in the osc view
+    SenderOsc senderOsc;
+    masterSender.addSenderThread(&senderOsc,OscControl::SenderName);
 
     // midi over ethernet, it is switched on in the network midi view
     SenderRtpMidi senderRtpMidi;
     masterSender.addSenderThread(&senderRtpMidi,RtpMidiControl::SenderName);
     RtpMidiControl rtpMidiControl(&masterSender, &senderRtpMidi);
+    OscControl oscControl(&masterSender, &senderOsc);
 
     QQmlApplicationEngine engine;
 
@@ -52,7 +54,8 @@ int main(int argc, char *argv[])
         {"senderContext", QVariant::fromValue(&masterSender)},
         {"synthContext", QVariant::fromValue(synth.get())},
         {"soundFontContext", QVariant::fromValue(soundFontSynth.get())},
-        {"rtpMidiContext", QVariant::fromValue(&rtpMidiControl)}
+        {"rtpMidiContext", QVariant::fromValue(&rtpMidiControl)},
+        {"oscContext", QVariant::fromValue(&oscControl)}
     });
 
     // Expose PresetStore to QML

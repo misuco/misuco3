@@ -7,3 +7,6 @@
 [submodule "fluidsynth"]
 	path = fluidsynth
 	url = https://github.com/misuco/fluidsynth.git
+[submodule "ofq"]
+	path = ofq
+	url = https://github.com/misuco/ofq

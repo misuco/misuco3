@@ -44,6 +44,8 @@ qt_add_qml_module(MISUCO3
         qml/Main.qml
         qml/NetworkMidi.qml
         qml/NetworkMidiForm.ui.qml
+        qml/OscSender.qml
+        qml/OscSenderForm.ui.qml
         qml/AudioDevice.qml
         qml/AudioDeviceForm.ui.qml
         qml/ColorPalette.js
@@ -115,34 +117,33 @@ qt_add_qml_module(MISUCO3
         misulib/comm/mastersender.h
         misulib/comm/mdnsbrowser.cpp
         misulib/comm/mdnsbrowser.h
+        misulib/comm/osccontrol.cpp
+        misulib/comm/osccontrol.h
         misulib/comm/rtpmidicontrol.cpp
         misulib/comm/rtpmidicontrol.h
         misulib/comm/sendermobilesynth.cpp
         misulib/comm/sendermobilesynth.h
-        misulib/comm/senderoscmidigeneric.cpp
-        misulib/comm/senderoscmidigeneric.h
+        misulib/comm/senderosc.cpp
+        misulib/comm/senderosc.h
         misulib/comm/sendersoundfont.cpp
         misulib/comm/sendersoundfont.h
-        misulib/comm/senderreaktor.cpp
-        misulib/comm/senderreaktor.h
         misulib/comm/senderrtpmidi.cpp
         misulib/comm/senderrtpmidi.h
-        misulib/comm/sendersupercollider.cpp
-        misulib/comm/sendersupercollider.h
         misulib/comm/senderthread.cpp
         misulib/comm/senderthread.h
 
-        misulib/comm/libofqf/qoscclient.cpp
-        misulib/comm/libofqf/qoscclient.h
-        misulib/comm/libofqf/qoscmsgparser.cpp
-        misulib/comm/libofqf/qoscmsgparser.h
-        misulib/comm/libofqf/qoscserver.cpp
-        misulib/comm/libofqf/qoscserver.h
-        misulib/comm/libofqf/qoscserverinterface.h
-        misulib/comm/libofqf/qosctcpclient.cpp
-        misulib/comm/libofqf/qosctcpclient.h
-        misulib/comm/libofqf/qosctypes.cpp
-        misulib/comm/libofqf/qosctypes.h
+        ofq/libofqf/qoscclient.cpp
+        ofq/libofqf/qoscclient.h
+        ofq/libofqf/qoscclientinterface.h
+        ofq/libofqf/qoscmsgparser.cpp
+        ofq/libofqf/qoscmsgparser.h
+        ofq/libofqf/qoscserver.cpp
+        ofq/libofqf/qoscserver.h
+        ofq/libofqf/qoscserverinterface.h
+        ofq/libofqf/qosctcpclient.cpp
+        ofq/libofqf/qosctcpclient.h
+        ofq/libofqf/qosctypes.cpp
+        ofq/libofqf/qosctypes.h
 
         polysoundfont/qt6/soundfontsynth.cpp
         polysoundfont/qt6/soundfontsynth.h
@@ -196,6 +197,7 @@ target_include_directories(MISUCO3 PRIVATE
     polymobilesynth/qt6
     polysoundfont/qt6
     misulib/comm
+    ofq/libofqf
 )
 
 target_link_libraries(MISUCO3

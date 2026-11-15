@@ -18,6 +18,7 @@ ApplicationWindow {
     required property MobileSynth synthContext
     required property SoundFontSynth soundFontContext
     required property RtpMidiControl rtpMidiContext
+    required property OscControl oscContext
 
     property var scaleModel: [
         {
@@ -129,7 +130,7 @@ ApplicationWindow {
         ControlArea {
             id: headerArea
 
-            property int tabCount: 6 // 15 with the PolyMobileSynth layouts, without network midi
+            property int tabCount: 7 // 15 with the PolyMobileSynth layouts, without network midi and osc
 
             readonly property double buttonHeight: viewContainer.rasterWidth - 5*viewContainer.elementSpace
             readonly property double buttonWidth: viewContainer.rasterWidth
@@ -687,6 +688,21 @@ ApplicationWindow {
                 width: confArea.width
                 height: confArea.height
                 visible: confArea.currentIndex===5
+
+                rasterWidth: viewContainer.rasterWidth
+                elementSpace: viewContainer.elementSpace
+                elementRadius: viewContainer.elementRadius
+                portrait: root.portrait
+                fontFamily: misuco3font.name
+                fontPixelSize: root.fontPixelSize
+            }
+
+            OscSender {
+                osc: root.oscContext
+
+                width: confArea.width
+                height: confArea.height
+                visible: confArea.currentIndex===6
 
                 rasterWidth: viewContainer.rasterWidth
                 elementSpace: viewContainer.elementSpace
