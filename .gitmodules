@@ -1,12 +1,12 @@
 [submodule "polymobilesynth"]
 	path = polymobilesynth
-	url = https://github.com/misuco/polymobilesynth.git
+	url = git@github.com:misuco/polymobilesynth.git
 [submodule "misulib"]
 	path = misulib
 	url = git@github.com:misuco/misulib.git
 [submodule "fluidsynth"]
 	path = fluidsynth
-	url = https://github.com/misuco/fluidsynth.git
+	url = git@github.com:misuco/fluidsynth.git
 [submodule "ofq"]
 	path = ofq
-	url = https://github.com/misuco/ofq
+	url = git@github.com:misuco/ofq.git
