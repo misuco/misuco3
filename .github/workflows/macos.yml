@@ -1,0 +1,90 @@
+name: macOS Build
+
+on:
+  push:
+    branches:
+      - main
+      # push a branch named ci/... to try a change without opening a pull request
+      - 'ci/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: macos-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QT_VERSION: '6.11.3'
+  QT_ARCH: 'clang_64'
+  AQT_VERSION: '3.3.0'
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    # fluidsynth only needs gcem, not its test data and optional modules
+    - name: Fetch gcem
+      run: git -C fluidsynth submodule update --init --depth 1 gcem
+
+    - name: Install Ninja
+      run: brew install ninja
+
+    - name: Restore cached Qt
+      id: cache-qt
+      uses: actions/cache@v4
+      with:
+        path: ${{ runner.temp }}/Qt
+        key: qt-${{ runner.os }}-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-multimedia
+
+    - name: Install Qt
+      if: steps.cache-qt.outputs.cache-hit != 'true'
+      run: |
+        python3 -m venv "$RUNNER_TEMP/aqt"
+        "$RUNNER_TEMP/aqt/bin/pip" install "aqtinstall==$AQT_VERSION"
+        "$RUNNER_TEMP/aqt/bin/aqt" install-qt mac desktop "$QT_VERSION" "$QT_ARCH" \
+          -m qtmultimedia -O "$RUNNER_TEMP/Qt"
+
+    # a universal app, for Apple silicon and Intel Macs
+    - name: Configure
+      run: |
+        cmake -S . -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/Qt/$QT_VERSION/macos" \
+          -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+
+    - name: Build
+      run: cmake --build build
+
+    # the install runs macdeployqt: the Qt frameworks, plugins and qml
+    # modules are copied into the app bundle
+    - name: Install
+      run: |
+        cmake --install build --prefix "$PWD/dist"
+        ls dist dist/MISUCO3.app/Contents
+
+    # The app is signed ad hoc, which Apple silicon requires to start it.
+    # It is not notarized: macOS asks before the first start, open it with
+    # right click / Open, or allow it in System Settings / Privacy & Security.
+    - name: Sign ad hoc and build the disk image
+      run: |
+        codesign --force --deep --sign - dist/MISUCO3.app
+        codesign --verify --deep --verbose=2 dist/MISUCO3.app
+        lipo -info dist/MISUCO3.app/Contents/MacOS/MISUCO3
+        VERSION=$(sed -n 's/^project(misuco3 VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
+        echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+        ln -s /Applications dist/Applications
+        hdiutil create -volname MISUCO3 -srcfolder dist -ov -format UDZO "MISUCO3-$VERSION-macos.dmg"
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: MISUCO3-macos-universal
+        path: MISUCO3-${{ env.VERSION }}-macos.dmg
+        if-no-files-found: error

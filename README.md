@@ -3,6 +3,10 @@
 **Microtonal Surface Controller** — a touch instrument for phones, tablets and desktops.
 
 [![Android Build](https://github.com/misuco/misuco3/actions/workflows/qt68_android.yml/badge.svg)](https://github.com/misuco/misuco3/actions/workflows/qt68_android.yml)
+[![Windows Build](https://github.com/misuco/misuco3/actions/workflows/windows.yml/badge.svg)](https://github.com/misuco/misuco3/actions/workflows/windows.yml)
+[![Ubuntu Build](https://github.com/misuco/misuco3/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/misuco/misuco3/actions/workflows/ubuntu.yml)
+[![macOS Build](https://github.com/misuco/misuco3/actions/workflows/macos.yml/badge.svg)](https://github.com/misuco/misuco3/actions/workflows/macos.yml)
+[![iOS Build](https://github.com/misuco/misuco3/actions/workflows/ios.yml/badge.svg)](https://github.com/misuco/misuco3/actions/workflows/ios.yml)
 
 MISUCO3 turns the screen into a playing surface. You choose a scale, a root note and
 an octave range, and the surface shows exactly those notes as keys. Every note of the
@@ -157,6 +161,18 @@ Every push to `main` is built by the
 It has two artifacts: an APK signed with a key made for that run only, which can be
 installed for testing but not updated over a build of another run, and an unsigned app
 bundle (AAB) to be signed with the upload key for the play store.
+
+The desktop and iOS builds have a workflow each, also run on every push to `main`:
+
+| Workflow | Artifact |
+|---|---|
+| [Windows Build](https://github.com/misuco/misuco3/actions/workflows/windows.yml) | folder with `bin/MISUCO3.exe` and the Qt libraries, for 64 bit Windows 10 and 11 |
+| [Ubuntu Build](https://github.com/misuco/misuco3/actions/workflows/ubuntu.yml) | `.deb` package for Ubuntu 24.04 and newer, installs to `/opt/misuco3`, starts with `misuco3` |
+| [macOS Build](https://github.com/misuco/misuco3/actions/workflows/macos.yml) | disk image with a universal app (Apple silicon and Intel), signed ad hoc, not notarized |
+| [iOS Build](https://github.com/misuco/misuco3/actions/workflows/ios.yml) | unsigned `.ipa`, to be signed for a device or the App Store |
+
+The macOS app is not notarized, macOS asks before the first start: open it with right click / Open,
+or allow it in System Settings / Privacy & Security.
 
 ## Repository layout
 

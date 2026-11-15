@@ -1,0 +1,134 @@
+name: Ubuntu Build
+
+on:
+  push:
+    branches:
+      - main
+      # push a branch named ci/... to try a change without opening a pull request
+      - 'ci/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ubuntu-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QT_VERSION: '6.11.3'
+  QT_ARCH: 'linux_gcc_64'
+  AQT_VERSION: '3.3.0'
+  # the package installs the app with its own Qt here
+  PREFIX: '/opt/misuco3'
+
+jobs:
+  build:
+    # the package runs on Ubuntu 24.04 and newer
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    # fluidsynth only needs gcem, not its test data and optional modules
+    - name: Fetch gcem
+      run: git -C fluidsynth submodule update --init --depth 1 gcem
+
+    # the headers Qt Gui is built against, and the libraries of the xcb
+    # platform plugin, needed by the Qt deployment at install
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build libgl-dev libegl-dev libxkbcommon-dev libxkbcommon-x11-0 \
+          libfontconfig1-dev libfreetype-dev libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 \
+          libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 libxcb-xkb1 libpulse-dev
+
+    - name: Restore cached Qt
+      id: cache-qt
+      uses: actions/cache@v4
+      with:
+        path: ${{ runner.temp }}/Qt
+        key: qt-${{ runner.os }}-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-multimedia
+
+    - name: Install Qt
+      if: steps.cache-qt.outputs.cache-hit != 'true'
+      run: |
+        python3 -m venv "$RUNNER_TEMP/aqt"
+        "$RUNNER_TEMP/aqt/bin/pip" install "aqtinstall==$AQT_VERSION"
+        "$RUNNER_TEMP/aqt/bin/aqt" install-qt linux desktop "$QT_VERSION" "$QT_ARCH" \
+          -m qtmultimedia -O "$RUNNER_TEMP/Qt"
+
+    # the app finds the deployed Qt libraries in ../lib
+    - name: Configure
+      run: |
+        cmake -S . -B build -G Ninja \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/Qt/$QT_VERSION/gcc_64" \
+          -DCMAKE_INSTALL_PREFIX="$PREFIX" \
+          -DCMAKE_INSTALL_RPATH='$ORIGIN/../lib'
+
+    - name: Build
+      run: cmake --build build
+
+    # the install runs the Qt deployment: the Qt libraries, plugins and
+    # qml modules are copied into the package
+    - name: Install into the package
+      run: |
+        cmake --install build --prefix "$PWD/pkg$PREFIX"
+        ls "pkg$PREFIX" "pkg$PREFIX/bin"
+
+    - name: Build the package
+      run: |
+        VERSION=$(sed -n 's/^project(misuco3 VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
+        echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+        mkdir -p pkg/usr/bin pkg/usr/share/applications pkg/usr/share/icons/hicolor/192x192/apps pkg/DEBIAN
+        ln -s "$PREFIX/bin/MISUCO3" pkg/usr/bin/misuco3
+        cp android/res/drawable-xxxhdpi/icon.png pkg/usr/share/icons/hicolor/192x192/apps/misuco3.png
+
+        cat > pkg/usr/share/applications/misuco3.desktop <<EOF
+        [Desktop Entry]
+        Type=Application
+        Name=MISUCO3
+        GenericName=Microtonal Surface Controller
+        Comment=Touch instrument with microtuning, SoundFont player, OSC and network MIDI
+        Exec=misuco3
+        Icon=misuco3
+        Categories=AudioVideo;Audio;Music;
+        Terminal=false
+        EOF
+
+        # Qt is in the package, the system provides the graphics, the
+        # window system and the sound server
+        cat > pkg/DEBIAN/control <<EOF
+        Package: misuco3
+        Version: $VERSION
+        Section: sound
+        Priority: optional
+        Architecture: amd64
+        Maintainer: c1audio <c1audio@x21.ch>
+        Homepage: https://github.com/misuco/misuco3
+        Installed-Size: $(du -sk pkg --exclude=DEBIAN | cut -f1)
+        Depends: libc6, libstdc++6, libgcc-s1, libgl1, libegl1, libopengl0, libfontconfig1, libfreetype6,
+         libxkbcommon0, libxkbcommon-x11-0, libx11-6, libx11-xcb1, libxcb1, libxcb-cursor0, libxcb-glx0,
+         libxcb-icccm4, libxcb-image0, libxcb-keysyms1, libxcb-randr0, libxcb-render-util0, libxcb-shape0,
+         libxcb-shm0, libxcb-sync1, libxcb-xfixes0, libxcb-xinerama0, libxcb-xinput0, libxcb-xkb1,
+         libdbus-1-3, libglib2.0-0t64 | libglib2.0-0, libwayland-client0, libwayland-cursor0,
+         libwayland-egl1, libpulse0
+        Description: Microtonal Surface Controller
+         A touch instrument: the screen is a playing surface with the notes of
+         a scale, every note can be tuned in cent. It plays SoundFont files and
+         sends the notes as OSC or as MIDI over the network (RTP-MIDI).
+        EOF
+
+        dpkg-deb --root-owner-group --build pkg "misuco3_${VERSION}_amd64.deb"
+        dpkg-deb --info "misuco3_${VERSION}_amd64.deb"
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: MISUCO3-ubuntu-amd64-deb
+        path: misuco3_${{ env.VERSION }}_amd64.deb
+        if-no-files-found: error

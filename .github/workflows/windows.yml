@@ -1,0 +1,89 @@
+name: Windows Build
+
+on:
+  push:
+    branches:
+      - main
+      # push a branch named ci/... to try a change without opening a pull request
+      - 'ci/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QT_VERSION: '6.11.3'
+  # MinGW, as for the local builds: libofqf uses gettimeofday, which MSVC does not have
+  QT_ARCH: 'win64_mingw'
+  MINGW_TOOL: 'tools_mingw1310'
+  MINGW_PACKAGE: 'qt.tools.win64_mingw1310'
+  MINGW_DIR: 'mingw1310_64'
+  AQT_VERSION: '3.3.0'
+
+jobs:
+  build:
+    # the app runs on 64 bit Windows 10 and 11
+    runs-on: windows-2022
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    # fluidsynth only needs gcem, not its test data and optional modules
+    - name: Fetch gcem
+      run: git -C fluidsynth submodule update --init --depth 1 gcem
+
+    - name: Restore cached Qt
+      id: cache-qt
+      uses: actions/cache@v4
+      with:
+        path: ${{ runner.temp }}/Qt
+        key: qt-${{ runner.os }}-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-${{ env.MINGW_TOOL }}-multimedia
+
+    - name: Install Qt and MinGW
+      if: steps.cache-qt.outputs.cache-hit != 'true'
+      run: |
+        python -m venv "$RUNNER_TEMP/aqt"
+        "$RUNNER_TEMP/aqt/Scripts/pip" install "aqtinstall==$AQT_VERSION"
+        "$RUNNER_TEMP/aqt/Scripts/aqt" install-qt windows desktop "$QT_VERSION" "$QT_ARCH" \
+          -m qtmultimedia -O "$RUNNER_TEMP/Qt"
+        "$RUNNER_TEMP/aqt/Scripts/aqt" install-tool windows desktop "$MINGW_TOOL" "$MINGW_PACKAGE" \
+          -O "$RUNNER_TEMP/Qt"
+
+    - name: Configure
+      run: |
+        QT_DIR="$RUNNER_TEMP/Qt/$QT_VERSION/mingw_64"
+        export PATH="$RUNNER_TEMP/Qt/Tools/$MINGW_DIR/bin:$QT_DIR/bin:$PATH"
+        cmake -S . -B build -G "MinGW Makefiles" \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="$QT_DIR" \
+          -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/MISUCO3"
+
+    - name: Build
+      run: |
+        export PATH="$RUNNER_TEMP/Qt/Tools/$MINGW_DIR/bin:$RUNNER_TEMP/Qt/$QT_VERSION/mingw_64/bin:$PATH"
+        cmake --build build -j 4
+
+    # the install runs windeployqt: the folder holds the app with the Qt
+    # libraries, the plugins, the qml modules and the MinGW runtime
+    - name: Install
+      run: |
+        export PATH="$RUNNER_TEMP/Qt/Tools/$MINGW_DIR/bin:$RUNNER_TEMP/Qt/$QT_VERSION/mingw_64/bin:$PATH"
+        cmake --install build
+        ls MISUCO3 MISUCO3/bin
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: MISUCO3-windows-x64
+        path: MISUCO3
+        if-no-files-found: error

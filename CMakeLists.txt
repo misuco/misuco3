@@ -173,10 +173,10 @@ qt_add_qml_module(MISUCO3
         polymobilesynth/mobilesynth/Classes/synth/parameter.cpp
 )
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
+# the bundle identifier of macOS and iOS
 set_target_properties(MISUCO3 PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER "org.misuco.misuco3"
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "org.misuco.misuco3"
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -217,5 +217,17 @@ include(GNUInstallDirs)
 install(TARGETS MISUCO3
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# the install of a desktop build is a running app: the Qt libraries,
+# plugins and qml modules are copied next to it (windeployqt, macdeployqt,
+# on linux the deployment of Qt). Used by the github workflows.
+if(NOT ANDROID AND NOT IOS)
+    qt_generate_deploy_qml_app_script(
+        TARGET MISUCO3
+        OUTPUT_SCRIPT deploy_script
+        NO_UNSUPPORTED_PLATFORM_ERROR
+    )
+    install(SCRIPT ${deploy_script})
+endif()

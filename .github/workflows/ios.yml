@@ -1,0 +1,81 @@
+name: iOS Build
+
+on:
+  push:
+    branches:
+      - main
+      # push a branch named ci/... to try a change without opening a pull request
+      - 'ci/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  QT_VERSION: '6.11.3'
+  AQT_VERSION: '3.3.0'
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    # fluidsynth only needs gcem, not its test data and optional modules
+    - name: Fetch gcem
+      run: git -C fluidsynth submodule update --init --depth 1 gcem
+
+    - name: Restore cached Qt
+      id: cache-qt
+      uses: actions/cache@v4
+      with:
+        path: ${{ runner.temp }}/Qt
+        key: qt-${{ runner.os }}-${{ env.QT_VERSION }}-ios-multimedia
+
+    # --autodesktop also installs the macOS Qt, its tools run during the build
+    - name: Install Qt
+      if: steps.cache-qt.outputs.cache-hit != 'true'
+      run: |
+        python3 -m venv "$RUNNER_TEMP/aqt"
+        "$RUNNER_TEMP/aqt/bin/pip" install "aqtinstall==$AQT_VERSION"
+        "$RUNNER_TEMP/aqt/bin/aqt" install-qt mac ios "$QT_VERSION" ios \
+          -m qtmultimedia --autodesktop -O "$RUNNER_TEMP/Qt"
+
+    - name: Configure
+      run: |
+        chmod +x "$RUNNER_TEMP/Qt/$QT_VERSION/ios/bin/qt-cmake"
+        "$RUNNER_TEMP/Qt/$QT_VERSION/ios/bin/qt-cmake" -S . -B build -G Xcode \
+          -DQT_HOST_PATH="$RUNNER_TEMP/Qt/$QT_VERSION/macos"
+
+    # The app is built for devices without signing: a store build needs
+    # the certificate and the provisioning profile of the Apple developer
+    # account, they can be added as secrets later.
+    - name: Build
+      run: |
+        cmake --build build --config Release -- \
+          -sdk iphoneos CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+    # an unsigned ipa, to be signed for a device or for the store
+    - name: Package
+      run: |
+        VERSION=$(sed -n 's/^project(misuco3 VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
+        echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+        APP=$(find build -path '*Release-iphoneos/MISUCO3.app' -type d | head -1)
+        echo "app: $APP"
+        mkdir Payload
+        cp -R "$APP" Payload/
+        zip -qry "MISUCO3-$VERSION-ios-unsigned.ipa" Payload
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: MISUCO3-ios-unsigned
+        path: MISUCO3-${{ env.VERSION }}-ios-unsigned.ipa
+        if-no-files-found: error
