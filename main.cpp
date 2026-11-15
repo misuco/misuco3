@@ -10,6 +10,7 @@
 #include <rtpmidicontrol.h>
 #include <soundfontsynth.h>
 #include "presetstore.h"
+#include "tuningstore.h"
 
 int main(int argc, char *argv[])
 {
@@ -57,6 +58,10 @@ int main(int argc, char *argv[])
     // Expose PresetStore to QML
     PresetStore *presetStore = new PresetStore(&engine);
     engine.rootContext()->setContextProperty("PresetStore", presetStore);
+
+    // the tunings of the user
+    TuningStore *tuningStore = new TuningStore(&engine);
+    engine.rootContext()->setContextProperty("TuningStore", tuningStore);
 
     QObject::connect(
         &engine,

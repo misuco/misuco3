@@ -421,6 +421,8 @@ ApplicationWindow {
                 id: tuningArea
 
                 sender: root.senderContext
+                store: TuningStore
+                rootNote: scaleConfigArea.baseNoteIndex
 
                 width: confArea.width
                 height: confArea.height

@@ -31,10 +31,15 @@ Slider {
     orientation: Qt.Vertical
 
     onValueChanged: {
-        console.log("updateSlider index: " + controlSlider.index + " f: " + controlSlider.f + " pitch: " + controlSlider.value)
         controller.tuningUpdated(index,value)
-        controlSlider.sender.pitch(controlSlider.voiceId,controlSlider.f,controlSlider.index+1,controlSlider.value)
+        // only the note that sounds is retuned
+        if(controlSlider.pressed) {
+            controlSlider.sender.pitch(controlSlider.voiceId,controlSlider.f,controlSlider.index+1,controlSlider.value)
+        }
     }
+
+    // moved by hand: the tuning is not one of the list any more
+    onMoved: controller.tuningEdited()
 
     onPressedChanged: {
         if(controlSlider.pressed) {

@@ -82,6 +82,7 @@ qt_add_qml_module(MISUCO3
         qml/ScaleConfigForm.ui.qml
         qml/SoundFont.qml
         qml/SoundFontForm.ui.qml
+        qml/Tunings.js
         qml/Tuning.qml
         qml/TuningForm.ui.qml
         qml/XYAssignableParameter.qml
@@ -101,6 +102,8 @@ qt_add_qml_module(MISUCO3
     SOURCES
         src/presetstore.cpp
         src/presetstore.h
+        src/tuningstore.cpp
+        src/tuningstore.h
 
         misulib/comm/heartbeat.cpp
         misulib/comm/heartbeat.h

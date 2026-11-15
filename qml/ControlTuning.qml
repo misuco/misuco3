@@ -22,6 +22,12 @@ Item {
     readonly property double sliderHeight: height * 0.9
     readonly property double labelHeight: height * 0.1
 
+    readonly property alias value: slider.value
+
+    function setValue(v) {
+        slider.value = v
+    }
+
     ControlSliderTuning {
         id: slider
         width: root.width

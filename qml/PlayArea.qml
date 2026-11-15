@@ -46,6 +46,25 @@ Item {
     signal xMod(voiceId :int, note :int, tuning :int, value :double)
     signal yMod(voiceId :int, note :int, tuning :int, value :double)
 
+    // a key that sounds follows a change of its tuning
+    function retuneKey(keyIndex) {
+        let key=keyRepeater.itemAt(keyIndex)
+        if(key===null) {
+            return
+        }
+        let note=key.note
+        let tuning=key.tuning
+        let frequency=6.875 * Math.pow( 2 , ((note + key.offsetMidiChamberTone) * 100 + tuning) / 1200)
+        if(keyMapVid.has(keyIndex)) {
+            root.sender.pitch(keyMapVid.get(keyIndex),frequency,note,tuning)
+        }
+        touchMapVid.forEach((vid,pointId) => {
+            if(touchMapKey.get(pointId)===keyIndex) {
+                root.sender.pitch(vid,frequency,note,tuning)
+            }
+        })
+    }
+
     onHoldKeysChanged: {
         // transition for hold keys on/off
         // transform still active touch points in other domain
@@ -190,6 +209,12 @@ Item {
                         noteSymbol===8 ? root.tuningModel8 :
                         noteSymbol===9 ? root.tuningModel9 :
                         noteSymbol===10 ? root.tuningModel10 : root.tuningModel11
+
+                onTuningChanged: {
+                    if(key.pressed>0) {
+                        root.retuneKey(key.index)
+                    }
+                }
 
                 width: root.keyWidth
                 height: root.height
